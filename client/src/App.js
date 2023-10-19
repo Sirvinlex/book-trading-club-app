@@ -10,7 +10,7 @@ function App() {
       {/* <PostToast /> */}
         <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='register-login' element={<RegisterLogin />} />
+        <Route path='authentication-page' element={<RegisterLogin />} />
         <Route path='*' element={<ErrorPage />} />
       </Routes>
       

@@ -20,7 +20,7 @@ const Navbar = () => {
 const Wrapper = styled.div`
   height: 300px;
   padding-top: 3px;
-  background-color: #c5d1c8;
+  background-color: var(--color1);
   .logo-name{
     font-size: 27px;
     font-weight: 600;
@@ -30,11 +30,12 @@ const Wrapper = styled.div`
   .nav-item-container p{
     margin-left: 10px;
     font-size: 20px;
-    color: #343634;
+    color: var(--fontColor1);
   }
   .login-btn-container{
     margin-left: 10px;
-    color: #343634;
+    font-size: 20px;
+    color: var(--fontColor1);
   }
   @media (min-width: 600px) {
     .logo-name{

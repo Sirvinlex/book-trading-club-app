@@ -1,12 +1,24 @@
 import React from "react";
 import FormInput from "../components/FormInput";
 import styled from 'styled-components';
+import { useDispatch, useSelector } from 'react-redux';
+import { handleInputs } from '../features/authSlice';
 
 // type, name, value,  handleChange, labelText, page,placeholder 
 const RegisterLogin = () => {
+  const { name, email, password } = useSelector((store) => store.auth);
+
+  const dispatch = useDispatch();
+
   const [isLogin, setIsLogin] = React.useState(true);
   const handleSubmit = (e) =>{
     e.preventDefault();
+  };
+
+  const handleChange = (e) =>{
+    const name = e.target.name;
+    const value = e.target.value;
+    dispatch(handleInputs({name, value}));
   };
 
   return (
@@ -15,14 +27,14 @@ const RegisterLogin = () => {
       <form onSubmit={handleSubmit}>
         {isLogin ? (
         <>
-          <FormInput className='input' name='email' type='email' value= '' labelText='Email' />
-          <FormInput name='password' type='password' value= '' labelText='Password' />
+          <FormInput handleChange={handleChange} className='input' name='email' type='email' value={email} labelText='Email' />
+          <FormInput handleChange={handleChange} name='password' type='password' value={password} labelText='Password' />
         </>
         ) : (
         <>
-          <FormInput name='name' type='text' value= '' labelText='Name' />
-          <FormInput name='email' type='email' value= '' labelText='Email' />
-          <FormInput name='password' type='password' value= '' labelText='Password' />
+          <FormInput handleChange={handleChange} name='name' type='text' value={name} labelText='Name' />
+          <FormInput handleChange={handleChange} name='email' type='email' value={email} labelText='Email' />
+          <FormInput handleChange={handleChange} name='password' type='password' value={password} labelText='Password' />
         </>
         )}
         <div className="btn-container">

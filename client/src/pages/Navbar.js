@@ -1,5 +1,6 @@
 import React from "react";
 import styled from 'styled-components';
+import { Link } from 'react-router-dom'
 
 const Navbar = () => {
   return (
@@ -11,7 +12,7 @@ const Navbar = () => {
         <p>Trades</p>
         <p>Users</p>
       </div>
-      <p className="login-btn-container">login</p>
+      <Link className="login-btn-container" to='authentication-page'>Login/Register</Link>
     </Wrapper>
   )
 }
@@ -36,6 +37,8 @@ const Wrapper = styled.div`
     margin-left: 10px;
     font-size: 20px;
     color: var(--fontColor1);
+    text-decoration: none;
+
   }
   @media (min-width: 600px) {
     .logo-name{

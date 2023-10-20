@@ -1,19 +1,42 @@
-import React from "react";
+import React, {useEffect} from "react";
 import FormInput from "../components/FormInput";
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { handleInputs } from '../features/authSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import { handleInputs, logUser, regUser, resetUserState } from '../features/authSlice';
 
 // type, name, value,  handleChange, labelText, page,placeholder 
 const RegisterLogin = () => {
-  const { name, email, password } = useSelector((store) => store.auth);
+  // const localStorageUser = JSON.parse(localStorage.getItem("user"));
+  const { name, email, password, authSuccess, deactivateBtn, user } = useSelector((store) => store.auth);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = React.useState(true);
+
   const handleSubmit = (e) =>{
     e.preventDefault();
+    console.log('test')
+    if (isLogin){
+      if (!email || !password) alert("Please provide all values");
+      else dispatch(logUser({ email, password }))
+    }else{
+      if (!name || !email || !password) alert("Please provide all values");
+      else dispatch(regUser({ name, email, password }));
+    }
   };
+
+  useEffect(() => {
+    if (user?.userId && user?.token) {
+      setTimeout(() => {
+        navigate('/');
+        console.log(user.name)
+        dispatch(resetUserState());
+      }, 500);
+      // console.log(user.name)
+    }
+  }, [user, navigate]);
 
   const handleChange = (e) =>{
     const name = e.target.name;
@@ -23,6 +46,7 @@ const RegisterLogin = () => {
 
   return (
     <Wrapper>
+      {/* {console.log(user, 'user')} */}
       <p className="form-title">{isLogin ? 'Login' : 'Register'}</p>
       <form onSubmit={handleSubmit}>
         {isLogin ? (
@@ -32,17 +56,22 @@ const RegisterLogin = () => {
         </>
         ) : (
         <>
-          <FormInput handleChange={handleChange} name='name' type='text' value={name} labelText='Name' />
+          <FormInput handleChange={handleChange} name='name' type='text' value={name} labelText='Full Name' />
           <FormInput handleChange={handleChange} name='email' type='email' value={email} labelText='Email' />
           <FormInput handleChange={handleChange} name='password' type='password' value={password} labelText='Password' />
         </>
         )}
         <div className="btn-container">
-          <button className="submit-btn" type='submit'>{isLogin ? 'Login' : 'Register'}</button>
+          <button disabled={deactivateBtn ? true : false} className="submit-btn" type='submit'>
+            {deactivateBtn ? 'Loading...' : isLogin ? 'Login' : 'Register'}
+          </button>
           <p className="switch-form">
             {isLogin ? "Don't have an account?" : "Already have an account?"} 
-            <button className="switch-btn" onClick={() => setIsLogin((prevState) => !prevState)} type='button'>{isLogin ? 'Register' : 'Login'}</button>
+            <button className="switch-btn" onClick={() => setIsLogin((prevState) => !prevState)} type='button'>
+              {isLogin ? 'Register' : 'Login'}
+            </button>
           </p>
+          {/* {deactivateBtn ? 'Loading...' : <>{isLogin ? 'Register' : 'Login'}</>} */}
         </div>
       </form>
     </Wrapper>
@@ -69,10 +98,10 @@ const Wrapper = styled.div`
     width: 100%;
     margin-top: 15px;
     border: none;
-    background-color: var(--backgroundColor);
+    background-color: var(--btnColor);
     height: 33px;
     border-radius: 3px;
-    color: var(--fontColor1);
+    color: var(--backgroundColor);
     cursor: pointer;
   }
   .switch-form{
@@ -82,6 +111,8 @@ const Wrapper = styled.div`
     border: none;
     background-color: inherit;
     cursor: pointer;
+    font-weight: 600;
+    color: var(--btnColor);
   }
   @media (min-width: 600px) {
     .btn-container{

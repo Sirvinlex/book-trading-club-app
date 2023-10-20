@@ -10,8 +10,25 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         minLength: 3
-    }
+    },
+    city: {
+        type: String,
+        default: null,
+    },
+    state:  {
+        type: String,
+        default: null,
+    },
+    address:  {
+        type: String,
+        default: null,
+    },
+    activeRequest:  {
+        type: Number,
+        default: 0,
+    },
 },
+{ timestamps: true }
 );
 
 const User = mongoose.model('User', UserSchema);

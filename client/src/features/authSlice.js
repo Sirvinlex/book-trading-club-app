@@ -31,13 +31,13 @@ export const logUser = createAsyncThunk('login/user', async (loginData, thunkAPI
         // console.log(data, 'login')
         return data;
     } catch (error) {
-        console.log(error)
+        // console.log(error)
         
         return  thunkAPI.rejectWithValue(error.response.data.msg);
     }
 });
 
-const userSlice = createSlice({
+const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers:{
@@ -87,6 +87,6 @@ const userSlice = createSlice({
     }
 });
 
-export const { handleInputs, resetUserState, } = userSlice.actions;
+export const { handleInputs, resetUserState, } = authSlice.actions;
 
-export default userSlice.reducer;
+export default authSlice.reducer;

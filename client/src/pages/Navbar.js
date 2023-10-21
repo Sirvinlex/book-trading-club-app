@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
+import { AiFillCaretDown } from 'react-icons/ai';
 
 const Navbar = () => {
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
@@ -20,8 +21,10 @@ const Navbar = () => {
     <Wrapper>
       <p className="logo-name">Book Club</p>
       <div className="nav-item-container">
-        <p>Books</p>
-        <p style={{cursor: 'pointer'}} onClick={() => setShowRequest((prevState) => !prevState)}>Requests</p>
+        <p><Link style={{textDecoration:'none', color:'var(--fontColor1)'}} to='books'>Books</Link></p>
+        <p style={{cursor:'pointer', display:'flex', flexDirection:'row'}} onClick={() => setShowRequest((prevState) => !prevState)}>
+          <span>Requests</span> {localStorageUser ? <AiFillCaretDown className="request-icon"/> : null}
+        </p>
         {(showRequest && localStorageUser) ? (
           <div id="request-container">
           <p>All Requests</p>
@@ -29,12 +32,14 @@ const Navbar = () => {
         </div>
         ) : null}
         <p>Trades</p>
-        <p>Users</p>
+        <p><Link style={{textDecoration:'none', color:'var(--fontColor1)'}} to='users'>Users</Link></p>
       </div>
       {!localStorageUser ? (
         <Link className="login-btn-container" to='authentication-page'>Login/Register</Link>
       ) : (
-        <p className="owner-name" onClick={() => setShowProfile((prevState) => !prevState)}>{ownerFirstName}</p>
+        <p className="owner-name" onClick={() => setShowProfile((prevState) => !prevState)}>
+          <span>{ownerFirstName}</span> {localStorageUser ? <AiFillCaretDown className="user-icon"/> : null}
+        </p>
       )}
       {(showProfile && localStorageUser) ? (
         <div className="profile-container">
@@ -62,8 +67,14 @@ const Wrapper = styled.div`
     margin-top: -15px;
     margin-left: 25px;
   }
+  .request-icon{
+    margin-top: 8px;
+  }
+  .user-icon{
+    margin-top: 6px;
+  }
   .profile-container{
-    margin-top: 15px;
+    margin-top: -23px;
   }
   .profile-container p{
     margin-left: 25px;
@@ -100,6 +111,8 @@ const Wrapper = styled.div`
     color: var(--fontColor1);
     font-weight: 500;
     cursor: pointer;
+    display: flex;
+    flex-direction: row;
   }
   @media (min-width: 600px) {
     .logo-name{
@@ -113,17 +126,51 @@ const Wrapper = styled.div`
       font-size: 23px;
       margin-top: -10px;
     }
+    .owner-name{
+      font-size: 23px;
+      margin-top: -10px;
+    }
   }
   @media (min-width: 768px) {
     height: 50px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    .request-icon{
+    margin-top: 4px;
+    }
+    .user-icon{
+      margin-top: 3px;
+    }
+    #request-container p{
+      margin-top: 0px;
+    }
     #request-container{
-      display: none;
+      /* display: none; */
+      position: absolute;
+      left: 320px;
+      top: 60px;
+      /* background-color: red; */
+      padding-top: 7px;
+      background-color: var(--backgroundColor);
+      height: fit-content;
+      width: 150px;
+      box-shadow: 4px 3px 5px #abaaa7, -4px 3px 5px #abaaa7;
     }
     .profile-container{
-      display: none;
+      /* display: none; */
+      padding-top: 6px;
+      position: absolute;
+      right: 20px;
+      top: 60px;
+      background-color: var(--backgroundColor);
+      /* background-color: red; */
+      height: fit-content;
+      width: 130px;
+      box-shadow: 4px 3px 5px #abaaa7, -4px 3px 5px #abaaa7;
+    }
+    .profile-container p{
+      margin-top: 0px;
     }
     .logo-name{
       font-size: 25px;
@@ -143,9 +190,42 @@ const Wrapper = styled.div`
       margin-top: 10px;
       margin-right: 70px;
     }
+    .owner-name{
+      font-size: 16px;
+      margin-top: 10px;
+      margin-right: 70px;
+    }
+  }
+  @media (min-width: 850px) {
+    #request-container{
+      left: 370px;
+    }
+  }
+  @media (min-width: 850px) {
+    #request-container{
+      left: 420px;
+    }
   }
   @media (min-width: 992px) {
     height: 70px;
+    #request-container{
+      left: 450px;
+      top: 70px;
+    }
+    .profile-container{
+      padding-top: 6px;
+      position: absolute;
+      right: 20px;
+      top: 70px;
+      height: fit-content;
+      width: 130px;
+    }
+    .request-icon{
+    margin-top: 7px;
+    }
+    .user-icon{
+      margin-top: 5px;
+    }
     .logo-name{
       font-size: 30px;
       margin-left: 80px;
@@ -159,6 +239,16 @@ const Wrapper = styled.div`
       font-size: 20px;
       margin-top: 15px;
       margin-right: 80px;
+    }
+    .owner-name{
+      font-size: 20px;
+      margin-top: 15px;
+      margin-right: 80px;
+    }
+  }
+  @media (min-width: 1100px) {
+    #request-container{
+      left: 630px;
     }
   }
 `

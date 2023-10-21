@@ -5,6 +5,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import xss from 'xss-clean';
 import auth from './routes/auth.js'
+import users from './routes/users.js'
 
 // const auth = require('./routes/auth')
 
@@ -26,6 +27,7 @@ app.use(xss());
 // app.use(express.json());
 
 app.use('/api/v1/auth', auth);
+app.use('/api/v1/users', users);
 
 const CONNECTION_URL = process.env.CONNECTION_URL
 const PORT = process.env.PORT|| 5000;

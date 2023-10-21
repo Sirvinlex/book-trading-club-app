@@ -18,7 +18,7 @@ export const signUp = async(req, res) =>{
         const user = await User.create({name, email, password: hashedPassword});
         const token = jwt.sign({ userId: user._id, name: user.name}, process.env.AUTH_KEY,);
         res.status(200).json({name: user.name, userId: user._id, token, joined: user.createdAt, city: user.city, state: user.state, 
-        address: user.address, activeRequest: user.activeRequest, msg: "Registration successful"});
+        address: user.address, activeRequest: user.activeRequest, books: user.books, msg: "Registration successful"});
     } catch (error) {
         res.status(400).json(error);
     } 
@@ -37,8 +37,9 @@ export const signIn = async(req, res) =>{
         if(!isPasswordCorrect) return res.status(400).json({msg: 'Invalid Credentials'});
         
         // res.status(200).json({name:existingUser.name, token, msg: `Welcome Back ${existingUser.name}`});
-        res.status(200).json({name: existingUser.name, userId: existingUser._id, token, joined: existingUser.createdAt, city: existingUser.city,
-        state: existingUser.state,  address: existingUser.address, activeRequest: existingUser.activeRequest, msg: `Welcome Back ${existingUser.name}`});
+        res.status(200).json({name: existingUser.name, userId: existingUser._id, token, joined: existingUser.createdAt, 
+        city: existingUser.city, state: existingUser.state,  address: existingUser.address, activeRequest: existingUser.activeRequest,
+         books: existingUser.books, msg: `Welcome Back ${existingUser.name}`});
     } catch (error) {
         res.status(400).json(error);
     }

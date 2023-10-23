@@ -3,6 +3,7 @@ import * as api from '../api';
 
 const initialState = {
     users: [],
+    userDetails: {},
     isLoading: false,
 };
 
@@ -20,7 +21,7 @@ export const getUsers = createAsyncThunk('getUsers/allUsers', async (_, thunkAPI
 export const getUserDetails = createAsyncThunk('getUsers/userDetails', async (id, thunkAPI) =>{
   try {
     const {data} = await api.getUserDetails(id); 
-    console.log(data)
+    // console.log(data)
     return data
   } catch (error) {
     // console.log(error)
@@ -43,6 +44,17 @@ const usersSlice = createSlice({
             state.isLoading = false;
         },
         [getUsers.rejected]: (state, actions) => {
+            alert(actions.payload.message);
+           state.isLoading = false;
+        },
+        [getUserDetails.pending]: (state, actions) => {
+            state.isLoading = true;
+        },
+        [getUserDetails.fulfilled]: (state, actions) => {
+            state.userDetails = actions.payload;
+            state.isLoading = false;
+        },
+        [getUserDetails.rejected]: (state, actions) => {
             alert(actions.payload.message);
            state.isLoading = false;
         },

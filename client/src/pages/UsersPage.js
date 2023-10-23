@@ -23,7 +23,6 @@ const UsersPage = () => {
       <div className='user-page'>
         {myUsers.map((item, i) =>{
           const id = item?._id;
-          const link = `users/:${id}`
           return(
             <div key={i} className='users-container'>
               {/* <p className='user-name'>{item.name}</p> */}
@@ -69,6 +68,9 @@ const Wrapper = styled.div`
     font-size: 40px;
     margin-bottom: -15px;
   }
+  .user-name:hover{
+    text-decoration: underline;
+  }
   .user-name{
     color: var(--btnColor);
     font-weight: 600;
@@ -97,7 +99,7 @@ const Wrapper = styled.div`
     height: 15px;
     width: fit-content;
     font-size: 13px;
-    background-color: #d97604;
+    background-color: var(--btnColor2);
     color: white;
     margin-right: 5px;
     padding: 2px 5px 6px 5px;

@@ -10,6 +10,17 @@ export const getUsers = createAsyncThunk('getUsers/allUsers', async (_, thunkAPI
   try {
     const {data} = await api.getUsers(); 
     // console.log(data)
+    return data;
+  } catch (error) {
+    // console.log(error)
+    // return  thunkAPI.rejectWithValue(error.response.data.msg);
+    return  thunkAPI.rejectWithValue(error);
+  }
+});
+export const getUserDetails = createAsyncThunk('getUsers/userDetails', async (id, thunkAPI) =>{
+  try {
+    const {data} = await api.getUserDetails(id); 
+    console.log(data)
     return data
   } catch (error) {
     // console.log(error)

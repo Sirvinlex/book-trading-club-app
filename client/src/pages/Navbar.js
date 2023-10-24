@@ -15,6 +15,12 @@ const Navbar = () => {
     navigate(`/users/users-details/${localStorageUser.userId}`);
     setShowProfile(false);
   };
+
+  const handleEditProfile = () =>{
+    navigate(`/edit-profile/${localStorageUser?.userId}`);
+    setShowProfile(false);
+  };
+
   const handleLogout = () =>{
     localStorage.removeItem("user");
     navigate('/');
@@ -49,7 +55,7 @@ const Navbar = () => {
         <div className="profile-container">
           {/* {console.log(localStorageUser.userId)} */}
         <p onClick={handleProfileClick}>Profile</p>
-        <p>Edit Profile</p>
+        <p onClick={handleEditProfile}>Edit Profile</p>
         <p>My Books</p>
         <p><button className="logout-btn" type="button" onClick={handleLogout}>Logout</button></p>
       </div>

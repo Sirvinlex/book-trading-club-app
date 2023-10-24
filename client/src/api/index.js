@@ -6,3 +6,7 @@ export const registerUser = (regData) => API.post('/auth/registerUser', regData)
 export const loginUser = (loginData) => API.post('/auth/loginUser', loginData);
 export const getUsers = () => API.get('/users/getUsers');
 export const getUserDetails = (id) => API.get(`/users/getUsers/${id}`);
+export const updateUserProfile = (updateData) => API.patch(`/users/getUsers/${updateData.userId}`, updateData);
+
+
+// export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost)

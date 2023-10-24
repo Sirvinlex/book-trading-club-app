@@ -2,11 +2,14 @@ import React, {useEffect} from 'react';
 import { useParams, } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../features/usersSlice';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 const UserDetails = () => {
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const { userDetails, isLoading } = useSelector((store) => store.users);
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
 
@@ -46,7 +49,7 @@ const UserDetails = () => {
       <div className='btn-container'>
         <button onClick={handleUserBooks} className='book-btn' type='button'>See {userFirstName} Books</button>
         {localStorageUser?.userId === userId ? (
-          <button className='edit-btn' type='button'>Edit Profile</button>
+          <button onClick={() => navigate(`/edit-profile/${localStorageUser?.userId}`)} className='edit-btn' type='button'>Edit Profile</button>
         ) : null}
       </div>
     </Wrapper>

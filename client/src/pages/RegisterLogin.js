@@ -17,7 +17,7 @@ const RegisterLogin = () => {
 
   const handleSubmit = (e) =>{
     e.preventDefault();
-    console.log('test')
+    // console.log('test')
     if (isLogin){
       if (!email || !password) alert("Please provide all values");
       else dispatch(logUser({ email, password }))

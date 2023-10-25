@@ -26,14 +26,17 @@ export const getUserDetails = async (req, res) =>{
 };
 
 export const updateUserProfile = async(req, res) =>{
-    const { body: { name, city, state, address }, params: { id }} = req;
+    const { body: { name, city, userState, address }, params: { id }} = req;
     try {
-      console.log({id, name, city, state, address})
-      //   if (taskName === '' || status === '') return res.status(400).json({msg: 'Please fill in required fields'});
-      //   const task = await Task.findByIdAndUpdate({ _id: taskId, createdBy: userId}, { taskName, status}, {new: true, runValidators: true})
-      //   if (!task) return res.status(400).json({msg: 'No task with this Id'});
-      //   res.status(200).json({ task });
+      // console.log({id, name, city, state, address})
+        if (!name || !city || !userState || !address) return res.status(400).json({msg: 'Please fill in required fields'});
+        const user = await User.findByIdAndUpdate({ _id: id }, { name, city, state: userState, address }, {new: true, runValidators: true})
+        if (!user) return res.status(400).json({msg: 'No task with this Id'});
+        // console.log(user)
+        res.status(200).json({ result: {name: user.name, city: user.city, state: user.state, address: user.address,}, msg: 'Your profile has been updated successfully' });
+        // res.status(200).json({ user });
     } catch (error) { 
         res.status(400).json(error);
     }
 };
+

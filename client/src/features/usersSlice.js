@@ -7,8 +7,10 @@ const initialState = {
     isLoading: false,
     name: '',
     city: '',
-    state: '',
+    userState: '',
     address: '',
+    updateProfileMessage: '',
+    profileUpdateResult: {}
 };
 
 export const getUsers = createAsyncThunk('getUsers/allUsers', async (_, thunkAPI) =>{
@@ -39,7 +41,7 @@ export const updateUserProfile = createAsyncThunk('updateUser/userProfile', asyn
     // console.log(updateData, 'data')
     const {data} = await api.updateUserProfile(updateData); 
     // console.log(data)
-    return data
+    return data;
   } catch (error) {
     // console.log(error)
     // return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -58,14 +60,18 @@ const usersSlice = createSlice({
         // console.log(name, stateName, 'test')
             state[name] = stateName;
       },
-      handleCity:(state, {payload: {name, stateCity}}) =>{
-            state[name] = stateCity;
+      handleCity:(state, {payload: {city, stateCity}}) =>{
+            state[city] = stateCity;
       },
-      handleState:(state, {payload: {name, stateState}}) =>{
-            state[name] = stateState;
+      handleState:(state, {payload: {userState, stateState}}) =>{
+        // console.log(userState, stateState)
+            state[userState] = stateState;
       },
-      handleAddress:(state, {payload: {name, stateAddress}}) =>{
-            state[name] = stateAddress;
+      handleAddress:(state, {payload: {address, stateAddress}}) =>{
+            state[address] = stateAddress;
+      },
+      resetUpdateProfileMessage:(state, actions) =>{
+            state.updateProfileMessage = '';
       },
     },
     extraReducers:{
@@ -91,9 +97,26 @@ const usersSlice = createSlice({
             alert(actions.payload.message);
            state.isLoading = false;
         },
+        [updateUserProfile.pending]: (state, actions) => {
+            state.isLoading = true;
+        },
+        [updateUserProfile.fulfilled]: (state, actions) => {
+            state.updateProfileMessage = actions.payload.msg;
+            state.profileUpdateResult = actions.payload.result;
+            state.isLoading = false;
+            alert('Your profile has been updated successfully');
+            state.name = '';
+            state.city = '';
+            state.userState = '';
+            state.address = '';
+        },
+        [updateUserProfile.rejected]: (state, actions) => {
+            alert(actions.payload.message);
+           state.isLoading = false;
+        },
     }
 });
-
-export const { handleEditProfileInputs, handleAddress, handleCity, handleName, handleState } = usersSlice.actions;
+// Your profile has been updated successfully
+export const { handleEditProfileInputs, handleAddress, handleCity, handleName, handleState, resetUpdateProfileMessage } = usersSlice.actions;
 
 export default usersSlice.reducer;

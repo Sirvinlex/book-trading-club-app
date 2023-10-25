@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { getUserDetails } from '../features/usersSlice'
 import { Link, useNavigate } from 'react-router-dom';
 import { AiFillCaretDown } from 'react-icons/ai';
 
 const Navbar = () => {
+  
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const ownerFirstName = localStorageUser?.name.split(' ')[0];
   const [showProfile, setShowProfile] = useState(false);
   const [showRequest, setShowRequest] = useState(false);
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
+  
   const handleProfileClick = () =>{
     navigate(`/users/users-details/${localStorageUser.userId}`);
     setShowProfile(false);
@@ -18,6 +22,11 @@ const Navbar = () => {
 
   const handleEditProfile = () =>{
     navigate(`/edit-profile/${localStorageUser?.userId}`);
+    setShowProfile(false);
+  };
+
+  const handleMyBooks = () =>{
+    navigate(`books/user-books/${localStorageUser?.userId}`);
     setShowProfile(false);
   };
 
@@ -56,7 +65,7 @@ const Navbar = () => {
           {/* {console.log(localStorageUser.userId)} */}
         <p onClick={handleProfileClick}>Profile</p>
         <p onClick={handleEditProfile}>Edit Profile</p>
-        <p>My Books</p>
+        <p onClick={handleMyBooks}>My Books</p>
         <p><button className="logout-btn" type="button" onClick={handleLogout}>Logout</button></p>
       </div>
       ) : null}

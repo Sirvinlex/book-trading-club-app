@@ -1,28 +1,33 @@
 import React, {useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-    getUserDetails, handleEditProfileInputs, handleAddress, handleCity, handleName, handleState, updateUserProfile 
+    getUserDetails, handleEditProfileInputs, handleAddress, handleCity, handleName, handleState, updateUserProfile, resetUpdateProfileMessage
 } from '../features/usersSlice';
-import { useParams, } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import FormInput from '../components/FormInput';
 import styled from 'styled-components';
 
 
 const EditProfileForm = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     const { id } = useParams();
 
-    const { userDetails, isLoading, name, city, state, address, } = useSelector((store) => store.users);
+    const { 
+        userDetails, isLoading, name, city, userState, address, updateProfileMessage, profileUpdateResult
+    } = useSelector((store) => store.users);
 
     useEffect(() =>{
         dispatch(getUserDetails(id));
     }, [id])
 
     useEffect(() =>{
-        const name = 'name', state = 'state', city = 'city', address = 'address';
+        const name = 'name', userState = 'userState', city = 'city', address = 'address';
         const stateName = userDetails?.name, stateState = userDetails?.state, stateCity = userDetails?.city, stateAddress = userDetails.address;
+        // console.log(stateAddress, stateCity, stateName, stateState)
         dispatch(handleName({name, stateName}));
-        dispatch(handleState({state, stateState}));
+        dispatch(handleState({userState, stateState}));
         dispatch(handleCity({city, stateCity}));
         dispatch(handleAddress({address, stateAddress}));
     }, [userDetails])
@@ -39,18 +44,40 @@ const EditProfileForm = () => {
     const handleSubmit = (e) =>{
         e.preventDefault();
         const userId = id; 
-        dispatch(updateUserProfile({userId, name, city, state, address}));
+        if (!userId || !name || !city || !userState || !address) alert('Please provide all values');
+        else dispatch(updateUserProfile({userId, name, city, userState, address}));
     };
 
+    useEffect(() =>{
+        if (updateProfileMessage === 'Your profile has been updated successfully'){
+            navigate(`/users/users-details/${id}`);
+            dispatch(resetUpdateProfileMessage());
+            // console.log(profileUpdateResult)
+            const localStorageUser = JSON.parse(localStorage.getItem("user"));
+            
+            localStorageUser.name = profileUpdateResult.name;
+            localStorageUser.city = profileUpdateResult.city;
+            localStorageUser.state = profileUpdateResult.state;
+            localStorageUser.address = profileUpdateResult.address;
+            
+            localStorage.setItem('user', JSON.stringify(localStorageUser));
+        }
+    }, [updateProfileMessage]);
+    // localStorage.setItem('user', JSON.stringify(state.user));
+    // const localStorageUser = JSON.parse(localStorage.getItem("user"));
   return (
     <Wrapper>
         <p className='form-title'>Edit Your Profile</p>
         <form onSubmit={handleSubmit}>
             <FormInput type='text' name='name' value={name} handleChange={handleChange} labelText='Full Name' />
             <FormInput type='text' name='city' value={city} handleChange={handleChange} labelText='City' />
-            <FormInput type='text' name='state' value={state} handleChange={handleChange} labelText='State' />
+            <FormInput type='text' name='userState' value={userState} handleChange={handleChange} labelText='State' />
             <FormInput type='text' name='address' value={address} handleChange={handleChange} labelText='Address' />
-            <div className='btn-container'><button className='profile-btn' type='submit'>Submit</button></div>
+            <div className='btn-container'>
+                <button disabled={isLoading ? true : false} className='profile-btn' type='submit'>
+                    {isLoading ? 'Loading...' : 'Submit'}
+                </button>
+            </div>
         </form>
     </Wrapper>
   )
@@ -61,7 +88,7 @@ const Wrapper = styled.div`
     padding-top: 5px;
     width: 100%;
     height: 90vh;
-    .form-title{
+    .form-title{ 
         font-size: 25px;
         font-weight: 600;
         margin-top: 7px;

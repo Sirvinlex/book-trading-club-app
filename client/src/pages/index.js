@@ -6,7 +6,9 @@ import Books from "./Books";
 import UsersPage from "./UsersPage";
 import UserDetails from "./UserDetails";
 import EditProfileForm from "./EditProfileForm";
+import UserBooks from "./UserBooks";
+import BookRedirect from "./BookRedirect";
 
 
-export { ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm }
+export { ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm, UserBooks, BookRedirect}
 

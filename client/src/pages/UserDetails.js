@@ -29,10 +29,12 @@ const UserDetails = () => {
   const userBooks = userDetails?.books ? userDetails?.books : 0;
 
   const handleUserBooks = () =>{
-    if (userBooks < 1) {
+    if (userBooks >= 1) {
       if(userDetails?.userId === localStorageUser?.userId) alert('You have not added any book');
       else alert('This user has not added any books');
-    }else{}
+    }else{
+      navigate();
+    }
   };
 
   return (

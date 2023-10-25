@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { handleInputs, logUser, regUser, resetUserState } from '../features/authSlice';
 
-// type, name, value,  handleChange, labelText, page,placeholder 
+
 const RegisterLogin = () => {
   // const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const { name, email, password, authSuccess, deactivateBtn, user } = useSelector((store) => store.auth);

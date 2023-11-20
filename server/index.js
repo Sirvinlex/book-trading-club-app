@@ -29,7 +29,8 @@ app.use(xss());
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 
-const CONNECTION_URL = process.env.CONNECTION_URL
+// const CONNECTION_URL = 'mongodb+srv://sirvinlex:29933.Alex29933.Vin@cluster0.hzrll.mongodb.net/book-trading-club?retryWrites=true&w=majority'
+const CONNECTION_URL = process.env.CONNECTION_URL;
 const PORT = process.env.PORT|| 5000;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true, })

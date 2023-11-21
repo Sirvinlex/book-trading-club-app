@@ -4,8 +4,10 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import xss from 'xss-clean';
-import auth from './routes/auth.js'
-import users from './routes/users.js'
+import auth from './routes/auth.js';
+import users from './routes/users.js';
+import book from './routes/book.js';
+
 
 // const auth = require('./routes/auth')
 
@@ -28,6 +30,7 @@ app.use(xss());
 
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
+app.use('/api/v1/book', book);
 
 // const CONNECTION_URL = 'mongodb+srv://sirvinlex:29933.Alex29933.Vin@cluster0.hzrll.mongodb.net/book-trading-club?retryWrites=true&w=majority'
 const CONNECTION_URL = process.env.CONNECTION_URL;

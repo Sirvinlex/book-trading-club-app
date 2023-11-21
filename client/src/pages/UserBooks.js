@@ -1,26 +1,38 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import FormInput from '../components/FormInput';
+import { createBook, handleInput } from '../features/bookSlice';
 
 
 // navigate(`/users/user-books/${id}`, { relative: "path" });
 // type, name, value,  handleChange, labelText, page,placeholder 
 const UserBooks = () => {
+    const { title, description, isLoading } = useSelector((store) => store.book);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
     const { id } = useParams();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleUserAddBook = () =>{
         navigate(`/users/user-books/${localStorageUser?.userId}`);
     };
 
-    const handleChange = () =>{
-
+    const handleChange = (e) =>{
+        const name = e.target.name;
+        const value = e.target.value;
+        dispatch(handleInput({ name, value }));
     };
 
     const handleSubmit = (e) =>{
         e.preventDefault();
+        const creatorName = localStorageUser?.name;
+        const creatorId = localStorageUser?.userId;
+        
+        if  (!creatorName || !creatorId) alert('Oops! Something went wrong')
+        else if (!title || !description) alert('Please provide all fields')
+        else dispatch(createBook({ title, description, creatorName, creatorId }));
     };
 
   return (
@@ -30,9 +42,14 @@ const UserBooks = () => {
                 <>
                     <p className='form-title'>Add Book</p>
                     <form onSubmit={handleSubmit}>
-                        <FormInput type='text' name='title' value='' handleChange={handleChange} labelText='Book title'/>
-                        <FormInput placeholder='Author, condition' type='text' name='description' value='' handleChange={handleChange} labelText='Book description'/>
-                        <div className='btn-container'><button className='book-btn' type='submit'>Add book to exchange</button></div>
+                        <FormInput type='text' name='title' value={title} handleChange={handleChange} labelText='Book title'/>
+                        <FormInput placeholder='Author, condition' type='text' name='description' 
+                         value={description} handleChange={handleChange} labelText='Book description'/>
+                        <div className='btn-container'>
+                            <button disabled={ isLoading ? true : false} className='book-btn' type='submit'>
+                                { isLoading ? 'Loading...' : 'Add book to exchange' }
+                            </button>
+                        </div>
                     </form>
                 </>
             ) : null

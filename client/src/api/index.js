@@ -7,6 +7,6 @@ export const loginUser = (loginData) => API.post('/auth/loginUser', loginData);
 export const getUsers = () => API.get('/users/getUsers');
 export const getUserDetails = (id) => API.get(`/users/getUsers/${id}`);
 export const updateUserProfile = (updateData) => API.patch(`/users/getUsers/${updateData.userId}`, updateData);
+export const createBook = (bookData) => API.post('/book/createBook', bookData);
+export const getBooks = () => API.get('/book/getBooks');
 
-
-// export const updatePost = (id, updatedPost) => API.patch(`/posts/${id}`, updatedPost)

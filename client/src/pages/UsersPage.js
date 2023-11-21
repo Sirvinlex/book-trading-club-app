@@ -13,7 +13,7 @@ const UsersPage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     useEffect(() =>{
-        dispatch(getUsers());
+        dispatch(getUsers()); 
     }, []);
 
     if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>

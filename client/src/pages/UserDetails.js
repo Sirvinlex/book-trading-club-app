@@ -29,12 +29,16 @@ const UserDetails = () => {
   const userBooks = userDetails?.books ? userDetails?.books : 0;
 
   const handleUserBooks = () =>{
-    if (userBooks < 1) {
-      if(userDetails?.userId === localStorageUser?.userId) alert('You have not added any book');
-      else alert('This user has not added any books');
-    }else{
-      navigate();
-    }
+    navigate(`/users/user-books/${id}`, { relative: "path" });
+    // if (userBooks > 1) {
+    //   if(userDetails?.userId === localStorageUser?.userId) alert('You have not added any book');
+    //   else alert('This user has not added any books');
+    // }else{
+    //   // navigate(`users/users-details/${id}/user-books`, { relative: "path" });
+    //   // navigate(`/users/user-books/${id}`, { relative: "path" });
+    //   // navigate(`books/user-books/${id}`, { relative: "path" });
+    //   // navigate();
+    // }
   };
 
   return (

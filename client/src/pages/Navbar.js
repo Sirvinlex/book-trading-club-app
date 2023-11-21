@@ -26,7 +26,8 @@ const Navbar = () => {
   };
 
   const handleMyBooks = () =>{
-    navigate(`books/user-books/${localStorageUser?.userId}`);
+    // navigate(`books/user-books/${localStorageUser?.userId}`);
+    navigate(`users/user-books/${localStorageUser?.userId}`);
     setShowProfile(false);
   };
 
@@ -78,7 +79,7 @@ const Wrapper = styled.div`
   height: fit-content;
   padding-top: 3px;
   padding-bottom: 10px;
-  background-color: var(--color1);
+  background-color: var(--color1); 
   #request-container{
     margin-top: -22px;
   }

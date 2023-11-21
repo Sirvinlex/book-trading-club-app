@@ -5,7 +5,7 @@ import {
 } from './pages';
 
 function App() {
-  return (
+  return ( 
     <BrowserRouter>
       <Navbar />
       {/* <ToastContainer position='top-center' /> */}
@@ -13,11 +13,12 @@ function App() {
         <Routes>
         <Route path='/' element={<Home />} />
         <Route path='books' element={<Books />} />
-        <Route path='books/user-books/:id' element={<UserBooks />} />
+        {/* <Route path='books/user-books/:id' element={<UserBooks />} /> */}
         <Route path='authentication-page' element={<RegisterLogin />} />
         <Route path='users' element={<UsersPage />} />
         <Route path='edit-profile/:id' element={<EditProfileForm />} />
         <Route path='users/users-details/:id' element={<UserDetails />} />
+        <Route path='users/user-books/:id' element={<UserBooks />} />
         <Route path='' element={<BookRedirect />} />
         <Route path='*' element={<ErrorPage />} />
       </Routes>

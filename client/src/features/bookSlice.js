@@ -4,6 +4,7 @@ import * as api from '../api';
 
 
 const initialState = {
+    createdBook: {},
     book: [],
     title : '',
     description: '',
@@ -52,6 +53,7 @@ const bookSlice = createSlice({
         },
         [createBook.fulfilled]: (state, actions) => {
             alert(actions.payload.msg);
+            state.createdBook = actions.payload.book;
             state.title = '';
             state.description = '';
             state.isLoading = false;

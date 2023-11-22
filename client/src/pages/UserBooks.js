@@ -29,10 +29,12 @@ const UserBooks = () => {
         e.preventDefault();
         const creatorName = localStorageUser?.name;
         const creatorId = localStorageUser?.userId;
+        const creatorState = localStorageUser?.state;
+        const creatorCity = localStorageUser?.city;
         
         if  (!creatorName || !creatorId) alert('Oops! Something went wrong')
         else if (!title || !description) alert('Please provide all fields')
-        else dispatch(createBook({ title, description, creatorName, creatorId }));
+        else dispatch(createBook({ title, description, creatorName, creatorId, creatorState, creatorCity }));
     };
 
   return (
@@ -121,9 +123,6 @@ const Wrapper = styled.div`
         cursor: pointer;
     }
     .footer-btn-container{
-        /* display: block;
-        margin-left: auto;
-        margin-right: auto; */
         text-align: center;
     }
     .request-btn{

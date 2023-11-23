@@ -48,43 +48,40 @@ const authSlice = createSlice({
             state.user = {};
         },
     },
-    extraReducers:{
-        [regUser.pending]: (state, actions) => {
+    extraReducers: (builder) => {
+        builder.addCase(regUser.pending, (state, action) => {
             state.deactivateBtn = true;
-        },
-        [regUser.fulfilled]: (state, actions) => {
-            state.user = actions.payload;
-            // console.log(actions.payload, 'action payload')
+        })
+        builder.addCase(regUser.fulfilled, (state, action) => {
+            state.user = action.payload;
             localStorage.setItem('user', JSON.stringify(state.user));
-            // console.log(state.user)
             alert(state.user.msg);
             state.name = '';
             state.email = '';
             state.password = '';
             state.deactivateBtn = false;
-            // state.authSuccess = true;
-        },
-        [regUser.rejected]: (state, actions) => {
-            // console.log(actions.payload);
-            alert(actions.payload);
-            state.deactivateBtn = false;
-        },
-        [logUser.pending]: (state, actions) => {
-            state.deactivateBtn = true;
-        },
-        [logUser.fulfilled]: (state, actions) => {
-            state.user = actions.payload;
+        })
+        builder.addCase(regUser.rejected, (state, action) => {
+            alert(action.payload);
+            state.deactivateBtn = false;       
+        })
+        builder.addCase(logUser.pending, (state, action) => {
+            state.deactivateBtn = true;       
+        })
+        builder.addCase(logUser.fulfilled, (state, action) => {
+            state.user = action.payload;
             localStorage.setItem('user', JSON.stringify(state.user));
             alert(state.user.msg);
             state.email = '';
             state.password = '';
-            state.deactivateBtn = false;
-        },
-        [logUser.rejected]: (state, actions) => {
-            alert(actions.payload);
-            state.deactivateBtn = false;
-        },
-    }
+            state.deactivateBtn = false;       
+        })
+        builder.addCase(logUser.rejected, (state, action) => {
+            alert(action.payload);
+            state.deactivateBtn = false;      
+        })
+      },
+   
 });
 
 export const { handleInputs, resetUserState, } = authSlice.actions;

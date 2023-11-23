@@ -73,50 +73,51 @@ const usersSlice = createSlice({
       resetUpdateProfileMessage:(state, actions) =>{
             state.updateProfileMessage = '';
       },
+      },
+      extraReducers: (builder) => {
+        builder.addCase(getUsers.pending, (state, action) => {
+          state.isLoading = true;
+        })
+        builder.addCase(getUsers.fulfilled, (state, action) => {
+          state.users = action.payload?.result;
+          state.isLoading = false;
+        })
+        builder.addCase(getUsers.rejected, (state, action) => {
+          alert(action.payload.message);
+          state.isLoading = false;
+        })
+        builder.addCase(getUserDetails.pending, (state, action) => {
+          state.isLoading = true;
+        })
+        builder.addCase(getUserDetails.fulfilled, (state, action) => {
+          state.userDetails = action.payload;
+          state.isLoading = false;
+        })
+        builder.addCase(getUserDetails.rejected, (state, action) => {
+          alert(action.payload.message);
+          state.isLoading = false;
+        })
+        builder.addCase(updateUserProfile.pending, (state, action) => {
+          state.isLoading = true;
+        })
+        builder.addCase(updateUserProfile.fulfilled, (state, action) => {
+          state.updateProfileMessage = action.payload.msg;
+          state.profileUpdateResult = action.payload.result;
+          state.isLoading = false;
+          alert('Your profile has been updated successfully');
+          state.name = '';
+          state.city = '';
+          state.userState = '';
+          state.address = '';
+        })
+        builder.addCase(updateUserProfile.rejected, (state, action) => {
+          alert(action.payload.message);
+          state.isLoading = false;
+        })
+      
     },
-    extraReducers:{
-        [getUsers.pending]: (state, actions) => {
-            state.isLoading = true;
-        },
-        [getUsers.fulfilled]: (state, actions) => {
-            state.users = actions.payload?.result;
-            state.isLoading = false;
-        },
-        [getUsers.rejected]: (state, actions) => {
-            alert(actions.payload.message);
-           state.isLoading = false;
-        },
-        [getUserDetails.pending]: (state, actions) => {
-            state.isLoading = true;
-        },
-        [getUserDetails.fulfilled]: (state, actions) => {
-            state.userDetails = actions.payload;
-            state.isLoading = false;
-        },
-        [getUserDetails.rejected]: (state, actions) => {
-            alert(actions.payload.message);
-           state.isLoading = false;
-        },
-        [updateUserProfile.pending]: (state, actions) => {
-            state.isLoading = true;
-        },
-        [updateUserProfile.fulfilled]: (state, actions) => {
-            state.updateProfileMessage = actions.payload.msg;
-            state.profileUpdateResult = actions.payload.result;
-            state.isLoading = false;
-            alert('Your profile has been updated successfully');
-            state.name = '';
-            state.city = '';
-            state.userState = '';
-            state.address = '';
-        },
-        [updateUserProfile.rejected]: (state, actions) => {
-            alert(actions.payload.message);
-           state.isLoading = false;
-        },
-    }
+    
 });
-// Your profile has been updated successfully
 export const { handleEditProfileInputs, handleAddress, handleCity, handleName, handleState, resetUpdateProfileMessage } = usersSlice.actions;
 
 export default usersSlice.reducer;

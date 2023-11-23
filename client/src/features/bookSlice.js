@@ -47,33 +47,35 @@ const bookSlice = createSlice({
             state[name] = value;
       },
     },
-    extraReducers:{
-        [createBook.pending]: (state, actions) => {
+    
+    extraReducers: (builder) => {
+        builder.addCase(createBook.pending, (state, action) => {
             state.isLoading = true;
-        },
-        [createBook.fulfilled]: (state, actions) => {
-            alert(actions.payload.msg);
-            state.createdBook = actions.payload.book;
+        })
+        builder.addCase(createBook.fulfilled, (state, action) => {
+            alert(action.payload.msg);
+            state.createdBook = action.payload.book;
             state.title = '';
             state.description = '';
             state.isLoading = false;
-        },
-        [createBook.rejected]: (state, actions) => {
-            alert(actions.payload);
+        })
+        builder.addCase(createBook.rejected, (state, action) => {
+            alert(action.payload);
             state.isLoading = false;
-        },
-        [getBooks.pending]: (state, actions) => {
+        })
+        builder.addCase(getBooks.pending, (state, action) => {
             state.isLoading = true;
-        },
-        [getBooks.fulfilled]: (state, actions) => {
-            state.book = actions.payload.result;
+        })
+        builder.addCase(getBooks.fulfilled, (state, action) => {
+            state.book = action.payload.result;
             state.isLoading = false;
-        },
-        [getBooks.rejected]: (state, actions) => {
-            alert(actions.payload);
+        })
+        builder.addCase(getBooks.rejected, (state, action) => {
+            alert(action.payload);
             state.isLoading = false;
-        },
-    }
+        })
+      },
+    
 });
 
 export const { handleInput } = bookSlice.actions;

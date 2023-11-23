@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { getBooks } from '../features/bookSlice';
 import styled from 'styled-components';
+import { FaTimes } from "react-icons/fa";
 
 const Books = () => {
   const { book, isLoading, createdBook } = useSelector((store) => store.book);
@@ -27,7 +28,7 @@ const Books = () => {
   return (
     <Wrapper>
       <div className='books-container'>
-            <div className='books-container-title'></div>
+            <div className='books-container-title'>Books Available for Trade</div>
             {
               book.length < 1 ? (
                 <div className='empty-book-body'>No books have been added yet</div>
@@ -35,35 +36,28 @@ const Books = () => {
                 book.map((item, i) =>{
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
+                  const itemId = item._id;
                   return(
-                    <div key={i} className='books-container-body'>
+                    <div key={item._id} className='books-container-body'>
                       <div className='book-details'>
                         <p className='book-title'>{item.title}</p>
                         <p className='book-description'>{item.description}</p>
                         <p className='creator-details'>
-                          from <span><Link style={{textDecoration:'none'}} to={myLink}>{creatorName}</Link></span> in {item.creatorCity}, {item.creatorState}
+                          from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
+                          {' '} in {item.creatorCity}, {item.creatorState}
                         </p>
                       </div>
                       <div className='book-stats'>
                         <p className='request-count'>request: <span className='request-number'>{item.requests}</span></p>
                         <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
                       </div>
+                      <button className='remove-book-btn'><FaTimes size={30}/></button>
                     </div>
                   )
                 })
               )
             }
-            {/* <div className='books-container-body'>
-              <div className='book-details'>
-                <p className='book-title'>Book titlt book title Book titlt </p>
-                <p className='book-description'>Book description book description </p>
-                <p className='creator-details'>from Alex in Lugbe, Abuja</p>
-              </div>
-              <div className='book-stats'>
-                <p className='request-count'>request: 0</p>
-                <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
-              </div>
-            </div> */}
+            
             <div className='books-container-footer'>
                 <div className='footer-btn-container'>
                   {localStorageUser ? (
@@ -88,6 +82,7 @@ const Wrapper = styled.div`
         width: 100%;
         /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
+        color: var(--fontColor1);
     }
     .books-container-footer{
         width: 100%;
@@ -98,8 +93,9 @@ const Wrapper = styled.div`
         /* padding-left: 5px; */
         height: 200px;
         width: 100%;
-        border-top: var(--color2) 1px solid;
+        /* border-top: var(--color2) 1px solid; */
         border-bottom: var(--color2) 1px solid;
+        position: relative;
     }
     .empty-book-body{
         padding-left: 5px;
@@ -114,6 +110,7 @@ const Wrapper = styled.div`
     }
     .book-stats{
       margin: 5px;
+      /* position: relative; */
     }
     .book-title{
       font-size: 20px;
@@ -137,12 +134,39 @@ const Wrapper = styled.div`
     }
     .requestor-list{
       font-weight: 500;
+      /* font-size: 12px; */
       margin-top: -20px;
+    }
+    .remove-book-btn{
+      margin-right: 5px;
+      background-color: red;
+      color: white;
+      border: none;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100%;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      margin-top: -10px;
+      cursor: pointer;
     }
     .books-container-title{
         width: 100%;
         background-color: var(--color1);
+        border-bottom: var(--color2) 1px solid;
         height: 100px;
+        /* text-align: center; */
+        font-weight: 600;
+        font-size: 21px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
     }
     .footer-btn-container{
         text-align: center;
@@ -179,10 +203,10 @@ const Wrapper = styled.div`
         cursor: pointer;
     }
     @media (min-width: 600px) {
-      /* .btn-container{
-            margin-left: 40px;
-            margin-right: 40px;
-        } */
+      .remove-book-btn{
+        height: 25px;
+        width: 25px;
+      }
     }
     @media (min-width: 768px) {
         /* margin-top: -65px; */
@@ -194,6 +218,10 @@ const Wrapper = styled.div`
             margin-right: auto;
             border-radius: 5px;
         }
+        .books-container-title{
+          font-size: 30px;
+          font-weight: 700;
+        }
         .books-container-body{
           display: flex;
           flex-direction: row;
@@ -204,6 +232,9 @@ const Wrapper = styled.div`
         }
         .book-stats{
           width: 40%;
+        }
+        .requestor-list{
+          font-size: 13px;
         }
         /* .btn-container{
             margin-left: 70px;

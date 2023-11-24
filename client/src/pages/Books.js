@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { getBooks } from '../features/bookSlice';
 import styled from 'styled-components';
 import { FaTimes } from "react-icons/fa";
+import { deleteBook } from '../features/bookSlice';
 
 const Books = () => {
   const { book, isLoading, createdBook } = useSelector((store) => store.book);
@@ -22,7 +23,11 @@ const Books = () => {
 
   const handleUserAddBook = () =>{
     navigate(`/users/user-books/${localStorageUser?.userId}`);
-  }
+  };
+
+  const handleDeleteBook = (bookId) =>{
+    dispatch(deleteBook(bookId));
+  };
 
   if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
   return (
@@ -48,10 +53,12 @@ const Books = () => {
                         </p>
                       </div>
                       <div className='book-stats'>
-                        <p className='request-count'>request: <span className='request-number'>{item.requests}</span></p>
+                        <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
                         <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
                       </div>
-                      <button className='remove-book-btn'><FaTimes size={30}/></button>
+                      { localStorageUser?.userId === item.creatorId ? (
+                        <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                      ) : null}
                     </div>
                   )
                 })
@@ -91,7 +98,7 @@ const Wrapper = styled.div`
     }
     .books-container-body{
         /* padding-left: 5px; */
-        height: 200px;
+        height: fit-content;
         width: 100%;
         /* border-top: var(--color2) 1px solid; */
         border-bottom: var(--color2) 1px solid;
@@ -225,7 +232,7 @@ const Wrapper = styled.div`
         .books-container-body{
           display: flex;
           flex-direction: row;
-          height: 100px;
+          /* height: 100px; */
         }
         .book-details{
           width: 60%;

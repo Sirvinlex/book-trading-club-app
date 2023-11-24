@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUserDetails } from '../features/usersSlice';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { toggleOnHasUpdateProfile } from '../features/authSlice';
 
 const UserDetails = () => {
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
@@ -17,6 +18,9 @@ const UserDetails = () => {
     dispatch(getUserDetails(id));
   }, [id]);
 
+  useEffect(() =>{
+    dispatch(toggleOnHasUpdateProfile());
+  }, []);
 
   if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
 
@@ -55,7 +59,7 @@ const UserDetails = () => {
       <div className='btn-container'>
         <button onClick={handleUserBooks} className='book-btn' type='button'>See {userFirstName} Books</button>
         {localStorageUser?.userId === userId ? (
-          <button onClick={() => navigate(`/edit-profile/${localStorageUser?.userId}`)} className='edit-btn' type='button'>Edit Profile</button>
+          <button onClick={() => navigate(`/edit-profile/${localStorageUser?.userId}`)} className='edit-btn' type='button'>Update Profile</button>
         ) : null}
       </div>
     </Wrapper>

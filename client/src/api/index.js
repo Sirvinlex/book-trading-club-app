@@ -9,4 +9,5 @@ export const getUserDetails = (id) => API.get(`/users/getUsers/${id}`);
 export const updateUserProfile = (updateData) => API.patch(`/users/getUsers/${updateData.userId}`, updateData);
 export const createBook = (bookData) => API.post('/book/createBook', bookData);
 export const getBooks = () => API.get('/book/getBooks');
+export const deleteBook = (bookId) => API.delete(`/book/deleteBook/${bookId}`);
 

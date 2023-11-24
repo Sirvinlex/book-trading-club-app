@@ -6,6 +6,8 @@ import {
 import { useParams, useNavigate } from 'react-router-dom';
 import FormInput from '../components/FormInput';
 import styled from 'styled-components';
+import { toggleOnHasUpdateProfile } from '../features/authSlice';
+
 
 
 const EditProfileForm = () => {
@@ -17,7 +19,7 @@ const EditProfileForm = () => {
     const { 
         userDetails, isLoading, name, city, userState, address, updateProfileMessage, profileUpdateResult
     } = useSelector((store) => store.users);
-
+ 
     useEffect(() =>{
         dispatch(getUserDetails(id));
     }, [id])
@@ -30,7 +32,11 @@ const EditProfileForm = () => {
         dispatch(handleState({userState, stateState}));
         dispatch(handleCity({city, stateCity}));
         dispatch(handleAddress({address, stateAddress}));
-    }, [userDetails])
+    }, [userDetails]);
+
+    useEffect(() =>{
+        dispatch(toggleOnHasUpdateProfile());
+    }, []);
 
     // {type, name, value,  handleChange, labelText, page,placeholder }
 

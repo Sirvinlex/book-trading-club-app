@@ -12,6 +12,7 @@ const initialState = {
     toggleUser: false,
     loading: false,
     deactivateBtn: false,
+    hasUpdatedProfile: true,
 };
 
 export const regUser = createAsyncThunk('register/user', async (regData, thunkAPI) =>{
@@ -46,6 +47,12 @@ const authSlice = createSlice({
         },
         resetUserState: (state) =>{
             state.user = {};
+        },
+        toggleOnHasUpdateProfile: (state) =>{
+            state.hasUpdatedProfile = true;
+        },
+        toggleOffHasUpdateProfile: (state) =>{
+            state.hasUpdatedProfile = false;
         },
     },
     extraReducers: (builder) => {
@@ -84,6 +91,6 @@ const authSlice = createSlice({
    
 });
 
-export const { handleInputs, resetUserState, } = authSlice.actions;
+export const { handleInputs, resetUserState, toggleOffHasUpdateProfile, toggleOnHasUpdateProfile} = authSlice.actions;
 
 export default authSlice.reducer;

@@ -21,3 +21,14 @@ export const getBooks = async (req, res) =>{
         res.status(404).json(error);
     }
  };
+
+export const deleteBook = async(req, res) =>{
+    const { params: { id: bookId } } = req;
+    try {
+       const book = await Book.findByIdAndRemove({ _id: bookId });
+        if (!book) return res.status(400).json({msg: 'No book with this Id'});
+        res.status(200).json({deletedId: bookId, msg: 'Book Successfully deleted'});
+    } catch (error) {
+        res.status(404).json(error);
+    }
+};

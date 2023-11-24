@@ -38,6 +38,15 @@ export const getBooks = createAsyncThunk('getBooks/book', async (_, thunkAPI) =>
     }
 
 });
+export const deleteBook = createAsyncThunk('deleteBook/book', async (bookId, thunkAPI) =>{
+    try {
+        const {data} = await api.deleteBook(bookId);
+        return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
 
 const bookSlice = createSlice({
     name: 'book',
@@ -73,6 +82,13 @@ const bookSlice = createSlice({
         builder.addCase(getBooks.rejected, (state, action) => {
             alert(action.payload);
             state.isLoading = false;
+        })
+        builder.addCase(deleteBook.fulfilled, (state, action) => {
+            state.book = state.book.filter((item) => item._id !== action.payload.deletedId);
+            alert(action.payload.msg);
+        })
+        builder.addCase(deleteBook.rejected, (state, action) => {
+            alert('Oops! an error occured');
         })
       },
     

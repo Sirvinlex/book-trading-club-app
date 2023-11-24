@@ -1,4 +1,5 @@
 import React from "react";
+import UpdateProfile from "./components/UpdateProfile";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { 
   ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm, UserBooks, BookRedirect
@@ -7,6 +8,7 @@ import {
 function App() {
   return ( 
     <BrowserRouter>
+      <UpdateProfile />
       <Navbar />
       {/* <ToastContainer position='top-center' /> */}
       {/* <PostToast /> */}

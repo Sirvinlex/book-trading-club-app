@@ -3,7 +3,7 @@ import User from "../models/auth.js";
 export const getUsers = async (req, res) =>{
    const { page } = req.query;
    try {
-       const users = await User.find();
+       const users = await User.find().sort({ _id: -1});
     //    console.log(users)  
        res.status(200).json({ result: users })
    } catch (error) {
@@ -32,9 +32,25 @@ export const updateUserProfile = async(req, res) =>{
         if (!name || !city || !userState || !address) return res.status(400).json({msg: 'Please fill in required fields'});
         const user = await User.findByIdAndUpdate({ _id: id }, { name, city, state: userState, address }, {new: true, runValidators: true})
         if (!user) return res.status(400).json({msg: 'No task with this Id'});
-        // console.log(user)
         res.status(200).json({ result: {name: user.name, city: user.city, state: user.state, address: user.address,}, msg: 'Your profile has been updated successfully' });
         // res.status(200).json({ user });
+    } catch (error) { 
+        res.status(400).json(error);
+    }
+};
+export const updateUserBookCount = async(req, res) =>{
+    const { userId, isIncreased} = req.body;
+    try {
+      // console.log(userId, isIncreased)
+      const user = await User.findById(userId);
+      let books;
+      if (isIncreased === true){
+        books = user.books + 1;
+      }else{
+        books = user.books - 1;
+      };
+      const updatedUser = await User.findByIdAndUpdate({ _id: userId }, { books }, {new: true, runValidators: true});
+      res.status(200).json({ updatedUser, updatedUserId: userId, isIncreased });
     } catch (error) { 
         res.status(400).json(error);
     }

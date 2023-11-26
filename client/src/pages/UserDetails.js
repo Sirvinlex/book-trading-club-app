@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { toggleOnHasUpdateProfile } from '../features/authSlice';
 
+
 const UserDetails = () => {
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const { userDetails, isLoading } = useSelector((store) => store.users);
@@ -16,11 +17,11 @@ const UserDetails = () => {
 
   useEffect(() =>{
     dispatch(getUserDetails(id));
-  }, [id]);
+  }, [id, dispatch]);
 
   useEffect(() =>{
     dispatch(toggleOnHasUpdateProfile());
-  }, []);
+  }, [dispatch]);
 
   if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
 
@@ -30,25 +31,16 @@ const UserDetails = () => {
   const userId = userDetails?.userId ? userDetails?.userId : '';
 
   // const userBooks = (userDetails !== {} && userDetails !== undefined) ? userDetails.books : 0;
-  const userBooks = userDetails?.books ? userDetails?.books : 0;
+  // const userBooks = userDetails?.books ? userDetails?.books : 0;
 
   const handleUserBooks = () =>{
     navigate(`/users/user-books/${id}`, { relative: "path" });
-    // if (userBooks > 1) {
-    //   if(userDetails?.userId === localStorageUser?.userId) alert('You have not added any book');
-    //   else alert('This user has not added any books');
-    // }else{
-    //   // navigate(`users/users-details/${id}/user-books`, { relative: "path" });
-    //   // navigate(`/users/user-books/${id}`, { relative: "path" });
-    //   // navigate(`books/user-books/${id}`, { relative: "path" });
-    //   // navigate();
-    // }
   };
 
   return (
     <Wrapper>
       <p className='details-title'>
-        {/* {console.log(userDetails)} */}
+        {console.log(userDetails)}
         <span id='span1'>{userFirstName}</span> <span id='span2'>Profile</span>
       </p>
       <p>Full Name: {userDetails?.name}</p>

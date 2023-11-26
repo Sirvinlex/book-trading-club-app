@@ -25,7 +25,6 @@ const UsersPage = () => {
           const id = item?._id;
           return(
             <div key={i} className='users-container'>
-              {/* <p className='user-name'>{item.name}</p> */}
               <p className='user-name' onClick={() => navigate(`users-details/${id}`)}>{item.name}</p>
               <p>City: {item.city}</p>
               <div style={{display:'flex', flexDirection:'row'}}>

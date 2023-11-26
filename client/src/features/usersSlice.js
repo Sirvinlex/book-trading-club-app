@@ -48,6 +48,18 @@ export const updateUserProfile = createAsyncThunk('updateUser/userProfile', asyn
     return  thunkAPI.rejectWithValue(error);
   }
 });
+export const updateUserBookCount = createAsyncThunk('updateUserBookCount/userProfile', async (updateData, thunkAPI) =>{
+  try {
+    // console.log(updateData, 'data')
+    const {data} = await api.updateUserBookCount(updateData); 
+    console.log(data)
+    return data;
+  } catch (error) {
+    // console.log(error)
+    // return  thunkAPI.rejectWithValue(error.response.data.msg);
+    return  thunkAPI.rejectWithValue(error);
+  }
+});
 
 const usersSlice = createSlice({
     name: 'users',
@@ -113,6 +125,9 @@ const usersSlice = createSlice({
         builder.addCase(updateUserProfile.rejected, (state, action) => {
           alert(action.payload.message);
           state.isLoading = false;
+        })
+        builder.addCase(updateUserBookCount.rejected, (state, action) => {
+          alert('Oops! an error occured');
         })
       
     },

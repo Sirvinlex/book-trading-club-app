@@ -1,19 +1,37 @@
-import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React,{ useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import FormInput from '../components/FormInput';
-import { createBook, handleInput } from '../features/bookSlice';
+import { createBook, handleInput, getUserBooks } from '../features/bookSlice';
+import { FaTimes } from "react-icons/fa";
+import { deleteBook } from '../features/bookSlice';
+import { getUserDetails, updateUserBookCount } from '../features/usersSlice';
 
 
 // navigate(`/users/user-books/${id}`, { relative: "path" });
 // type, name, value,  handleChange, labelText, page,placeholder 
 const UserBooks = () => {
-    const { title, description, isLoading } = useSelector((store) => store.book);
+    const { title, description, isLoading, userBooks, createdBook } = useSelector((store) => store.book);
+    const { userDetails } = useSelector((store) => store.users);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    // useEffect(() =>{
+    //   const userId = localStorageUser?.userId;
+    //   dispatch(updateUserBookCount({userId, isIncreased: true}))
+    // }, []);
+
+    useEffect(() =>{
+      dispatch(getUserDetails(id));
+    }, [id, dispatch]);
+  
+    useEffect(() =>{
+        const userId = id;
+        dispatch(getUserBooks(userId));
+    }, [id, createdBook]);
 
     const handleUserAddBook = () =>{
         navigate(`/users/user-books/${localStorageUser?.userId}`);
@@ -37,6 +55,12 @@ const UserBooks = () => {
         else dispatch(createBook({ title, description, creatorName, creatorId, creatorState, creatorCity }));
     };
 
+    const handleDeleteBook = (bookId) =>{
+        dispatch(deleteBook(bookId));
+    };
+
+  if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
+
   return (
     <Wrapper>
         {
@@ -57,8 +81,44 @@ const UserBooks = () => {
             ) : null
         }
         <div className='books-container'>
-            <div className='books-container-title'>title</div>
-            <div className='books-container-body'></div>
+            <div className='books-container-title'>
+              {localStorageUser?.userId === userDetails?.userId ? 'Your' : `${userDetails?.name}'s`} Books available for trade
+            </div>
+            {/* <div className='books-container-body'></div> */}
+
+            {
+              userBooks.length < 1 ? (
+                <div className='empty-book-body'>
+                  No books have been added by {localStorageUser?.userId === userDetails?.userId ? 'You' : `${userDetails?.name}`} yet.
+                </div>
+              ) : (
+                userBooks.map((item, i) =>{
+                  const creatorName = item.creatorName.split(' ')[0];
+                  const myLink = `/users/users-details/${item.creatorId}`
+                  const itemId = item._id;
+                  return(
+                    <div key={item._id} className='books-container-body'>
+                      <div className='book-details'>
+                        <p className='book-title'>{item.title}</p>
+                        <p className='book-description'>{item.description}</p>
+                        <p className='creator-details'>
+                          from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
+                          {' '} in {item.creatorCity}, {item.creatorState}
+                        </p>
+                      </div>
+                      <div className='book-stats'>
+                        <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
+                        <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
+                      </div>
+                      { localStorageUser?.userId === item.creatorId ? (
+                        <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                      ) : null}
+                    </div>
+                  )
+                })
+              )
+            }
+
             <div className='books-container-footer'>
                 {
                     (localStorageUser?.userId && localStorageUser?.userId !== id)
@@ -77,7 +137,7 @@ const UserBooks = () => {
 
 const Wrapper = styled.div`
     width: 100%;
-    height: 100vh;
+    /* height: 100vh; */
     margin-top: -40px;
     padding-top: 30px;
     .books-container{
@@ -85,6 +145,7 @@ const Wrapper = styled.div`
         width: 100%;
         /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
+        margin-bottom: 40px;
     }
     .books-container-footer{
         width: 100%;
@@ -92,15 +153,28 @@ const Wrapper = styled.div`
         height: 60px;
     }
     .books-container-body{
-        height: 70px;
+        /* height: 70px;
         width: 100%;
         border-top: var(--color2) 1px solid;
+        border-bottom: var(--color2) 1px solid; */
+        height: fit-content;
+        width: 100%;
+        /* border-top: var(--color2) 1px solid; */
         border-bottom: var(--color2) 1px solid;
+        position: relative;
     }
     .books-container-title{
         width: 100%;
         background-color: var(--color1);
+        border-bottom: var(--color2) 1px solid;
         height: 100px;
+        /* text-align: center; */
+        font-weight: 600;
+        font-size: 21px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
     }
    .form-title{ 
         font-size: 25px;
@@ -146,14 +220,82 @@ const Wrapper = styled.div`
         border: var(--color2) 1px solid;
         cursor: pointer;
     }
+    .empty-book-body{
+        padding-left: 5px;
+        font-size: 25px;
+        height: 100px;
+        width: 100%;
+        border-top: var(--color2) 1px solid;
+        border-bottom: var(--color2) 1px solid;
+    }
+    .book-details{
+      margin: 5px;
+    }
+    .book-title{
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .book-description{
+      font-size: 15px;
+      margin-top: -20px;
+    }
+    .creator-details{
+      font-weight: 600;
+      font-size: 13px;
+      margin-top: -10px;
+    }
+    .book-stats{
+      margin: 5px;
+    }
+    .request-count{
+      font-weight: 600;
+      font-size: 20px;
+      margin-top: -5px;
+    }
+    .requestor-list{
+      font-weight: 500;
+      margin-top: -20px;
+    }
+    .remove-book-btn{
+      margin-right: 5px;
+      background-color: red;
+      color: white;
+      border: none;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      border-radius: 100%;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      margin-top: -10px;
+      cursor: pointer;
+    }
     @media (min-width: 600px) {
       .btn-container{
             margin-left: 40px;
             margin-right: 40px;
         }
+      .remove-book-btn{
+        height: 25px;
+        width: 25px;
+      }
     }
     @media (min-width: 768px) {
         margin-top: -65px;
+        .requestor-list{
+          font-size: 13px;
+        }
+        .book-stats{
+          width: 40%;
+        }
+        .book-details{
+          width: 60%;
+        }
         .books-container{
             width: 82%;
             margin-top: 60px;
@@ -168,6 +310,15 @@ const Wrapper = styled.div`
         }
         .form-title{
             margin-top: 65px;
+        }
+        .books-container-body{
+          display: flex;
+          flex-direction: row;
+          /* height: 100px; */
+        }
+        .books-container-title{
+          font-size: 30px;
+          font-weight: 700;
         }
     }
     @media (min-width: 992px) {

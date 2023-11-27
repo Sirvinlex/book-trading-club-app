@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { getBooks } from '../features/bookSlice';
@@ -29,10 +29,30 @@ const Books = () => {
     dispatch(deleteBook(bookId));
   };
 
+  const handleSubmit = (e) =>{
+    e.preventDefault();
+    const name = e.target.name;
+    const value = e.target.value;
+    console.log(name)
+  };
+
+  let myArr = []
+  const handleChange = (e) =>{
+    const name = e.target.name;
+    const value = e.target.value;
+    const bookData = JSON.parse(e.currentTarget.getAttribute('data-test-id'));
+    if (e.target.checked){
+      myArr.push(bookData)
+    }else{
+      myArr = myArr.filter((item) => item.bookId !== bookData.bookId)
+    }
+    console.log(myArr)
+  };
+
   if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
   return (
-    <Wrapper>
-      <div className='books-container'>
+    <Wrapper>    
+      <form onSubmit={handleSubmit} className='books-container'>
             <div className='books-container-title'>Books Available for Trade</div>
             {
               book.length < 1 ? (
@@ -42,24 +62,33 @@ const Books = () => {
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
                   const itemId = item._id;
+                  const bookId = item._id, bookCreatorName = item.creatorName, creatorId = item.creatorId, bookDesc = item.description, 
+                  bookTitle = item.title, bookReq = item.requests;
+                  const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "creatorId": "${creatorId}",
+                   "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}  }`
                   return(
-                    <div key={item._id} className='books-container-body'>
-                      <div className='book-details'>
-                        <p className='book-title'>{item.title}</p>
-                        <p className='book-description'>{item.description}</p>
-                        <p className='creator-details'>
-                          from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
-                          {' '} in {item.creatorCity}, {item.creatorState}
-                        </p>
-                      </div>
-                      <div className='book-stats'>
-                        <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
-                        <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
-                      </div>
-                      { localStorageUser?.userId === item.creatorId ? (
-                        <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
-                      ) : null}
+                    <div key={item._id}>
+                      {/* {console.log(item)} */}
+                        <label className='books-container-body'>
+                        <input onChange={handleChange} type="checkbox" id="books" name="bookData" value={item._id} data-test-id={itemData}/>
+                        <div className='book-details'>
+                          <p className='book-title'>{item.title}</p>
+                          <p className='book-description'>{item.description}</p>
+                          <p className='creator-details'>
+                            from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
+                            {' '} in {item.creatorCity}, {item.creatorState}
+                          </p>
+                        </div>
+                        <div className='book-stats'>
+                          <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
+                          <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
+                        </div>
+                        { localStorageUser?.userId === item.creatorId ? (
+                          <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                        ) : null}
+                      </label>
                     </div>
+                    
                   )
                 })
               )
@@ -69,7 +98,7 @@ const Books = () => {
                 <div className='footer-btn-container'>
                   {localStorageUser ? (
                     <>
-                      <button className='request-btn'>New request</button>
+                      <button type='submit' className='request-btn'>New request</button>
                       <button onClick={handleUserAddBook} className='add-btn'>Add book</button>
                     </>
                   ) : (
@@ -77,7 +106,7 @@ const Books = () => {
                   )}
                 </div>
             </div>
-        </div>
+        </form>
     </Wrapper>
   )
 }

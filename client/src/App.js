@@ -2,7 +2,7 @@ import React from "react";
 import UpdateProfile from "./components/UpdateProfile";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { 
-  ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm, UserBooks, BookRedirect
+  ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm, UserBooks, BookRedirect, RequestPage
 } from './pages';
 
 function App() {
@@ -21,6 +21,7 @@ function App() {
         <Route path='edit-profile/:id' element={<EditProfileForm />} />
         <Route path='users/users-details/:id' element={<UserDetails />} />
         <Route path='users/user-books/:id' element={<UserBooks />} />
+        <Route path='books/create-request' element={<RequestPage />} />
         <Route path='' element={<BookRedirect />} />
         <Route path='*' element={<ErrorPage />} />
       </Routes>

@@ -11,8 +11,12 @@ const BookSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    requestersNameId: {
-        type: [[String]],
+    requestersNames: {
+        type: [String],
+        default: [],
+    },
+    requestersIds: {
+        type: [String],
         default: [],
     },
     creatorCity: {

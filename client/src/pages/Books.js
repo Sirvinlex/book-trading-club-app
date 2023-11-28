@@ -4,10 +4,10 @@ import { useNavigate, Link } from 'react-router-dom';
 import { getBooks } from '../features/bookSlice';
 import styled from 'styled-components';
 import { FaTimes } from "react-icons/fa";
-import { deleteBook } from '../features/bookSlice';
+import { deleteBook, addBook, removeBook } from '../features/bookSlice';
 
 const Books = () => {
-  const { book, isLoading, createdBook } = useSelector((store) => store.book);
+  const { book, isLoading, createdBook, requestBooks } = useSelector((store) => store.book);
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
@@ -31,27 +31,26 @@ const Books = () => {
 
   const handleSubmit = (e) =>{
     e.preventDefault();
-    const name = e.target.name;
-    const value = e.target.value;
-    console.log(name)
+    
   };
 
-  let myArr = []
   const handleChange = (e) =>{
-    const name = e.target.name;
-    const value = e.target.value;
     const bookData = JSON.parse(e.currentTarget.getAttribute('data-test-id'));
     if (e.target.checked){
-      myArr.push(bookData)
+      dispatch(addBook(bookData));
     }else{
-      myArr = myArr.filter((item) => item.bookId !== bookData.bookId)
+      dispatch(removeBook(bookData));
     }
-    console.log(myArr)
   };
 
   if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
   return (
-    <Wrapper>    
+    <Wrapper>
+      {requestBooks.length > 0 ? (
+        <div className='request-btn-absolute_container'>
+          <button onClick={() => navigate('create-request')} className='request-btn-absolute' >Create New Request</button>
+        </div> 
+      ) : null}   
       <form onSubmit={handleSubmit} className='books-container'>
             <div className='books-container-title'>Books Available for Trade</div>
             {
@@ -62,10 +61,10 @@ const Books = () => {
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
                   const itemId = item._id;
-                  const bookId = item._id, bookCreatorName = item.creatorName, creatorId = item.creatorId, bookDesc = item.description, 
-                  bookTitle = item.title, bookReq = item.requests;
-                  const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "creatorId": "${creatorId}",
-                   "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}  }`
+                  const bookId = item._id, bookCreatorName = item.creatorName, bookCreatorId = item.creatorId, bookDesc = item.description, 
+                  bookTitle = item.title, bookReq = item.requests, requesterId = localStorageUser?.userId;
+                  const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "creatorId": "${bookCreatorId}",
+                   "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
                   return(
                     <div key={item._id}>
                       {/* {console.log(item)} */}
@@ -98,7 +97,7 @@ const Books = () => {
                 <div className='footer-btn-container'>
                   {localStorageUser ? (
                     <>
-                      <button type='submit' className='request-btn'>New request</button>
+                      <button onClick={() => navigate('create-request')} type='submit' className='request-btn'>New Request</button>
                       <button onClick={handleUserAddBook} className='add-btn'>Add book</button>
                     </>
                   ) : (
@@ -112,6 +111,27 @@ const Books = () => {
 }
 
 const Wrapper = styled.div`
+  .request-btn-absolute_container{
+    position: sticky;
+    z-index: 1;
+    top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: -30px;
+  }
+  .request-btn-absolute{
+    width: 150px;
+    height: 40px;
+    border: none;
+    border-radius: 3px;
+    box-shadow: 4px 3px 5px #abaaa7, -4px 3px 5px #abaaa7;
+    cursor: pointer;
+    color: var(--fontColor1);
+  }
   .books-container{
         margin-top: 45px;
         margin-bottom: 40px;
@@ -246,6 +266,13 @@ const Wrapper = styled.div`
     }
     @media (min-width: 768px) {
         /* margin-top: -65px; */
+        .request-btn-absolute{
+          width: 200px;
+          height: 45px;
+        }
+        .request-btn-absolute_container{
+          margin-bottom: -35px;
+        }
         .books-container{
             width: 82%;
             margin-top: 60px;

@@ -11,6 +11,7 @@ const initialState = {
     title : '',
     description: '',
     isLoading: false,
+    requestBooks: [],
     // bookId: '',
     // creatorName: '',
     // creatorId: '',
@@ -75,7 +76,17 @@ const bookSlice = createSlice({
     reducers:{
         handleInput: (state, {payload: { name, value }}) =>{
             state[name] = value;
-      },
+        },
+        addBook: (state, action) =>{
+            let tempState = state.requestBooks;
+            tempState.push(action.payload);
+            state.requestBooks = tempState;
+        },
+        removeBook: (state, action) =>{
+            let tempState = state.requestBooks;
+            tempState = tempState.filter((item) => item.bookId !== action.payload.bookId);
+            state.requestBooks = tempState;
+        },
     },
     
     extraReducers: (builder) => {
@@ -129,6 +140,6 @@ const bookSlice = createSlice({
     
 });
 
-export const { handleInput } = bookSlice.actions;
+export const { handleInput, addBook, removeBook } = bookSlice.actions;
 
 export default bookSlice.reducer;

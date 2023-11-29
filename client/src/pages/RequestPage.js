@@ -1,33 +1,54 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link, } from 'react-router-dom';
 import styled from 'styled-components';
 
 const RequestPage = () => {
-  const { requestBooks } = useSelector((store) => store.book);
+  const { requestedBooks } = useSelector((store) => store.book);
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
-const myArr = [1,2,3]
+  const requesterBooks = requestedBooks?.filter((item) => item.bookCreatorId === item.requesterId)
+  const accepterBooks = requestedBooks?.filter((item) => item.bookCreatorId !== item.requesterId)
+
   return (
     <Wrapper>
         <div className='books-container'>
             <div className='books-container-title'>
-
+                
             </div>
             <div className='books-container-body'>
                 <div className='give-div'>
                     <p>You want to give:</p>
-                    <div className='main-book-container'>
-                        {/* <div className='main-book'>
-                        
-                        </div> */}
+                    <div className={requesterBooks.length > 0 ? 'main-book-container' : 'main-book-container2'}>
+                        {requesterBooks?.map((item) =>{
+                            return(
+                                <div key={item.bookId} className='main-book'>
+                                    <p className='book-title1'>{item.bookTitle}</p>
+                                    <p className='book-description1'>{item.bookDesc}</p>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
                 <div className='take-div'>
                     <p>And want to take:</p>
-                    <div className='main-book-container'>
-                        {/* <div className='main-book'>
-                        
-                        </div> */}
+                    <div className={accepterBooks.length > 0 ? 'main-book-container' : 'main-book-container2'}>
+                    {accepterBooks?.map((item) =>{
+                        const ownerFirstName = item.bookCreatorName.split(' ')[0];
+                        const ownerId = item.bookCreatorId;
+                        const link = `/users/users-details/${ownerId}`
+                            return(
+                                <div key={item.bookId} className='main-book'>
+                                    
+                                    <p className='book-title2'>
+                                        {item.bookTitle} from
+                                        
+                                        <Link style={{textDecoration:'none', color:'var(--fontColor1)'}} to={link}>{ownerFirstName}</Link>
+                                    </p>
+                                    <p className='book-description2'>{item.bookDesc}</p>
+                                </div>
+                            )
+                        })}
                     </div>
                 </div>
             </div>
@@ -117,6 +138,34 @@ const Wrapper = styled.div`
         color: white;cursor: pointer;
         width: 130px;
         height: 35px;
+    }
+    .book-title1{
+        font-weight: 600;
+        margin-left: 5px;
+        color: #f59c36;
+        font-size: 20px;
+        margin-top: 1px;
+    }
+    .book-title2{
+        font-weight: 600;
+        margin-left: 5px;
+        color: #27a160;
+        font-size: 20px;
+        margin-top: 1px;
+    }
+    .book-description1{
+        font-weight: 500;
+        margin-left: 5px;
+        color: #f59c36;
+        font-size: 17px;
+        margin-top: -10px;
+    }
+    .book-description2{
+        font-weight: 500;
+        margin-left: 5px;
+        color: #27a160;
+        font-size: 17px;
+        margin-top: -10px;
     }
     @media (min-width: 600px) {
         .books-container-body{

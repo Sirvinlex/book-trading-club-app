@@ -11,7 +11,7 @@ const initialState = {
     title : '',
     description: '',
     isLoading: false,
-    requestBooks: [],
+    requestedBooks: [],
     // bookId: '',
     // creatorName: '',
     // creatorId: '',
@@ -78,14 +78,14 @@ const bookSlice = createSlice({
             state[name] = value;
         },
         addBook: (state, action) =>{
-            let tempState = state.requestBooks;
+            let tempState = state.requestedBooks;
             tempState.push(action.payload);
-            state.requestBooks = tempState;
+            state.requestedBooks = tempState;
         },
         removeBook: (state, action) =>{
-            let tempState = state.requestBooks;
+            let tempState = state.requestedBooks;
             tempState = tempState.filter((item) => item.bookId !== action.payload.bookId);
-            state.requestBooks = tempState;
+            state.requestedBooks = tempState;
         },
     },
     

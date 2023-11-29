@@ -7,7 +7,7 @@ import { FaTimes } from "react-icons/fa";
 import { deleteBook, addBook, removeBook } from '../features/bookSlice';
 
 const Books = () => {
-  const { book, isLoading, createdBook, requestBooks } = useSelector((store) => store.book);
+  const { book, isLoading, createdBook, requestedBooks } = useSelector((store) => store.book);
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
@@ -46,7 +46,7 @@ const Books = () => {
   if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
   return (
     <Wrapper>
-      {requestBooks.length > 0 ? (
+      {requestedBooks.length > 0 ? (
         <div className='request-btn-absolute_container'>
           <button onClick={() => navigate('create-request')} className='request-btn-absolute' >Create New Request</button>
         </div> 
@@ -63,7 +63,7 @@ const Books = () => {
                   const itemId = item._id;
                   const bookId = item._id, bookCreatorName = item.creatorName, bookCreatorId = item.creatorId, bookDesc = item.description, 
                   bookTitle = item.title, bookReq = item.requests, requesterId = localStorageUser?.userId;
-                  const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "creatorId": "${bookCreatorId}",
+                  const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "bookCreatorId": "${bookCreatorId}",
                    "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
                   return(
                     <div key={item._id}>

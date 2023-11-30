@@ -12,6 +12,7 @@ const initialState = {
     description: '',
     isLoading: false,
     requestedBooks: [],
+    requestData: {},
     // bookId: '',
     // creatorName: '',
     // creatorId: '',
@@ -31,6 +32,16 @@ export const createBook = createAsyncThunk('createBook/book', async (bookData, t
             const userId = data.book.creatorId;
             thunkAPI.dispatch(updateUserBookCount({userId, isIncreased: true}))
         };
+        return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
+export const request = createAsyncThunk('request/book', async (requestData, thunkAPI) =>{
+    try {
+        const {data} = await api.request(requestData);
+        
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -135,6 +146,15 @@ const bookSlice = createSlice({
         builder.addCase(getUserBooks.rejected, (state, action) => {
             alert('Oops! an error occured');
             state.isLoading = false;
+        })
+        builder.addCase(request.pending, (state, action) => {
+            
+        })
+        builder.addCase(request.fulfilled, (state, action) => {
+            
+        })
+        builder.addCase(request.rejected, (state, action) => {
+            
         })
       },
     

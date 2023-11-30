@@ -1,4 +1,4 @@
-import React, { useEffect, } from 'react';
+import React, { useEffect,  } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { getBooks } from '../features/bookSlice';
@@ -13,9 +13,11 @@ const Books = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const requestedBooksId = requestedBooks?.map((item) => item.bookId);
+
   useEffect(() =>{
     dispatch(getBooks());
-  }, [dispatch, createdBook]);
+  }, [dispatch, createdBook,]);
 
   const handleLoginClick = () =>{
     navigate('/authentication-page');
@@ -36,9 +38,10 @@ const Books = () => {
 
   const handleChange = (e) =>{
     const bookData = JSON.parse(e.currentTarget.getAttribute('data-test-id'));
-    if (e.target.checked){
+    if (e.target.checked && !requestedBooksId.includes(e.target.id)){
       dispatch(addBook(bookData));
-    }else{
+    }
+    else if (!e.target.checked && requestedBooksId.includes(e.target.id)){
       dispatch(removeBook(bookData));
     }
   };
@@ -66,13 +69,22 @@ const Books = () => {
                   const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "bookCreatorId": "${bookCreatorId}",
                    "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
                   return(
+                    // requestedBooksId.includes(bookId)
                     <div key={item._id}>
                       {/* {console.log(item)} */}
                         <label className='books-container-body'>
-                        <input onChange={handleChange} type="checkbox" id="books" name="bookData" value={item._id} data-test-id={itemData}/>
+                        <input onChange={handleChange} type="checkbox" id={item._id} name="bookData" value={item._id} 
+                        data-test-id={itemData}  checked={requestedBooksId.includes(bookId) ? 'checked' : null}
+                        />
                         <div className='book-details'>
-                          <p className='book-title'>{item.title}</p>
-                          <p className='book-description'>{item.description}</p>
+                          <p className={requestedBooksId.includes(item._id) && bookCreatorId === requesterId ? 'book-title2' :
+                         requestedBooksId.includes(item._id) && bookCreatorId !== requesterId ? 'book-title3' : 'book-title'}>
+                            {item.title}
+                          </p>
+                          <p className={requestedBooksId.includes(item._id) && bookCreatorId === requesterId ? 'book-description2' :
+                         requestedBooksId.includes(item._id) && bookCreatorId !== requesterId ? 'book-description3' : 'book-description'}>
+                            {item.description}
+                          </p>
                           <p className='creator-details'>
                             from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
                             {' '} in {item.creatorCity}, {item.creatorState}
@@ -173,6 +185,20 @@ const Wrapper = styled.div`
       font-weight: 600;
       margin-top: 2px;
     }
+    .book-title2{
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 2px;
+      color: #f59c36;
+      font-style: italic;
+    }
+    .book-title3{
+      font-size: 20px;
+      font-weight: 600;
+      margin-top: 2px;
+      color: #27a160;
+      font-style: italic;
+    }
     .creator-details{
       font-weight: 600;
       font-size: 13px;
@@ -182,6 +208,20 @@ const Wrapper = styled.div`
       /* font-weight: 500; */
       font-size: 15px;
       margin-top: -20px;
+    }
+    .book-description2{
+      /* font-weight: 500; */
+      font-size: 15px;
+      margin-top: -20px;
+      color: #f59c36;
+      font-style: italic;
+    }
+    .book-description3{
+      /* font-weight: 500; */
+      font-size: 15px;
+      margin-top: -20px;
+      color: #27a160;
+      font-style: italic;
     }
     .request-count{
       font-weight: 600;

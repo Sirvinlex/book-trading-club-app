@@ -47,8 +47,16 @@ const Navbar = () => {
         </p>
         {(showRequest && localStorageUser) ? (
           <div id="request-container">
-          <p>All Requests</p>
-          <p>Create Request</p>
+          <p>
+            <Link onClick={() => setShowRequest(false)} style={{textDecoration:'none', color:'var(--fontColor1)'}} to='books/requests'>
+              All Requests
+            </Link>
+          </p>
+          <p>
+            <Link onClick={() => setShowRequest(false)} style={{textDecoration:'none', color:'var(--fontColor1)'}} to='/books/create-request'>
+              Create Request
+            </Link>
+          </p>
         </div>
         ) : null}
         <p>Trades</p>

@@ -8,8 +8,9 @@ import UserDetails from "./UserDetails";
 import EditProfileForm from "./EditProfileForm";
 import UserBooks from "./UserBooks";
 import BookRedirect from "./BookRedirect";
-import RequestPage from "./RequestPage";
+import CreateRequestPage from "./CreateRequestPage";
+import BookRequests from "./BookRequests";
 
 
-export { ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm, UserBooks, BookRedirect, RequestPage}
+export { ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm, UserBooks, BookRedirect, CreateRequestPage, BookRequests}
 

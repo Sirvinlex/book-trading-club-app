@@ -1,4 +1,5 @@
 import Book from "../models/book.js";
+import Request from "../models/request.js";
 
 export const createBook = async(req, res) =>{
     const { title, description, creatorName, creatorId, creatorState, creatorCity } = req.body;
@@ -6,6 +7,17 @@ export const createBook = async(req, res) =>{
         if (!title || !description) return res.status(400).json({msg: "Please provide all values"});
         const book = await Book.create({ title, description, creatorName, creatorId, creatorState, creatorCity });
         res.status(200).json({ book, msg: 'Book successfully added' });
+    } catch (error) {
+        res.status(400).json(error);
+    } 
+};
+export const request = async(req, res) =>{
+    const { requestCreatorId, requesterBooksId, accepterBooksId } = req.body;
+    // console.log({requestCreatorId, requesterBooksId, accepterBooksId})
+    try {
+        if (!requestCreatorId || !requesterBooksId || !accepterBooksId) return res.status(400).json({msg: "Oops something went wrong"});
+        const request = await Request.create({ requestCreatorId, requesterBooksId, accepterBooksId });
+        res.status(200).json({ request, msg: 'Request successfully  created' });
     } catch (error) {
         res.status(400).json(error);
     } 

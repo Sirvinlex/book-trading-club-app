@@ -5,19 +5,21 @@ import styled from 'styled-components';
 import FormInput from '../components/FormInput';
 import { createBook, handleInput, getUserBooks } from '../features/bookSlice';
 import { FaTimes } from "react-icons/fa";
-import { deleteBook } from '../features/bookSlice';
+import { deleteBook, addBook, removeBook } from '../features/bookSlice';
 import { getUserDetails, updateUserBookCount } from '../features/usersSlice';
 
 
 // navigate(`/users/user-books/${id}`, { relative: "path" });
 // type, name, value,  handleChange, labelText, page,placeholder 
 const UserBooks = () => {
-    const { title, description, isLoading, userBooks, createdBook } = useSelector((store) => store.book);
+    const { title, description, isLoading, userBooks, createdBook, requestedBooks, } = useSelector((store) => store.book);
     const { userDetails } = useSelector((store) => store.users);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const requestedBooksId = requestedBooks?.map((item) => item.bookId);
+
 
     // useEffect(() =>{
     //   const userId = localStorageUser?.userId;
@@ -41,6 +43,24 @@ const UserBooks = () => {
         const name = e.target.name;
         const value = e.target.value;
         dispatch(handleInput({ name, value }));
+    };
+
+    const handleCheckedChange = (e) =>{
+      const bookData = JSON.parse(e.currentTarget.getAttribute('data-test-id'));
+      // if (e.target.checked){
+      //   dispatch(addBook(bookData));
+      // }
+      // else{
+      //   dispatch(removeBook(bookData));
+      // }
+
+
+      if (e.target.checked && !requestedBooksId.includes(e.target.id)){
+        dispatch(addBook(bookData));
+      }
+      else if (!e.target.checked && requestedBooksId.includes(e.target.id)){
+        dispatch(removeBook(bookData));
+      }
     };
 
     const handleSubmit = (e) =>{
@@ -96,24 +116,35 @@ const UserBooks = () => {
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
                   const itemId = item._id;
+                  const bookId = item._id, bookCreatorName = item.creatorName, bookCreatorId = item.creatorId, bookDesc = item.description, 
+                  bookTitle = item.title, bookReq = item.requests, requesterId = localStorageUser?.userId;
+                  const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "bookCreatorId": "${bookCreatorId}",
+                   "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
                   return(
-                    <div key={item._id} className='books-container-body'>
-                      <div className='book-details'>
-                        <p className='book-title'>{item.title}</p>
-                        <p className='book-description'>{item.description}</p>
-                        <p className='creator-details'>
-                          from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
-                          {' '} in {item.creatorCity}, {item.creatorState}
-                        </p>
-                      </div>
-                      <div className='book-stats'>
-                        <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
-                        <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
-                      </div>
-                      { localStorageUser?.userId === item.creatorId ? (
-                        <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
-                      ) : null}
+                    <div key={item._id}>
+                      {/* {console.log(item)} */}
+                        <label className='books-container-body'>
+                        <input onChange={handleCheckedChange} type="checkbox" id={item._id} name="bookData" value={item._id} 
+                        data-test-id={itemData} checked={requestedBooksId.includes(bookId) ? 'checked' : null}
+                        />
+                        <div className='book-details'>
+                          <p className='book-title'>{item.title}</p>
+                          <p className='book-description'>{item.description}</p>
+                          <p className='creator-details'>
+                            from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
+                            {' '} in {item.creatorCity}, {item.creatorState}
+                          </p>
+                        </div>
+                        <div className='book-stats'>
+                          <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
+                          <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
+                        </div>
+                        { localStorageUser?.userId === item.creatorId ? (
+                          <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                        ) : null}
+                      </label>
                     </div>
+                    
                   )
                 })
               )
@@ -124,7 +155,7 @@ const UserBooks = () => {
                     (localStorageUser?.userId && localStorageUser?.userId !== id)
                 }
                 <div className='footer-btn-container'>
-                    {localStorageUser?.userId ? <button className='request-btn'>New request</button> : null}
+                    {localStorageUser?.userId ? <button onClick={() => navigate('/books/create-request')} className='request-btn'>New request</button> : null}
                     {(localStorageUser?.userId && localStorageUser?.userId !== id) ? (
                         <button onClick={handleUserAddBook} className='add-btn'>Add book</button>
                     ) : null}

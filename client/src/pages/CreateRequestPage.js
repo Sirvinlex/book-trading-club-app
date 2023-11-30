@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { request } from '../features/bookSlice';
 
 const CreateRequestPage = () => {
-  const { requestedBooks } = useSelector((store) => store.book);
+  const { requestedBooks, isCreateRequestSuccessful } = useSelector((store) => store.book);
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
@@ -14,6 +14,7 @@ const CreateRequestPage = () => {
   const requesterBooks = requestedBooks?.filter((item) => item.bookCreatorId === item.requesterId);
   const accepterBooks = requestedBooks?.filter((item) => item.bookCreatorId !== item.requesterId);
 
+  const requestAcceptersIds = accepterBooks?.map((item) => item.bookCreatorId);
   const requesterBooksIds = requesterBooks?.map((item) => item.bookId);
   const accepterBooksIds = accepterBooks?.map((item) => item.bookId);
 
@@ -21,14 +22,17 @@ const CreateRequestPage = () => {
     const requestCreatorId = requestedBooks[0].requesterId;
     const requesterBooksId = requesterBooksIds;
     const accepterBooksId = accepterBooksIds;
+    const acceptersId = requestAcceptersIds;
     if (requesterBooks.length < 1) alert('Please select book you want to give for this trade')
     else if (accepterBooks.length < 1) alert('Please select book you want take for this trade')
     else {
-        dispatch(request({requestCreatorId, requesterBooksId, accepterBooksId}));
-        navigate('/books/requests')
+        dispatch(request({requestCreatorId, requesterBooksId, accepterBooksId, acceptersId}));
     }
   };
 
+  useEffect(() =>{
+    if (isCreateRequestSuccessful === true) navigate('/books/requests');
+  }, [isCreateRequestSuccessful])
   return (
     <Wrapper>
         <div className='books-container'>

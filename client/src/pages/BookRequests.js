@@ -2,42 +2,61 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { request } from '../features/bookSlice';
-import { getUserDetails } from '../features/usersSlice';
+import { request, getRequestData, getBooks } from '../features/bookSlice';
+import { getUsers } from '../features/usersSlice';
 
 const BookRequests = () => {
-    const { book, requestedBooks } = useSelector((store) => store.book);
-    const { userDetails } = useSelector((store) => store.users);
+    const { book, requestedBooks, requestData } = useSelector((store) => store.book);
+    const { users } = useSelector((store) => store.users);
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
-
-    const requesterBooks = requestedBooks?.filter((item) => item.bookCreatorId === item.requesterId)
-    const accepterBooks = requestedBooks?.filter((item) => item.bookCreatorId !== item.requesterId)
-
-    const requesterBooksIds = requesterBooks?.map((item) => item.bookId);
-    const accepterBooksIds = accepterBooks?.map((item) => item.bookId);
-
-    const requesterBooksFromState = book.filter((item) => requesterBooksIds.includes(item._id));
-    const accepterBooksFromState = book.filter((item) => accepterBooksIds.includes(item._id));
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() =>{
-        // console.log(requestedBooks)
-        const requestCreatorId = requestedBooks[0].requesterId;
-        // const requesterBooksId = requesterBooksIds;
-        // const accepterBooksId = accepterBooksIds;
-        // console.log(({requestCreatorId, requesterBooksId, accepterBooksId}))
-        // dispatch(request({requestCreatorId, requesterBooksId, accepterBooksId}));
-        dispatch(getUserDetails(requestCreatorId));
+        dispatch(getBooks());
+        dispatch(getUsers());
+    }, [requestData]);
+
+    useEffect(() =>{
+        dispatch(getRequestData());
+    }, []);
+
+    // const requesterBooks = requestedBooks?.filter((item) => item.bookCreatorId === item.requesterId)
+    // const accepterBooks = requestedBooks?.filter((item) => item.bookCreatorId !== item.requesterId)
+
+    // const requesterBooksIds = requesterBooks?.map((item) => item.bookId);
+    // const accepterBooksIds = accepterBooks?.map((item) => item.bookId);
+
+    // const requesterBooksFromState = book.filter((item) => requesterBooksIds.includes(item._id));
+    // const accepterBooksFromState = book.filter((item) => accepterBooksIds.includes(item._id));
+
+    const myData = requestData.map((item) =>{
+        let mainData = item, requestCreatorId = item.requestCreatorId, accepterBooks = [], requesterBooks = [], 
+        acceptersId = item.acceptersId, requestCreatorName;
+        book?.map((bk) =>{
+            if (mainData.requesterBooksId.includes(bk._id)) requesterBooks.push(bk)
+            else if (mainData.accepterBooksId.includes(bk._id)) accepterBooks.push(bk)
+        });
+        
+        users?.map((user) =>{
+            if (user._id === requestCreatorId) requestCreatorName = user.name;
+        })
+
+        return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName }
+    });
+
+
+    useEffect(() =>{
+        // dispatch(getUserDetails(requestCreatorId));
     }, []);
 
   return (
     <Wrapper>
         <div className='books-container'>
             <div className='books-container-title'>
-                All Requests
+                All Requests {console.log(myData)}
             </div>
             <div className='books-container-body'>
                 {/* <div className='give-take-container'> */}

@@ -12,7 +12,8 @@ const initialState = {
     description: '',
     isLoading: false,
     requestedBooks: [],
-    requestData: {},
+    requestData: [],
+    isCreateRequestSuccessful: false,
     // bookId: '',
     // creatorName: '',
     // creatorId: '',
@@ -32,16 +33,6 @@ export const createBook = createAsyncThunk('createBook/book', async (bookData, t
             const userId = data.book.creatorId;
             thunkAPI.dispatch(updateUserBookCount({userId, isIncreased: true}))
         };
-        return data;
-    } catch (error) {
-        return  thunkAPI.rejectWithValue(error.response.data.msg);
-    }
-
-});
-export const request = createAsyncThunk('request/book', async (requestData, thunkAPI) =>{
-    try {
-        const {data} = await api.request(requestData);
-        
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -74,6 +65,26 @@ export const deleteBook = createAsyncThunk('deleteBook/book', async (bookId, thu
 export const getUserBooks = createAsyncThunk('getUserBooks/book', async (userId, thunkAPI) =>{
     try {
         const {data} = await api.getUserBooks(userId);
+        return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
+export const request = createAsyncThunk('request/book', async (requestData, thunkAPI) =>{
+    try {
+        const {data} = await api.request(requestData);
+        
+        return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
+export const getRequestData = createAsyncThunk('getRequestData/book', async (_, thunkAPI) =>{
+    try {
+        const {data} = await api.getRequestData();
+        // console.log(data)
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -147,14 +158,23 @@ const bookSlice = createSlice({
             alert('Oops! an error occured');
             state.isLoading = false;
         })
-        builder.addCase(request.pending, (state, action) => {
-            
-        })
         builder.addCase(request.fulfilled, (state, action) => {
-            
+            state.isCreateRequestSuccessful = true;
+            alert(action.payload.msg);
+            state.requestedBooks = [];
         })
         builder.addCase(request.rejected, (state, action) => {
-            
+            alert('Oops! something went wrong');
+        })
+        builder.addCase(getRequestData.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(getRequestData.fulfilled, (state, action) => {
+            state.requestData = action.payload.result;
+            state.isLoading = false;
+        })
+        builder.addCase(getRequestData.rejected, (state, action) => {
+            state.isLoading = false;
         })
       },
     

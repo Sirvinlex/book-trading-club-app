@@ -4,6 +4,10 @@ import mongoose from 'mongoose';
 
 const RequestSchema = new mongoose.Schema({
     requestCreatorId: String,
+    acceptersId: {
+        type: [String],
+        default: [],
+    },
     requesterBooksId: {
         type: [String],
         default: [],
@@ -16,6 +20,6 @@ const RequestSchema = new mongoose.Schema({
 { timestamps: true }
 );
 
-const Request = mongoose.model('Book', RequestSchema);
+const Request = mongoose.model('Request', RequestSchema);
 // module.exports = User;
 export default Request;

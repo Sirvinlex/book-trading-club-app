@@ -38,7 +38,11 @@ const Books = () => {
 
   const handleChange = (e) =>{
     const bookData = JSON.parse(e.currentTarget.getAttribute('data-test-id'));
-    if (e.target.checked && !requestedBooksId.includes(e.target.id)){
+    if (!localStorageUser){
+      e.target.checked = null;
+      alert('Login/Create account to select book to trade');
+    }
+    else if (e.target.checked && !requestedBooksId.includes(e.target.id)){
       dispatch(addBook(bookData));
     }
     else if (!e.target.checked && requestedBooksId.includes(e.target.id)){

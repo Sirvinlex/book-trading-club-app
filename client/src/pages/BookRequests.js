@@ -11,26 +11,24 @@ const BookRequests = () => {
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
+
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() =>{
-        dispatch(getBooks());
-        dispatch(getUsers());
+        if (requestData.length > 0){
+            dispatch(getBooks());
+            dispatch(getUsers());
+        }
+        // dispatch(getBooks());
+        // dispatch(getUsers());
     }, [requestData]);
 
     useEffect(() =>{
         dispatch(getRequestData());
     }, []);
 
-    // const requesterBooks = requestedBooks?.filter((item) => item.bookCreatorId === item.requesterId)
-    // const accepterBooks = requestedBooks?.filter((item) => item.bookCreatorId !== item.requesterId)
-
-    // const requesterBooksIds = requesterBooks?.map((item) => item.bookId);
-    // const accepterBooksIds = accepterBooks?.map((item) => item.bookId);
-
-    // const requesterBooksFromState = book.filter((item) => requesterBooksIds.includes(item._id));
-    // const accepterBooksFromState = book.filter((item) => accepterBooksIds.includes(item._id));
+    // add functionalities and css to make sure page renders properly if there are no active requests
 
     const myData = requestData.map((item) =>{
         let mainData = item, requestCreatorId = item.requestCreatorId, accepterBooks = [], requesterBooks = [], 
@@ -47,53 +45,71 @@ const BookRequests = () => {
         return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName }
     });
 
-
-    useEffect(() =>{
-        // dispatch(getUserDetails(requestCreatorId));
-    }, []);
-
   return (
     <Wrapper>
         <div className='books-container'>
             <div className='books-container-title'>
-                All Requests {console.log(myData)}
+                All Requests 
             </div>
             <div className='books-container-body'>
-                {/* <div className='give-take-container'> */}
-                    <div className='give-div'>
-                        <p><b>You want to give:</b></p>
-                        {/* <div className={requesterBooks.length > 0 ? 'main-book-container' : 'main-book-container2'}>
-                            {requesterBooksFromState?.map((item) =>{
-                                return(
-                                    <div key={item.bookId} className='main-book'>
-                                        <p className='book-title1'>{item.bookTitle}</p>
-                                        <p className='book-description1'>{item.bookDesc}</p>
-                                    </div>
-                                )
-                            })}
-                        </div> */}
-                    </div>
-                    <div className='take-div'>
-                        <p><b>And want to take:</b></p>
-                        {/* <div className={accepterBooks.length > 0 ? 'main-book-container' : 'main-book-container2'}>
-                            {accepterBooksFromState?.map((item) =>{
-                                const ownerFirstName = item.bookCreatorName.split(' ')[0];
-                                const ownerId = item.bookCreatorId;
-                                const link = `/users/users-details/${ownerId}`
-                                    return(
-                                        <div key={item.bookId} className='main-book'>
-                                            
-                                            <p className='book-title2'>
-                                                {item.bookTitle} from {' '}
-                                                <Link style={{textDecoration:'none'}} to={link}>{ownerFirstName}</Link>
-                                            </p>
-                                            <p className='book-description2'>{item.bookDesc}</p>
+                {requestData.length < 1 ? <p>No active requests</p>
+                    : ( myData.map((item, i) =>{
+                        const link = `/users/users-details/${item.requestCreatorId}`;
+                        return(
+                            <div key={i} className='request-container-cover'>
+                                <div className='request-container'>
+                                    {localStorageUser?.userId === item.requestCreatorId ? (
+                                        <button className='cancel-btn'>Cancel Request</button>
+                                    ) : null}
+                                    <button className='accept-btn'>Accept Request</button>
+                                    <div className='give-div'>
+                                        <p>
+                                            <b>
+                                            <Link style={{textDecoration:'none'}} to={link}>{item.requestCreatorName}</Link>{' '}
+                                                want to give:
+                                            </b>
+                                        </p>
+                                        <div className='main-book-container'>
+                                            {item.requesterBooks.map((reqBook) =>{
+                                                return(
+                                                    <div key={reqBook._id} className='main-book'>
+                                                        <p className='book-title'>{reqBook.title}</p>
+                                                        <p className='book-description'>{reqBook.description}</p>
+                                                    </div>
+                                                )
+                                            })}
                                         </div>
-                                    )
-                            })}
-                        </div> */}
-                    </div>
-                {/* </div> */}
+                                    </div>
+                                    <div className='take-div'>
+                                        <p><b>And want to take:</b></p>
+                                        <div className='main-book-container'>
+                                            {item.accepterBooks.map((accBook) =>{
+                                                const link = `/users/users-details/${accBook.creatorId}`;
+                                                let name;
+                                                users?.map((user) => {
+                                                    if (user._id === accBook.creatorId) name = user.name
+                                                })
+                                                return(
+                                                    <div key={accBook._id} className='main-book'>
+                                                        <p className='book-title'>{accBook.title} from {' '}
+                                                        <Link style={{textDecoration:'none'}} to={link}>{name}</Link>
+                                                        {/* <span>{name}</span> */}
+                                                        </p>
+                                                        <p className='book-description'>{accBook.description}</p>
+                                                    </div>
+                                                )
+                                            })}
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            <hr/>
+                            </div>
+                        )
+                    })
+                    )
+                }
+
             </div>
             <div className='books-container-footer'>
             </div>
@@ -110,6 +126,7 @@ const Wrapper = styled.div`
         /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
         color: var(--fontColor1);
+        /* background: pink; */
     }
     .books-container-title{
         width: 100%;
@@ -125,15 +142,18 @@ const Wrapper = styled.div`
         justify-content: center;
     }
     .books-container-body{
-        padding: 10px;
+        /* padding: 10px; */
         height: fit-content;
         width: 100%;
         /* border-bottom: var(--color2) 1px solid; */
         display: flex;
         flex-direction: column;
+        /* background-color: blue; */
+        align-items: center;
+        justify-content: center;
     }
     .give-take-container{
-        background-color: red;
+        /* background-color: red; */
         width: 100%;
         height: fit-content;
         display: flex;
@@ -147,24 +167,99 @@ const Wrapper = styled.div`
         margin-left: 1px;
         margin-top: -10px;
     } */
+    .give-div{
+        width: 100%;
+        /* margin-left: 10px; */
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* justify-content: center; */
+        /* align-items: center; */
+        
+        padding-bottom: 30px;
+    }
+    .take-div{
+        width: 100%;
+        /* margin-left: 10px; */
+        /* display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center; */
+        padding-bottom: 30px;
+    }
+    .take-div>p{
+        text-align: center;
+    }
+    .give-div>p{
+        text-align: center;
+    }
+    .request-container-cover{
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .request-container{
+        display: flex;
+        flex-direction: column;
+        /* background-color: pink; */
+        background-color: var(--color1);
+        width: 100%;
+        height: fit-content;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        /* padding-top: 10px; */
+        border: var(--color2) 1px solid;
+        position: relative;
+    }
+    .cancel-btn{
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        background-color: inherit;
+        border: none;
+        color: red;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 11px;
+    }
+    .accept-btn{
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        background-color: inherit;
+        border: none;
+        color: green;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 11px;
+    }
     .main-book-container{
         border: var(--color2) 1px solid;
-        margin-right: 20px;
-        margin-left: 1px;
+        /* margin-right: 20px; */
+        /* margin-left: 1px; */
         border-radius: 3px;
         height: fit-content;
+        width: 90%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
     }
-    .main-book-container2{
+    hr{
+        width: 100%;
+    }
+    /* .main-book-container2{
         border: var(--color2) 1px solid;
         margin-right: 20px;
         margin-left: 1px;
         border-radius: 3px;
         height: 80px;
-    }
+    } */
     .main-book{
-        /* border-radius: 3px; */
+        border-radius: 3px;
         border-bottom: var(--color2) 1px solid;
-        height: 80px;
+        height: fit-content;
+        background-color: var(--backgroundColor);
         /* margin-right: 20px;
         margin-left: 1px; */
         /* margin-top: -10px; */
@@ -178,7 +273,8 @@ const Wrapper = styled.div`
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        border-top: var(--color2) 1px solid;
+        margin-top: -9px;
+        /* border-top: var(--color2) 1px solid; */
     }
     .submit-request-btn{
         background-color: var(--btnColor);
@@ -188,56 +284,46 @@ const Wrapper = styled.div`
         width: 130px;
         height: 35px;
     }
-    .book-title1{
+    .book-title{
         font-weight: 600;
         margin-left: 5px;
-        color: #f59c36;
-        font-size: 20px;
-        margin-top: 1px;
-    }
-    .book-title2{
-        font-weight: 600;
-        margin-left: 5px;
-        color: #27a160;
-        font-size: 20px;
-        margin-top: 1px;
-    }
-    .book-description1{
-        font-weight: 500;
-        margin-left: 5px;
-        color: #f59c36;
-        font-size: 17px;
-        margin-top: -10px;
-    }
-    .book-description2{
-        font-weight: 500;
-        margin-left: 5px;
-        color: #27a160;
-        font-size: 17px;
-        margin-top: -10px;
-    }
-    .give-btn,.take-btn{
-        margin-left: 1px;
-        margin-top: -1px;
-        border: var(--color2) 1px solid;
-        /* border-top: none; */
-        height: 40px;
-        width: 130px;
-        border-bottom-left-radius: 3px 3px;
-        border-bottom-right-radius: 3px 3px;
-        cursor: pointer;
         color: var(--fontColor1);
+        font-size: 20px;
+        margin-top: 1px;
     }
+    /* .book-title2{
+        font-weight: 600;
+        margin-left: 5px;
+        color: #27a160;
+        font-size: 20px;
+        margin-top: 1px;
+    } */
+    .book-description{
+        font-weight: 500;
+        margin-left: 5px;
+        color: var(--fontColor1);
+        font-size: 17px;
+        margin-top: -10px;
+    }
+    /* .book-description2{
+        font-weight: 500;
+        margin-left: 5px;
+        color: #27a160;
+        font-size: 17px;
+        margin-top: -10px;
+    } */
+    
+    
     @media (min-width: 600px) {
         .give-btn,.take-btn{
             margin-left: 2px;
         }
         .books-container-body{
-            padding: 15px;
+            /* padding: 15px; */
         }
         .main-book-container{
-            margin-right: 33px;
-            margin-left: 2px;
+            /* margin-right: 33px; */
+            /* margin-left: 2px; */
         }
         .main-book-container2{
             margin-right: 33px;
@@ -245,8 +331,16 @@ const Wrapper = styled.div`
         }
     }
     @media (min-width: 768px) {
-        .books-container-body{
+        .cancel-btn, .accept-btn{
+            font-size: 12px;
+        }
+        .request-container{
             flex-direction: row;
+            width: 97%;
+            border-radius: 4px;
+        }
+        .books-container-body{
+            /* flex-direction: row; */
         }
         .give-div{
             width: 50%;

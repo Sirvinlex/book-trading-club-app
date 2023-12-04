@@ -54,8 +54,11 @@ const UserBooks = () => {
       //   dispatch(removeBook(bookData));
       // }
 
-
-      if (e.target.checked && !requestedBooksId.includes(e.target.id)){
+      if (!localStorageUser){
+        e.target.checked = null;
+        alert('Login/Create account to select book to trade');
+      }
+      else if (e.target.checked && !requestedBooksId.includes(e.target.id)){
         dispatch(addBook(bookData));
       }
       else if (!e.target.checked && requestedBooksId.includes(e.target.id)){
@@ -100,6 +103,13 @@ const UserBooks = () => {
                 </>
             ) : null
         }
+
+      {requestedBooks.length > 0 ? (
+        <div className='request-btn-absolute_container'>
+          <button onClick={() => navigate('/books/create-request')} className='request-btn-absolute' >Create New Request</button>
+        </div> 
+      ) : null} 
+
         <div className='books-container'>
             <div className='books-container-title'>
               {localStorageUser?.userId === userDetails?.userId ? 'Your' : `${userDetails?.name}'s`} Books available for trade
@@ -171,6 +181,27 @@ const Wrapper = styled.div`
     /* height: 100vh; */
     margin-top: -40px;
     padding-top: 30px;
+    .request-btn-absolute_container{
+      position: sticky;
+      z-index: 1;
+      top: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-top: 20px;
+      margin-bottom: -30px;
+    }
+    .request-btn-absolute{
+      width: 150px;
+      height: 40px;
+      border: none;
+      border-radius: 3px;
+      box-shadow: 4px 3px 5px #abaaa7, -4px 3px 5px #abaaa7;
+      cursor: pointer;
+      color: var(--fontColor1);
+    }
     .books-container{
         margin-top: 45px;
         width: 100%;
@@ -318,6 +349,10 @@ const Wrapper = styled.div`
     }
     @media (min-width: 768px) {
         margin-top: -65px;
+        .request-btn-absolute{
+          width: 200px;
+          height: 45px;
+        }
         .requestor-list{
           font-size: 13px;
         }

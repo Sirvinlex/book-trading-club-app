@@ -19,13 +19,14 @@ const CreateRequestPage = () => {
   const accepterBooksIds = accepterBooks?.map((item) => item.bookId);
 
   const handleSubmitRequest = () =>{
-    const requestCreatorId = requestedBooks[0].requesterId;
-    const requesterBooksId = requesterBooksIds;
-    const accepterBooksId = accepterBooksIds;
-    const acceptersId = requestAcceptersIds;
-    if (requesterBooks.length < 1) alert('Please select book you want to give for this trade')
+    if (requesterBooks.length < 1 && accepterBooks.length < 1) alert('Please select books to trade')
+    else if (requesterBooks.length < 1) alert('Please select book you want to give for this trade')
     else if (accepterBooks.length < 1) alert('Please select book you want take for this trade')
     else {
+        const requestCreatorId = requestedBooks[0].requesterId;
+        const requesterBooksId = requesterBooksIds;
+        const accepterBooksId = accepterBooksIds;
+        const acceptersId = requestAcceptersIds;
         dispatch(request({requestCreatorId, requesterBooksId, accepterBooksId, acceptersId}));
     }
   };
@@ -121,6 +122,12 @@ const Wrapper = styled.div`
         margin-right: 20px;
         margin-left: 1px;
         margin-top: -10px;
+    } */
+    /* .give-div{
+        background-color: red;
+    }
+    .take-div{
+        background-color: pink;
     } */
     .main-book-container{
         border: var(--color2) 1px solid;

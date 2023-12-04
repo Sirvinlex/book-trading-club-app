@@ -45,17 +45,32 @@ const Navbar = () => {
         <p style={{cursor:'pointer', display:'flex', flexDirection:'row'}} onClick={() => setShowRequest((prevState) => !prevState)}>
           <span>Requests</span> {localStorageUser ? <AiFillCaretDown className="request-icon"/> : null}
         </p>
-        {(showRequest && localStorageUser) ? (
+        {(showRequest) ? (
           <div id="request-container">
           <p>
             <Link onClick={() => setShowRequest(false)} style={{textDecoration:'none', color:'var(--fontColor1)'}} to='books/requests'>
               All Requests
             </Link>
           </p>
-          <p>
-            <Link onClick={() => setShowRequest(false)} style={{textDecoration:'none', color:'var(--fontColor1)'}} to='/books/create-request'>
+
+            {/* <Link onClick={() => {
+              if(!localStorageUser) alert('Login/Create account to create request')
+              else {
+                navigate('/books/create-request');
+                setShowRequest(false);
+              }
+            
+            }} style={{textDecoration:'none', color:'var(--fontColor1)'}} to='/books/create-request'>
               Create Request
-            </Link>
+            </Link> */}
+          <p onClick={() => {
+            if(!localStorageUser) alert('Login/Create account to create request')
+            else {
+              navigate('/books/create-request');
+              setShowRequest(false);
+            }
+          }} style={{cursor: 'pointer'}}>
+            Create Request
           </p>
         </div>
         ) : null}

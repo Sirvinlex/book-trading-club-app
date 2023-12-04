@@ -171,6 +171,7 @@ const bookSlice = createSlice({
         })
         builder.addCase(getRequestData.fulfilled, (state, action) => {
             state.requestData = action.payload.result;
+            state.isCreateRequestSuccessful = false;
             state.isLoading = false;
         })
         builder.addCase(getRequestData.rejected, (state, action) => {

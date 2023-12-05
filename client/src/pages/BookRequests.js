@@ -2,17 +2,17 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { request, getRequestData, getBooks } from '../features/bookSlice';
+import { request, getRequestData, getBooks, deleteRequestData, } from '../features/bookSlice';
 import { getUsers } from '../features/usersSlice';
 
 const BookRequests = () => {
-    const { book, requestedBooks, requestData } = useSelector((store) => store.book);
+    const { book, requestedBooks, requestData, } = useSelector((store) => store.book);
     const { users } = useSelector((store) => store.users);
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const dispatch = useDispatch();
 
     useEffect(() =>{
@@ -20,30 +20,28 @@ const BookRequests = () => {
             dispatch(getBooks());
             dispatch(getUsers());
         }
-        // dispatch(getBooks());
-        // dispatch(getUsers());
     }, [requestData]);
 
     useEffect(() =>{
         dispatch(getRequestData());
     }, []);
 
-    // add functionalities and css to make sure page renders properly if there are no active requests
 
     const myData = requestData.map((item) =>{
         let mainData = item, requestCreatorId = item.requestCreatorId, accepterBooks = [], requesterBooks = [], 
-        acceptersId = item.acceptersId, requestCreatorName;
-        book?.map((bk) =>{
+        acceptersId = item.acceptersId, requestCreatorName, requestDataId = item._id;
+        book?.forEach((bk) =>{
             if (mainData.requesterBooksId.includes(bk._id)) requesterBooks.push(bk)
             else if (mainData.accepterBooksId.includes(bk._id)) accepterBooks.push(bk)
         });
         
-        users?.map((user) =>{
+        users?.forEach((user) =>{
             if (user._id === requestCreatorId) requestCreatorName = user.name;
         })
 
-        return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName }
+        return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName, requestDataId }
     });
+
 
   return (
     <Wrapper>
@@ -59,9 +57,16 @@ const BookRequests = () => {
                             <div key={i} className='request-container-cover'>
                                 <div className='request-container'>
                                     {localStorageUser?.userId === item.requestCreatorId ? (
-                                        <button className='cancel-btn'>Cancel Request</button>
+                                        <button 
+                                            onClick={() => dispatch(deleteRequestData({dataId: item.requestDataId, role: 'cancel'}))} className='cancel-btn'
+                                        >
+                                            Cancel Request
+                                        </button>
                                     ) : null}
-                                    <button className='accept-btn'>Accept Request</button>
+
+                                    {item.acceptersId.includes(localStorageUser?.userId) ? (
+                                        <button className='accept-btn'>Accept Request</button>
+                                    ) : null}
                                     <div className='give-div'>
                                         <p>
                                             <b>
@@ -86,7 +91,7 @@ const BookRequests = () => {
                                             {item.accepterBooks.map((accBook) =>{
                                                 const link = `/users/users-details/${accBook.creatorId}`;
                                                 let name;
-                                                users?.map((user) => {
+                                                users?.forEach((user) => {
                                                     if (user._id === accBook.creatorId) name = user.name
                                                 })
                                                 return(

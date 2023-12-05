@@ -40,3 +40,16 @@ export const deleteBook = async(req, res) =>{
         res.status(404).json(error);
     }
 };
+export const updateBookProps = async(req, res) =>{
+    const { body: { requests, requestersNames, requestersIds, isIncreased }, params: { id }} = req;
+    try {
+      // console.log({id, requests, requestersNames, requestersIds})
+        // if (!requests || !requestersNames || !requestersIds || !id) return res.status(400).json({msg: 'Oops! something went wrong'});
+        // const book = await Book.findByIdAndUpdate({ _id: id }, { name, city, state: userState, address }, {new: true, runValidators: true})
+        // if (!book) return res.status(400).json({msg: 'No book with this Id'});
+        // res.status(200).json({ msg: 'Book property updated successfully' });
+        // res.status(200).json({ user });
+    } catch (error) { 
+        res.status(400).json(error);
+    }
+};

@@ -31,7 +31,7 @@ export const updateUserProfile = async(req, res) =>{
       // console.log({id, name, city, state, address})
         if (!name || !city || !userState || !address) return res.status(400).json({msg: 'Please fill in required fields'});
         const user = await User.findByIdAndUpdate({ _id: id }, { name, city, state: userState, address }, {new: true, runValidators: true})
-        if (!user) return res.status(400).json({msg: 'No task with this Id'});
+        if (!user) return res.status(400).json({msg: 'No user with this Id'});
         res.status(200).json({ result: {name: user.name, city: user.city, state: user.state, address: user.address,}, msg: 'Your profile has been updated successfully' });
         // res.status(200).json({ user });
     } catch (error) { 

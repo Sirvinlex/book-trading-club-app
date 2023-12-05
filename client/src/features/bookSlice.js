@@ -14,6 +14,7 @@ const initialState = {
     requestedBooks: [],
     requestData: [],
     isCreateRequestSuccessful: false,
+    // deletedReqData: false,
     // bookId: '',
     // creatorName: '',
     // creatorId: '',
@@ -71,6 +72,15 @@ export const getUserBooks = createAsyncThunk('getUserBooks/book', async (userId,
     }
 
 });
+// requests requestersNames requestersIds
+export const updateBookProps = createAsyncThunk('updateBookProps/book', async (updateData, thunkAPI) =>{
+    try {
+      const {data} = await api.updateBookProps(updateData); 
+      return data;
+    } catch (error) {
+      return  thunkAPI.rejectWithValue(error);
+    }
+  });
 export const request = createAsyncThunk('request/book', async (requestData, thunkAPI) =>{
     try {
         const {data} = await api.request(requestData);
@@ -86,6 +96,16 @@ export const getRequestData = createAsyncThunk('getRequestData/book', async (_, 
         const {data} = await api.getRequestData();
         // console.log(data)
         return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
+export const deleteRequestData = createAsyncThunk('deleteRequestData/book', async ({ dataId, role }, thunkAPI) =>{
+    try {
+        // console.log({ dataId, role })
+        const {data} = await api.deleteRequestData(dataId);
+        return { data, role};
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
     }
@@ -176,6 +196,19 @@ const bookSlice = createSlice({
         })
         builder.addCase(getRequestData.rejected, (state, action) => {
             state.isLoading = false;
+        })
+        builder.addCase(deleteRequestData.fulfilled, (state, action) => {
+            state.requestData = state.requestData.filter((item) => item._id !== action.payload.data.deletedId);
+            if (action.payload.role === 'cancel') alert('Request successfully removed')
+            else if (action.payload.role === 'accept') alert('Request successfully accepted')
+        })
+        builder.addCase(deleteRequestData.rejected, (state, action) => {
+            alert('Oops! something went wrong'); 
+        })
+        builder.addCase(updateBookProps.fulfilled, (state, action) => {
+        })
+        builder.addCase(updateBookProps.rejected, (state, action) => {
+            alert('Oops! something went wrong'); 
         })
       },
     

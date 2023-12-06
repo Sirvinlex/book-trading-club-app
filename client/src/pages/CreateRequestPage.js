@@ -27,7 +27,24 @@ const CreateRequestPage = () => {
         const requesterBooksId = requesterBooksIds;
         const accepterBooksId = accepterBooksIds;
         const acceptersId = requestAcceptersIds;
-        dispatch(request({requestCreatorId, requesterBooksId, accepterBooksId, acceptersId}));
+
+        // when creating request, books are also updated with number of active incoming requests, and the list of requesters, the logic will be
+        // used to extract the data needed to update books as request is created. The date will be sent together with the create request data
+        // and thunk API will be used to dispatch update to the book if create request is successful
+        const requesterBookProp = requesterBooksId.map((reqBookProp) =>{
+            // const requesterId = requestCreatorId;
+            const isProposed = true;
+            const bookId = reqBookProp;
+            return { isProposed, bookId }
+        })
+        const accepterBookProp = accepterBooksId.map((accBookProp) =>{
+            const requesterId = requestCreatorId;
+            const isIncreased = true;   // isIncreased constant is used to indicate that request is being created, hence the particular book request count will increase
+            const bookId = accBookProp;
+            return { requesterId, isIncreased, bookId }
+        })
+        dispatch(request({ createRequestData: {requestCreatorId, requesterBooksId, accepterBooksId, acceptersId}, 
+         updateBookPropData: {requesterBookProp, accepterBookProp}}));
     }
   };
 

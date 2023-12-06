@@ -7,7 +7,7 @@ export const loginUser = (loginData) => API.post('/auth/loginUser', loginData);
 export const getUsers = () => API.get('/users/getUsers');
 export const getUserDetails = (id) => API.get(`/users/getUsers/${id}`);
 export const updateUserProfile = (updateData) => API.patch(`/users/updateUserProfile/${updateData.userId}`, updateData);
-export const updateBookProps = (updateData) => API.patch(`/book/updateBookProps/${updateData.bookId}`, updateData);
+export const updateBookProps = (updateData) => API.patch(`/book/updateBookProps`, updateData);
 export const updateUserBookCount = (updateData) => API.patch(`/users/updateUserBookCount`, updateData);
 export const createBook = (bookData) => API.post('/book/createBook', bookData);
 export const request = (requestData) => API.post('request/create-request', requestData);

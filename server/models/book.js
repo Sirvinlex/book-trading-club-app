@@ -7,6 +7,10 @@ const BookSchema = new mongoose.Schema({
     description: String,
     creatorName: String,
     creatorId: String,
+    isProposed: {
+        type: Boolean,
+        default: false,
+    },
     requests: {
         type: Number,
         default: 0,

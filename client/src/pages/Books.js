@@ -5,9 +5,11 @@ import { getBooks } from '../features/bookSlice';
 import styled from 'styled-components';
 import { FaTimes } from "react-icons/fa";
 import { deleteBook, addBook, removeBook } from '../features/bookSlice';
+import { getUsers } from '../features/usersSlice';
 
 const Books = () => {
   const { book, isLoading, createdBook, requestedBooks } = useSelector((store) => store.book);
+  const { users } = useSelector((store) => store.users);
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
@@ -17,6 +19,10 @@ const Books = () => {
 
   useEffect(() =>{
     dispatch(getBooks());
+  }, [dispatch, createdBook,]);
+
+  useEffect(() =>{
+    dispatch(getUsers());
   }, [dispatch, createdBook,]);
 
   const handleLoginClick = () =>{
@@ -65,6 +71,16 @@ const Books = () => {
                 <div className='empty-book-body'>No books have been added yet</div>
               ) : (
                 book.map((item, i) =>{
+                  const myArr = item.requestersIds.map((reqId) =>{
+                    return users.map((user) =>{
+                      if (user._id === reqId){
+                        return user.name
+                      }
+                    })
+
+
+                  })
+                  // console.log(myArr)
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
                   const itemId = item._id;
@@ -94,10 +110,12 @@ const Books = () => {
                             {' '} in {item.creatorCity}, {item.creatorState}
                           </p>
                         </div>
-                        <div className='book-stats'>
-                          <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
-                          <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
-                        </div>
+                        {item.requests > 1 ? (
+                            <div className='book-stats'>
+                              <p className='request-count'>requests: <p className='request-number'>{item.requests}</p></p>
+                              <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
+                            </div>
+                        ) : null}
                         { localStorageUser?.userId === item.creatorId ? (
                           <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
                         ) : null}
@@ -127,6 +145,7 @@ const Books = () => {
 }
 
 const Wrapper = styled.div`
+  
   .request-btn-absolute_container{
     position: sticky;
     z-index: 1;
@@ -231,6 +250,22 @@ const Wrapper = styled.div`
       font-weight: 600;
       font-size: 20px;
       margin-top: -5px;
+      display: flex;
+      color: blue;
+    }
+    .request-number{
+      height: 18px;
+      width: 18px;
+      background-color: var(--fontColor1);
+      color: var(--backgroundColor);
+      margin-top: 7px;
+      margin-left: 2px;
+      border-radius: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
     }
     .requestor-list{
       font-weight: 500;

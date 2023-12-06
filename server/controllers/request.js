@@ -6,7 +6,7 @@ export const request = async(req, res) =>{
     try {
         if (!requestCreatorId || !requesterBooksId || !accepterBooksId || !acceptersId) return res.status(400).json({msg: "Oops something went wrong"});
         const request = await Request.create({ requestCreatorId, requesterBooksId, accepterBooksId, acceptersId });
-        res.status(200).json({ request, msg: 'Request successfully  created' });
+        res.status(200).json({ request, msg: 'Request successfully created' });
     } catch (error) {
         res.status(400).json(error);
     } 

@@ -76,6 +76,7 @@ export const getUserBooks = createAsyncThunk('getUserBooks/book', async (userId,
 export const updateBookProps = createAsyncThunk('updateBookProps/book', async (updateData, thunkAPI) =>{
     try {
       const {data} = await api.updateBookProps(updateData); 
+      if (data.msg === 'Book property updated successfully') thunkAPI.dispatch(getBooks());
       return data;
     } catch (error) {
       return  thunkAPI.rejectWithValue(error);
@@ -83,8 +84,9 @@ export const updateBookProps = createAsyncThunk('updateBookProps/book', async (u
   });
 export const request = createAsyncThunk('request/book', async (requestData, thunkAPI) =>{
     try {
-        const {data} = await api.request(requestData);
-        
+        // console.log(requestData.updateBookPropData)
+        const {data} = await api.request(requestData.createRequestData);
+        if (data.msg === 'Request successfully created') thunkAPI.dispatch(updateBookProps(requestData.updateBookPropData))
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);

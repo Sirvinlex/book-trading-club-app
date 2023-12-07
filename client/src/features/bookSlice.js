@@ -103,10 +103,16 @@ export const getRequestData = createAsyncThunk('getRequestData/book', async (_, 
     }
 
 });
-export const deleteRequestData = createAsyncThunk('deleteRequestData/book', async ({ dataId, role }, thunkAPI) =>{
+export const deleteRequestData = createAsyncThunk('deleteRequestData/book', async (delData, thunkAPI) =>{
     try {
-        // console.log({ dataId, role })
+        // console.log(delData)
+        const { dataId, role } = delData.cancelData;
+        const { updateBookPropData } = delData;
+
         const {data} = await api.deleteRequestData(dataId);
+
+        if (data.msg === "Request data Successfully deleted") thunkAPI.dispatch(updateBookProps(updateBookPropData));
+
         return { data, role};
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);

@@ -52,13 +52,32 @@ const BookRequests = () => {
             <div className='books-container-body'>
                 {requestData.length < 1 ? <p>No active requests</p>
                     : ( myData.map((item, i) =>{
+                        // console.log(item)
+
+                        const requesterBookProp = item.requesterBooks.map((reqBookProp) =>{
+                            const isProposed = false;
+                            const bookId = reqBookProp._id;
+                            return { isProposed, bookId }
+                        });
+                        const accepterBookProp = item.accepterBooks.map((accBookProp) =>{
+                            const isIncreased = false;
+                            const requesterId = item.requestCreatorId;
+                            const bookId = accBookProp._id;
+                            return { requesterId, isIncreased, bookId }
+                        })
+
+                        const updateBookPropData = {requesterBookProp, accepterBookProp}
+
                         const link = `/users/users-details/${item.requestCreatorId}`;
                         return(
                             <div key={i} className='request-container-cover'>
                                 <div className='request-container'>
                                     {localStorageUser?.userId === item.requestCreatorId ? (
-                                        <button 
-                                            onClick={() => dispatch(deleteRequestData({dataId: item.requestDataId, role: 'cancel'}))} className='cancel-btn'
+                                        <button
+                                            className='cancel-btn'
+                                            onClick={() => {
+                                                dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'cancel'}, updateBookPropData}))
+                                            }} 
                                         >
                                             Cancel Request
                                         </button>

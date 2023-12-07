@@ -71,16 +71,36 @@ const Books = () => {
                 <div className='empty-book-body'>No books have been added yet</div>
               ) : (
                 book.map((item, i) =>{
-                  const myArr = item.requestersIds.map((reqId) =>{
-                    return users.map((user) =>{
+                  const requestersArr = [];
+                  item.requestersIds.map((reqId) =>{
+                    users.map((user) =>{
                       if (user._id === reqId){
-                        return user.name
+                        requestersArr.push(`${reqId} ${user.name.split(' ')[0]}`);
+                        // requestersArr.push([reqId, user.name.split(' ')[0]]);
+                        // console.log(requestersArr)
                       }
                     })
 
 
                   })
                   // console.log(myArr)
+                  let requestersArr2 = [];
+
+                  requestersArr.forEach((reqArr) => !requestersArr2.includes(reqArr) ? requestersArr2.push(reqArr) : null)
+
+                  // adding the number of times a requester email appear and also adding comma
+                  requestersArr2.forEach((reqArr2, i) =>{
+                    let count = 0;
+                    requestersArr.forEach((reqArr) => reqArr === reqArr2 ? count++ : null)
+                    const itemWithCount = `${reqArr2} ${count}`
+                    requestersArr2[i] = itemWithCount;
+                    if (i !== requestersArr2.length - 1){
+                      const itemWithComma = `${itemWithCount} ,`
+                      requestersArr2[i] = itemWithComma;
+                    }
+                  })
+                  //  console.log(requestersArr2, '2')
+
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
                   const itemId = item._id;
@@ -110,10 +130,30 @@ const Books = () => {
                             {' '} in {item.creatorCity}, {item.creatorState}
                           </p>
                         </div>
-                        {item.requests > 1 ? (
+                        {item.requests > 0 ? (
                             <div className='book-stats'>
-                              <p className='request-count'>requests: <p className='request-number'>{item.requests}</p></p>
-                              <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
+                              <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
+                              <p style={{marginTop: '-13px'}}>
+                                 ( {
+                                    // const myLink = `/users/users-details/${item.creatorId}`
+                                    requestersArr2.map((reqArr2,i) =>{
+                                      const id = reqArr2?.split(' ')[0];
+                                      const name = reqArr2?.split(' ')[1];
+                                      const count = reqArr2?.split(' ')[2];
+                                      const comma = reqArr2?.split(' ')[3] || '';
+                                      const myLink = `/users/users-details/${id}`
+                                      // console.log(id, name, count, comma)
+                                      // console.log(id)
+                                      return(
+                                          <span key={i} className='requestor-list'>
+                                            <Link style={{textDecoration:'none', fontWeight:'700'}} to={myLink}>
+                                              {name}<span>({count}){comma} </span> 
+                                            </Link>
+                                          </span>
+                                      )
+                                    })
+                                  } )
+                              </p>
                             </div>
                         ) : null}
                         { localStorageUser?.userId === item.creatorId ? (
@@ -251,7 +291,7 @@ const Wrapper = styled.div`
       font-size: 20px;
       margin-top: -5px;
       display: flex;
-      color: blue;
+      color: var(--btnColor2);
     }
     .request-number{
       height: 18px;
@@ -270,7 +310,7 @@ const Wrapper = styled.div`
     .requestor-list{
       font-weight: 500;
       /* font-size: 12px; */
-      margin-top: -20px;
+      margin-top: -10px;
     }
     .remove-book-btn{
       margin-right: 5px;

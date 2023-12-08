@@ -71,9 +71,15 @@ const Books = () => {
                 <div className='empty-book-body'>No books have been added yet</div>
               ) : (
                 book.map((item, i) =>{
+                  //  getting the book creator's name directly from users state so that the book can dynamically update name if user updates
+                  // profile
+                  let bookCreatorNameFromUsersState;
+                  users?.map((user) => user._id === item.creatorId ? bookCreatorNameFromUsersState = user.name.split(' ')[0] : null);
+                  // /////
+
                   const requestersArr = [];
                   item.requestersIds.map((reqId) =>{
-                    users.map((user) =>{
+                    users?.map((user) =>{
                       if (user._id === reqId){
                         requestersArr.push(`${reqId} ${user.name.split(' ')[0]}`);
                         // requestersArr.push([reqId, user.name.split(' ')[0]]);
@@ -126,8 +132,10 @@ const Books = () => {
                             {item.description}
                           </p>
                           <p className='creator-details'>
-                            from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
-                            {' '} in {item.creatorCity}, {item.creatorState}
+                            from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>
+                              {bookCreatorNameFromUsersState || creatorName}
+                              </Link>
+                              </span>{' '} in {item.creatorCity}, {item.creatorState}
                           </p>
                         </div>
                         {item.requests > 0 ? (

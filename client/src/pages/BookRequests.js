@@ -78,7 +78,7 @@ const BookRequests = () => {
                         })
                         // isCancelled prop is passed to determine whether request is being created of cancelled
                         const updateBookPropData = {requesterBookProp, accepterBookProp, IsCancelled: true}
-
+                        // console.log(updateBookPropData, 'test test')
                         // when a user rejects a request and their books are removed from the request, the particular books request properties
                         // also need to be updated. so we need to get updateBookPropData for those particular book
                         

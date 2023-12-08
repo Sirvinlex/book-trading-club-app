@@ -108,7 +108,15 @@ export const updateRequestData = createAsyncThunk('updateRequestData/book', asyn
         // console.log(updateData)
         const { requestUpdateData, updateBookPropData } = updateData;
       const {data} = await api.updateRequestData(requestUpdateData); 
-      if (data.msg === 'Request data updated successfully') thunkAPI.dispatch(getRequestData());
+      if (data.msg === 'Request data updated successfully') {
+        thunkAPI.dispatch(getRequestData());
+        thunkAPI.dispatch(updateBookProps(updateBookPropData));
+      }
+    //   requestId, isAcceptersBookEmpty
+    
+      if (data.isAcceptersBookEmpty === true) {
+        thunkAPI.dispatch(deleteRequestData({cancelData: {dataId: data.requestId, role: ''}, updateBookPropData: data.updateBookPropData}));
+      }
       return data;
     } catch (error) {
       return  thunkAPI.rejectWithValue(error);
@@ -226,6 +234,9 @@ const bookSlice = createSlice({
         })
         builder.addCase(updateBookProps.rejected, (state, action) => {
             alert('Oops! something went wrong'); 
+        })
+        builder.addCase(updateRequestData.fulfilled, (state, action) => {
+            alert('You rejected this request'); 
         })
       },
     

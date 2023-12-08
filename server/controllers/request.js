@@ -27,21 +27,38 @@ export const getRequestData = async (req, res) =>{
  export const  updateRequestData = async(req, res) =>{
     const { requestId, userBookIds, userId } = req.body; 
     try {
-        console.log(requestId, userBookIds, userId)
-        // if (!userBookIds || !requestId) return res.status(400).json({msg: 'Oops! Something went wrong'});
-        // const request = await Request.findById(requestId);
-        // if (!request) return res.status(400).json({msg: 'Oops! something went wrong'});
-        // let tempAccepterBooksId = request.accepterBooksId;
+        // console.log(requestId, userBookIds, userId)
+        if (!userBookIds || !requestId  || !userId) return res.status(400).json({msg: 'Oops! Something went wrong'});
+        const request = await Request.findById(requestId);
+        // console.log(request.acceptersId, 'bbbbbbbbbbbbbbbbbbbbbbbbbb')
+        if (!request) return res.status(400).json({msg: 'Oops! something went wrong'});
+        let tempAcceptersId = request.acceptersId;
+        tempAcceptersId = tempAcceptersId.filter((tempAccId) => tempAccId !== userId);
+        // console.log(tempAcceptersId)
+        let tempAccepterBooksId = request.accepterBooksId;
         // console.log(tempAccepterBooksId, 'first')
-        // const tempArr = [];
-        // tempAccepterBooksId.forEach((item) =>{ 
-        //     if (!userBookIds.includes(item)) tempArr.push(item)
-        // })
-        // tempAccepterBooksId = tempArr;
+        const tempArr = [];
+        tempAccepterBooksId.forEach((item) =>{ 
+            if (!userBookIds.includes(item)) tempArr.push(item)
+        })
+        tempAccepterBooksId = tempArr;
         // console.log(tempAccepterBooksId, 'second')
-        // const updatedRequest = await Request.findByIdAndUpdate({ _id: requestId }, { accepterBooksId: tempAccepterBooksId }, 
-        //     {new: true, runValidators: true})
-        // res.status(200).json({ msg: 'Request data updated successfully' });
+        const updatedRequest = await Request.findByIdAndUpdate({ _id: requestId }, { accepterBooksId: tempAccepterBooksId, acceptersId: tempAcceptersId}, 
+            {new: true, runValidators: true})
+        
+        // check if the rejecting user book id is the last book id in the accepterBooksId, so that the rquest will be deleted, also the 
+        // request creator request book prpoerties should be updated when the request is deleted, so we can send the updateBookPropData from here
+        const requesterUpdateBookPropData = { 
+            requesterBookProp: updatedRequest.requesterBooksId.map((myData) =>{
+                return { bookId: myData}
+            }), 
+            accepterBookProp: [],
+            IsCancelled: true,
+        };
+        let isAcceptersBookEmpty = false;
+        if (updatedRequest.accepterBooksId.length < 1) isAcceptersBookEmpty = true;
+            // console.log(updatedRequest)
+        res.status(200).json({ requestId, isAcceptersBookEmpty, updateBookPropData: requesterUpdateBookPropData, msg: 'Request data updated successfully' });
     } catch (error) { 
         res.status(400).json(error);
     }

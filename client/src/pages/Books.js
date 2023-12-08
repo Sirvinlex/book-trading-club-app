@@ -294,8 +294,8 @@ const Wrapper = styled.div`
       color: var(--btnColor2);
     }
     .request-number{
-      height: 18px;
-      width: 18px;
+      height: 20px;
+      width: 20px;
       background-color: var(--fontColor1);
       color: var(--backgroundColor);
       margin-top: 7px;

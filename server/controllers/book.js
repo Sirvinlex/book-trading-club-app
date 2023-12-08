@@ -41,24 +41,35 @@ export const deleteBook = async(req, res) =>{
     }
 };
 export const updateBookProps = async(req, res) =>{
-    const { requesterBookProp, accepterBookProp } = req.body
+    const { requesterBookProp, accepterBookProp, IsCancelled } = req.body
     try {
+        // console.log(requesterBookProp)
         // if (!requesterBookProp || !accepterBookProp) return res.status(400).json({msg: 'Oops! something went wrong'});
         for (let i = 0; i < requesterBookProp.length; i++){
-            const updatedBook = await Book.findByIdAndUpdate({ _id: requesterBookProp[i].bookId }, 
-                { isProposed: requesterBookProp[i].isProposed }, {new: true, runValidators: true})
+            if(IsCancelled === false){
+                const updatedBook = await Book.findByIdAndUpdate({ _id: requesterBookProp[i].bookId }, 
+                    { isProposed: true }, {new: true, runValidators: true})
+            }else{
+                const updatedBook = await Book.findByIdAndUpdate({ _id: requesterBookProp[i].bookId }, 
+                    { isProposed: false }, {new: true, runValidators: true})
+            }
         }
+
         for (let i = 0; i < accepterBookProp.length; i++){
             const book = await Book.findById(accepterBookProp[i].bookId);
             let tempRequestersIds = book.requestersIds;
-            tempRequestersIds.push(accepterBookProp[i].requesterId);
 
-            // if (!tempRequestersIds.includes(accepterBookProp[i].requesterId)){
-            //     tempRequestersIds.push(accepterBookProp[i].requesterId);
-            // }
+            if(IsCancelled === false){
+                tempRequestersIds.push(accepterBookProp[i].requesterId);
+                const updatedBook = await Book.findByIdAndUpdate({ _id: accepterBookProp[i].bookId }, 
+                    { requests: book.requests + 1, requestersIds: tempRequestersIds }, {new: true, runValidators: true})
+            }else{
+                const index = tempRequestersIds.indexOf(accepterBookProp[i].requesterId);
+                tempRequestersIds.splice(index, 1);
+                const updatedBook = await Book.findByIdAndUpdate({ _id: accepterBookProp[i].bookId }, 
+                    { requests: book.requests - 1, requestersIds: tempRequestersIds }, {new: true, runValidators: true})
+            }
             
-            const updatedBook = await Book.findByIdAndUpdate({ _id: accepterBookProp[i].bookId }, 
-                { requests: book.requests + 1, requestersIds: tempRequestersIds }, {new: true, runValidators: true})
             
         }
 

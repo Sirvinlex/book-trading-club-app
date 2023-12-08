@@ -35,16 +35,19 @@ const CreateRequestPage = () => {
             // const requesterId = requestCreatorId;
             const isProposed = true;
             const bookId = reqBookProp;
-            return { isProposed, bookId }
+            return { bookId }
+            // return { isProposed, bookId }
         })
         const accepterBookProp = accepterBooksId.map((accBookProp) =>{
             const requesterId = requestCreatorId;
             const isIncreased = true;   // isIncreased constant is used to indicate that request is being created, hence the particular book request count will increase
             const bookId = accBookProp;
-            return { requesterId, isIncreased, bookId }
+            return { requesterId, bookId }
+            // return { requesterId, isIncreased, bookId }
         })
+        // isCancelled prop is passed to determine whether request is being created of cancelled
         dispatch(request({ createRequestData: {requestCreatorId, requesterBooksId, accepterBooksId, acceptersId}, 
-         updateBookPropData: {requesterBookProp, accepterBookProp}}));
+         updateBookPropData: {requesterBookProp, accepterBookProp, IsCancelled: false}}));
     }
   };
 

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { request, getRequestData, getBooks, deleteRequestData, } from '../features/bookSlice';
+import { request, getRequestData, getBooks, deleteRequestData, updateRequestData} from '../features/bookSlice';
 import { getUsers } from '../features/usersSlice';
 
 const BookRequests = () => {
@@ -52,22 +52,52 @@ const BookRequests = () => {
             <div className='books-container-body'>
                 {requestData.length < 1 ? <p>No active requests</p>
                     : ( myData.map((item, i) =>{
-                        // console.log(item)
+
+                        // getting bookIds belonging to each user that will accept or reject request
+                        const userBooks = item.accepterBooks.filter((userBook) => userBook.creatorId === localStorageUser?.userId);
+                        const userBookIds = [];
+                        const requestId = item.requestDataId;                        
+                        userBooks.forEach((userBook) => userBookIds.push(userBook._id))
+                        // console.log(userBookIds)
+
+                        const requestUpdateData = { userBookIds, requestId, userId: localStorageUser?.userId };
+                        // console.log(requestUpdateData)
 
                         const requesterBookProp = item.requesterBooks.map((reqBookProp) =>{
                             const isProposed = false;
                             const bookId = reqBookProp._id;
-                            return { isProposed, bookId }
+                            return { bookId }
+                            // return { isProposed, bookId }
                         });
                         const accepterBookProp = item.accepterBooks.map((accBookProp) =>{
                             const isIncreased = false;
                             const requesterId = item.requestCreatorId;
                             const bookId = accBookProp._id;
-                            return { requesterId, isIncreased, bookId }
+                            return { requesterId, bookId }
+                            // return { requesterId, isIncreased, bookId }
                         })
+                        // isCancelled prop is passed to determine whether request is being created of cancelled
+                        const updateBookPropData = {requesterBookProp, accepterBookProp, IsCancelled: true}
 
-                        const updateBookPropData = {requesterBookProp, accepterBookProp}
+                        // when a user rejects a request and their books are removed from the request, the particular books request properties
+                        // also need to be updated. so we need to get updateBookPropData for those particular book
+                        
+                        // requestId: "6572945236e361f898d3a5a4"
+                        // userBookIds: (2) ['656e12acae7f0c4f347751b5', '656ac1ba07c6a5a4423f388b']
+                        const updateBookPropDataForReject = { 
+                            requesterBookProp: [], 
+                            accepterBookProp: requestUpdateData.userBookIds.map((myData) =>{
+                                return { bookId: myData, requesterId: item.requestCreatorId}
+                            }),
+                            IsCancelled: true,
+                        }
 
+                        // console.log(updateBookPropDataForReject, ' jjjjjjjjjjj')
+                        // dispatch action to delete request is if accepters book is zero, that is if all accepters reject's request
+                        if (item.accepterBooks.length < 1){
+                            // dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'cancel'}, updateBookPropData}))
+                        }
+                        
                         const link = `/users/users-details/${item.requestCreatorId}`;
                         return(
                             <div key={i} className='request-container-cover'>
@@ -84,7 +114,14 @@ const BookRequests = () => {
                                     ) : null}
 
                                     {item.acceptersId.includes(localStorageUser?.userId) ? (
-                                        <button className='accept-btn'>Accept Request</button>
+                                        <div className='accept-reject-btn-container'>
+                                            <button className='accept-btn'>Accept</button>
+                                            <button 
+                                                onClick={() => dispatch(updateRequestData({requestUpdateData, updateBookPropData: updateBookPropDataForReject}))} 
+                                                className='reject-btn'>
+                                                    Reject
+                                            </button>
+                                        </div>
                                     ) : null}
                                     <div className='give-div'>
                                         <p>
@@ -247,16 +284,27 @@ const Wrapper = styled.div`
         font-weight: 600;
         font-size: 11px;
     }
-    .accept-btn{
+    .accept-reject-btn-container{
         position: absolute;
         right: 4px;
-        top: 4px;
+        top: 0;
+    }
+    .reject-btn{
+        background-color: inherit;
+        border: none;
+        color: red;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 11px;
+    }
+    .accept-btn{
         background-color: inherit;
         border: none;
         color: green;
         font-weight: 700;
         cursor: pointer;
         font-size: 11px;
+        margin-right: -5px;
     }
     .main-book-container{
         border: var(--color2) 1px solid;
@@ -355,7 +403,10 @@ const Wrapper = styled.div`
         }
     }
     @media (min-width: 768px) {
-        .cancel-btn, .accept-btn{
+        .accept-reject-btn-container{
+            top: 4;
+        }
+        .cancel-btn, .accept-btn, .reject-btn{
             font-size: 12px;
         }
         .request-container{

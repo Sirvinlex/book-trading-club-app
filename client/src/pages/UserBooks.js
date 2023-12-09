@@ -146,8 +146,13 @@ const UserBooks = () => {
                           </p>
                         </div>
                         <div className='book-stats'>
-                          <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
-                          <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p>
+                          {
+                            item.requests > 0 ? (
+                              <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
+                              // <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
+                            ) : null
+                          }
+                          {/* <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p> */}
                         </div>
                         { localStorageUser?.userId === item.creatorId ? (
                           <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
@@ -310,10 +315,33 @@ const Wrapper = styled.div`
     .book-stats{
       margin: 5px;
     }
+    /* .request-count{
+      font-weight: 600;
+      font-size: 20px;
+      margin-top: -5px;
+    } */
     .request-count{
       font-weight: 600;
       font-size: 20px;
       margin-top: -5px;
+      display: flex;
+      color: #22229c;
+      font-weight: 700;
+    }
+    .request-number{
+      font-weight: 600;
+      height: 20px;
+      width: 20px;
+      background-color: var(--fontColor1);
+      color: var(--backgroundColor);
+      margin-top: 7px;
+      margin-left: 2px;
+      border-radius: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
     }
     .requestor-list{
       font-weight: 500;
@@ -356,11 +384,15 @@ const Wrapper = styled.div`
         .requestor-list{
           font-size: 13px;
         }
+        .request-count{
+          float: right;
+          margin-right: 10px;
+        }
         .book-stats{
-          width: 40%;
+          width: 20%;
         }
         .book-details{
-          width: 60%;
+          width: 80%;
         }
         .books-container{
             width: 82%;

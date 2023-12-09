@@ -31,12 +31,11 @@ const RegisterLogin = () => {
     if (user?.userId && user?.token) {
       setTimeout(() => {
         navigate('/');
-        console.log(user.name)
         dispatch(resetUserState());
       }, 500);
       // console.log(user.name)
     }
-  }, [user, navigate]);
+  }, [user, navigate]); 
 
   const handleChange = (e) =>{
     const name = e.target.name;

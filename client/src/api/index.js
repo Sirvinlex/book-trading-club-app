@@ -17,5 +17,9 @@ export const deleteRequestData = (dataId) => API.delete(`/request/deleteRequestD
 export const getBooks = () => API.get('/book/getBooks');
 export const deleteBook = (bookId) => API.delete(`/book/deleteBook/${bookId}`);
 export const getUserBooks = (userId) => API.get(`/book/getUserBooks/${userId}`);
+export const createTrade = (tradeData) => API.post('/trades/createTrade', tradeData);
+export const getTrades = () => API.get('/trades/getTrades');
+
+
 
 

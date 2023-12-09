@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { request, getRequestData, getBooks, deleteRequestData, updateRequestData} from '../features/bookSlice';
+import { getRequestData, getBooks, deleteRequestData, updateRequestData, createTrade } from '../features/bookSlice';
 import { getUsers } from '../features/usersSlice';
 
 const BookRequests = () => {
@@ -115,11 +115,23 @@ const BookRequests = () => {
 
                                     {item.acceptersId.includes(localStorageUser?.userId) ? (
                                         <div className='accept-reject-btn-container'>
-                                            <button className='accept-btn'>Accept</button>
+                                            {/* requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName, requestDataId */}
+                                            <button className='accept-btn'
+                                                onClick={() =>{
+                                                    const idOfRequestCreator = item.requestCreatorId;
+                                                    const requestCreatorBooks = item.requesterBooks;
+                                                    const requestAccepterBooks = item.accepterBooks.filter((reqAccBook) => reqAccBook.creatorId === localStorageUser?.userId) 
+                                                    dispatch(createTrade({ idOfRequestCreator, requestCreatorBooks, requestAccepterBooks }));
+                                                    dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'accept request'}, updateBookPropData}));
+                                                }}
+                                            >
+                                                Accept
+                                            </button>
                                             <button 
                                                 onClick={() => dispatch(updateRequestData({requestUpdateData, updateBookPropData: updateBookPropDataForReject}))} 
-                                                className='reject-btn'>
-                                                    Reject
+                                                className='reject-btn'
+                                            >
+                                                Reject
                                             </button>
                                         </div>
                                     ) : null}
@@ -134,8 +146,17 @@ const BookRequests = () => {
                                             {item.requesterBooks.map((reqBook) =>{
                                                 return(
                                                     <div key={reqBook._id} className='main-book'>
-                                                        <p className='book-title'>{reqBook.title}</p>
-                                                        <p className='book-description'>{reqBook.description}</p>
+                                                        <div className='book-details-container'>
+                                                            <p className='book-title'>{reqBook.title}</p>
+                                                            <p className='book-description'>{reqBook.description}</p>
+                                                        </div>
+                                                        {
+                                                            reqBook.requests > 0 ? (
+                                                                <div className='book-stats'>
+                                                                    <div className='request-count'>Requests <p className='request-number'>{reqBook.requests}</p></div>
+                                                                </div>
+                                                            ) : null
+                                                        }
                                                     </div>
                                                 )
                                             })}
@@ -152,11 +173,20 @@ const BookRequests = () => {
                                                 })
                                                 return(
                                                     <div key={accBook._id} className='main-book'>
-                                                        <p className='book-title'>{accBook.title} from {' '}
-                                                        <Link style={{textDecoration:'none'}} to={link}>{name}</Link>
-                                                        {/* <span>{name}</span> */}
-                                                        </p>
-                                                        <p className='book-description'>{accBook.description}</p>
+                                                        <div className='book-details-container'>
+                                                            <p className='book-title'>{accBook.title} from {' '}
+                                                            <Link style={{textDecoration:'none'}} to={link}>{name}</Link>
+                                                            {/* <span>{name}</span> */}
+                                                            </p>
+                                                            <p className='book-description'>{accBook.description}</p>
+                                                        </div>
+                                                        {
+                                                            accBook.requests > 0 ? (
+                                                                <div className='book-stats'>
+                                                                    <div className='request-count'>Requests <p className='request-number'>{accBook.requests}</p></div>
+                                                                </div>
+                                                            ) : null
+                                                        }
                                                     </div>
                                                 )
                                             })}
@@ -180,6 +210,30 @@ const BookRequests = () => {
 }
 
 const Wrapper = styled.div`
+    .book-stats{
+      margin: 5px;
+    }
+    .request-count{
+      font-weight: 600;
+      font-size: 20px;
+      margin-top: -5px;
+      display: flex;
+      color: var(--btnColor2);
+    }
+    .request-number{
+      height: 20px;
+      width: 20px;
+      background-color: var(--fontColor1);
+      color: var(--backgroundColor);
+      margin-top: 7px;
+      margin-left: 2px;
+      border-radius: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
     .books-container{
         margin-top: 45px;
         margin-bottom: 40px;
@@ -332,6 +386,8 @@ const Wrapper = styled.div`
         border-bottom: var(--color2) 1px solid;
         height: fit-content;
         background-color: var(--backgroundColor);
+        display: flex;
+        flex-direction: column;
         /* margin-right: 20px;
         margin-left: 1px; */
         /* margin-top: -10px; */
@@ -403,6 +459,16 @@ const Wrapper = styled.div`
         }
     }
     @media (min-width: 768px) {
+        .main-book{
+            display: flex;
+            flex-direction: row;
+        }
+        .book-details-container{
+            width: 80%;
+        }
+        .book-stats{
+          width: 20%;
+        }
         .accept-reject-btn-container{
             top: 4;
         }

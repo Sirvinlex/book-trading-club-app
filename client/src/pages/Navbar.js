@@ -74,7 +74,8 @@ const Navbar = () => {
           </p>
         </div>
         ) : null}
-        <p>Trades</p>
+
+        <p><Link style={{textDecoration:'none', color:'var(--fontColor1)'}} to='trades'>Completed Trades</Link></p>
         <p><Link style={{textDecoration:'none', color:'var(--fontColor1)'}} to='users'>Users</Link></p>
       </div>
       {!localStorageUser ? (

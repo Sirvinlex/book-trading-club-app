@@ -8,6 +8,7 @@ import auth from './routes/auth.js';
 import users from './routes/users.js';
 import book from './routes/book.js';
 import request from './routes/request.js'
+import trades from './routes/trades.js'
 
 
 // const auth = require('./routes/auth')
@@ -33,6 +34,7 @@ app.use('/api/v1/auth', auth);
 app.use('/api/v1/users', users);
 app.use('/api/v1/book', book);
 app.use('/api/v1/request', request);
+app.use('/api/v1/trades', trades);
 
 // const CONNECTION_URL = 'mongodb+srv://sirvinlex:29933.Alex29933.Vin@cluster0.hzrll.mongodb.net/book-trading-club?retryWrites=true&w=majority'
 const CONNECTION_URL = process.env.CONNECTION_URL;

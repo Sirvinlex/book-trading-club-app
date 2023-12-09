@@ -14,6 +14,7 @@ const initialState = {
     requestedBooks: [],
     requestData: [],
     isCreateRequestSuccessful: false,
+    trades: [],
     // deletedReqData: false,
     // bookId: '',
     // creatorName: '',
@@ -136,6 +137,26 @@ export const deleteRequestData = createAsyncThunk('deleteRequestData/book', asyn
     }
 
 });
+export const createTrade = createAsyncThunk('createTrade/book', async (tradeData, thunkAPI) =>{
+    try {
+        console.log(tradeData)
+        const {data} = await api.createTrade(tradeData);
+        return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
+export const getTrades = createAsyncThunk('getTrades/book', async (_, thunkAPI) =>{
+    try {
+        const {data} = await api.getTrades();
+        // console.log(data)
+        return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
 
 const bookSlice = createSlice({
     name: 'book',
@@ -237,6 +258,25 @@ const bookSlice = createSlice({
         })
         builder.addCase(updateRequestData.fulfilled, (state, action) => {
             alert('You rejected this request'); 
+        })
+        builder.addCase(createTrade.pending, (state, action) => {
+        })
+        builder.addCase(createTrade.fulfilled, (state, action) => {
+            alert('You Successfully accepted this request!'); 
+        })
+        builder.addCase(createTrade.rejected, (state, action) => {
+            alert('Oops! an error occured'); 
+        })
+        builder.addCase(getTrades.pending, (state, action) => {
+            state.isLoading = true;
+        })
+        builder.addCase(getTrades.fulfilled, (state, action) => {
+            state.trades = action.payload.result;
+            state.isLoading = false;
+        })
+        builder.addCase(getTrades.rejected, (state, action) => {
+            state.isLoading = false;
+            alert('Oops! something went wrong');
         })
       },
     

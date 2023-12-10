@@ -1,6 +1,6 @@
 import React from 'react';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { updateUserBookCount } from './usersSlice';
+import { updateUserBookCount, updateUserRequestCount } from './usersSlice';
 import * as api from '../api';
 
 
@@ -15,6 +15,7 @@ const initialState = {
     requestData: [],
     isCreateRequestSuccessful: false,
     trades: [],
+    createTradeMsg: '',
     // deletedReqData: false,
     // bookId: '',
     // creatorName: '',
@@ -87,7 +88,11 @@ export const request = createAsyncThunk('request/book', async (requestData, thun
     try {
         // console.log(requestData.updateBookPropData)
         const {data} = await api.request(requestData.createRequestData);
-        if (data.msg === 'Request successfully created') thunkAPI.dispatch(updateBookProps(requestData.updateBookPropData))
+        if (data.msg === 'Request successfully created'){
+            thunkAPI.dispatch(updateBookProps(requestData.updateBookPropData));
+            thunkAPI.dispatch(updateUserRequestCount(requestData.updateUserRequestCountData));
+            //  updateUserRequestCountData
+        }
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -107,7 +112,7 @@ export const getRequestData = createAsyncThunk('getRequestData/book', async (_, 
 export const updateRequestData = createAsyncThunk('updateRequestData/book', async (updateData, thunkAPI) =>{
     try {
         // console.log(updateData)
-        const { requestUpdateData, updateBookPropData } = updateData;
+        const { requestUpdateData, updateBookPropData, updateUserRequestCountData } = updateData;
       const {data} = await api.updateRequestData(requestUpdateData); 
       if (data.msg === 'Request data updated successfully') {
         thunkAPI.dispatch(getRequestData());
@@ -116,7 +121,9 @@ export const updateRequestData = createAsyncThunk('updateRequestData/book', asyn
     //   requestId, isAcceptersBookEmpty
     
       if (data.isAcceptersBookEmpty === true) {
-        thunkAPI.dispatch(deleteRequestData({cancelData: {dataId: data.requestId, role: ''}, updateBookPropData: data.updateBookPropData}));
+        thunkAPI.dispatch(deleteRequestData({cancelData: {dataId: data.requestId, role: ''}, updateBookPropData: data.updateBookPropData,
+        updateUserRequestCountData
+        }));
       }
       return data;
     } catch (error) {
@@ -126,10 +133,13 @@ export const updateRequestData = createAsyncThunk('updateRequestData/book', asyn
 export const deleteRequestData = createAsyncThunk('deleteRequestData/book', async (delData, thunkAPI) =>{
     try {
         const { dataId, role } = delData.cancelData;
-        const { updateBookPropData } = delData;
+        const { updateBookPropData, updateUserRequestCountData } = delData;
         const {data} = await api.deleteRequestData(dataId);
 
-        if (data.msg === "Request data Successfully deleted") thunkAPI.dispatch(updateBookProps(updateBookPropData));
+        if (data.msg === "Request data Successfully deleted"){
+             thunkAPI.dispatch(updateBookProps(updateBookPropData));
+             thunkAPI.dispatch(updateUserRequestCount(updateUserRequestCountData));
+        }
 
         return { data, role};
     } catch (error) {
@@ -139,7 +149,6 @@ export const deleteRequestData = createAsyncThunk('deleteRequestData/book', asyn
 });
 export const createTrade = createAsyncThunk('createTrade/book', async (tradeData, thunkAPI) =>{
     try {
-        console.log(tradeData)
         const {data} = await api.createTrade(tradeData);
         return data;
     } catch (error) {
@@ -263,6 +272,7 @@ const bookSlice = createSlice({
         })
         builder.addCase(createTrade.fulfilled, (state, action) => {
             alert('You Successfully accepted this request!'); 
+            state.createTradeMsg = action.payload.msg;
         })
         builder.addCase(createTrade.rejected, (state, action) => {
             alert('Oops! an error occured'); 
@@ -272,6 +282,7 @@ const bookSlice = createSlice({
         })
         builder.addCase(getTrades.fulfilled, (state, action) => {
             state.trades = action.payload.result;
+            state.createTradeMsg = '';
             state.isLoading = false;
         })
         builder.addCase(getTrades.rejected, (state, action) => {

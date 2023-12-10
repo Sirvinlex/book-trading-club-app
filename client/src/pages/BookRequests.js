@@ -6,7 +6,7 @@ import { getRequestData, getBooks, deleteRequestData, updateRequestData, createT
 import { getUsers } from '../features/usersSlice';
 
 const BookRequests = () => {
-    const { book, requestedBooks, requestData, } = useSelector((store) => store.book);
+    const { book, requestedBooks, requestData, createTradeMsg } = useSelector((store) => store.book);
     const { users } = useSelector((store) => store.users);
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
@@ -14,6 +14,7 @@ const BookRequests = () => {
 
     // const navigate = useNavigate();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(() =>{
         if (requestData.length > 0){
@@ -25,6 +26,10 @@ const BookRequests = () => {
     useEffect(() =>{
         dispatch(getRequestData());
     }, []);
+
+    useEffect(() =>{
+        if (createTradeMsg === 'Trade successfully added') navigate('/trades');
+    }, [createTradeMsg]);
 
 
     const myData = requestData.map((item) =>{
@@ -106,7 +111,9 @@ const BookRequests = () => {
                                         <button
                                             className='cancel-btn'
                                             onClick={() => {
-                                                dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'cancel'}, updateBookPropData}))
+                                                dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'cancel'}, updateBookPropData,
+                                                updateUserRequestCountData: { userId: item.requestCreatorId, isIncreased: false }
+                                            }))
                                             }} 
                                         >
                                             Cancel Request
@@ -122,13 +129,18 @@ const BookRequests = () => {
                                                     const requestCreatorBooks = item.requesterBooks;
                                                     const requestAccepterBooks = item.accepterBooks.filter((reqAccBook) => reqAccBook.creatorId === localStorageUser?.userId) 
                                                     dispatch(createTrade({ idOfRequestCreator, requestCreatorBooks, requestAccepterBooks }));
-                                                    dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'accept request'}, updateBookPropData}));
+
+                                                    dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'accept request'}, updateBookPropData,
+                                                    updateUserRequestCountData: { userId: item.requestCreatorId, isIncreased: false }
+                                                    }));
                                                 }}
                                             >
                                                 Accept
                                             </button>
                                             <button 
-                                                onClick={() => dispatch(updateRequestData({requestUpdateData, updateBookPropData: updateBookPropDataForReject}))} 
+                                                onClick={() => dispatch(updateRequestData({requestUpdateData, updateBookPropData: updateBookPropDataForReject,
+                                                    updateUserRequestCountData: { userId: item.requestCreatorId, isIncreased: false }
+                                                }))} 
                                                 className='reject-btn'
                                             >
                                                 Reject

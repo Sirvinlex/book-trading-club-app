@@ -60,6 +60,18 @@ export const updateUserBookCount = createAsyncThunk('updateUserBookCount/userPro
     return  thunkAPI.rejectWithValue(error);
   }
 });
+export const updateUserRequestCount = createAsyncThunk('updateUserRequestCount/userProfile', async (updateData, thunkAPI) =>{
+  try {
+    // console.log(updateData, 'data')
+    const {data} = await api.updateUserRequestCount(updateData); 
+    // console.log(data)
+    return data;
+  } catch (error) {
+    // console.log(error)
+    // return  thunkAPI.rejectWithValue(error.response.data.msg);
+    return  thunkAPI.rejectWithValue(error);
+  }
+});
 
 const usersSlice = createSlice({
     name: 'users',

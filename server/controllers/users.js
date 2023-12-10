@@ -55,4 +55,21 @@ export const updateUserBookCount = async(req, res) =>{
         res.status(400).json(error);
     }
 };
+export const updateUserRequestCount = async(req, res) =>{
+    const { userId, isIncreased } = req.body;
+    try {
+      console.log(userId, isIncreased)
+      // const user = await User.findById(userId);
+      // let activeRequest;
+      // if (isIncreased === true){
+      //   activeRequest = user.activeRequest + 1;
+      // }else{
+      //   activeRequest = user.activeRequest - 1;
+      // };
+      // const updatedUser = await User.findByIdAndUpdate({ _id: userId }, { activeRequest }, {new: true, runValidators: true});
+      // res.status(200).json({ updatedUser, updatedUserId: userId, isIncreased });
+    } catch (error) { 
+        res.status(400).json(error);
+    }
+};
 

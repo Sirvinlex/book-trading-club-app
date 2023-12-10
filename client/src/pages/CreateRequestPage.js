@@ -28,9 +28,10 @@ const CreateRequestPage = () => {
         const accepterBooksId = accepterBooksIds;
         const acceptersId = requestAcceptersIds;
 
-        // when creating request, books are also updated with number of active incoming requests, and the list of requesters, the logic will be
-        // used to extract the data needed to update books as request is created. The date will be sent together with the create request data
-        // and thunk API will be used to dispatch update to the book if create request is successful
+        /* when creating request, books are also updated with number of active incoming requests, and the list of requesters, the logic will be
+         used to extract the data needed to update books as request is created. The date will be sent together with the create request data
+         and thunk API will be used to dispatch update to the book if create request is successful, we also update the request creator active
+         active request count on the user profile, so we also need to sent the data */
         const requesterBookProp = requesterBooksId.map((reqBookProp) =>{
             // const requesterId = requestCreatorId;
             const isProposed = true;
@@ -47,7 +48,8 @@ const CreateRequestPage = () => {
         })
         // isCancelled prop is passed to determine whether request is being created of cancelled
         dispatch(request({ createRequestData: {requestCreatorId, requesterBooksId, accepterBooksId, acceptersId}, 
-         updateBookPropData: {requesterBookProp, accepterBookProp, IsCancelled: false}}));
+         updateBookPropData: {requesterBookProp, accepterBookProp, IsCancelled: false}, 
+         updateUserRequestCountData: { userId: requestCreatorId, isIncreased: true } }));
     }
   };
 

@@ -23,6 +23,7 @@ const UsersPage = () => {
       <div className='user-page'>
         {myUsers.map((item, i) =>{
           const id = item?._id;
+          console.log(item)
           return(
             <div key={i} className='users-container'>
               <p className='user-name' onClick={() => navigate(`users-details/${id}`)}>{item.name}</p>

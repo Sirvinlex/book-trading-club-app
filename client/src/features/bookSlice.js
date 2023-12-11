@@ -16,6 +16,7 @@ const initialState = {
     isCreateRequestSuccessful: false,
     trades: [],
     createTradeMsg: '',
+    creatingRequest: false,
     // deletedReqData: false,
     // bookId: '',
     // creatorName: '',
@@ -196,19 +197,19 @@ const bookSlice = createSlice({
     
     extraReducers: (builder) => {
         builder.addCase(createBook.pending, (state, action) => {
-            state.isLoading = true;
+            // state.isLoading = true;
         })
         builder.addCase(createBook.fulfilled, (state, action) => {
             alert(action.payload.msg);
             state.createdBook = action.payload.book;
             state.title = '';
             state.description = '';
-            state.isLoading = false;
+            // state.isLoading = false;
         })
         builder.addCase(createBook.rejected, (state, action) => {
             // alert(action.payload);
             alert('Oops! an error occured');
-            state.isLoading = false;
+            // state.isLoading = false;
         })
         builder.addCase(getBooks.pending, (state, action) => {
             state.isLoading = true;
@@ -241,13 +242,18 @@ const bookSlice = createSlice({
             alert('Oops! an error occured');
             state.isLoading = false;
         })
+        builder.addCase(request.pending, (state, action) => {
+            state.creatingRequest = true;
+        })
         builder.addCase(request.fulfilled, (state, action) => {
             state.isCreateRequestSuccessful = true;
             alert(action.payload.msg);
             state.requestedBooks = [];
+            state.creatingRequest = false;
         })
         builder.addCase(request.rejected, (state, action) => {
             alert('Oops! something went wrong');
+            state.creatingRequest = false;
         })
         builder.addCase(getRequestData.pending, (state, action) => {
             state.isLoading = true;

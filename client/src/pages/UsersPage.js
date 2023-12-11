@@ -34,7 +34,7 @@ const UsersPage = () => {
                 <div className='trade-div'>Completed Trades: {item.completedTrades}</div>
               </div>
               {/* <p className='joined'>Joined: {item.createdAt}</p> */}
-              <p className='joined'>Joined: <Moment fromNow ago>{item.createdAt}</Moment></p>
+              <p className='joined'>Joined: <Moment fromNow ago>{item.createdAt}</Moment> ago</p>
               {/* <Moment fromNow ago>{item["created_at"]}</Moment> */}
             </div>
           )

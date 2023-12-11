@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { request } from '../features/bookSlice';
 
 const CreateRequestPage = () => {
-  const { requestedBooks, isCreateRequestSuccessful } = useSelector((store) => store.book);
+  const { requestedBooks, isCreateRequestSuccessful, creatingRequest } = useSelector((store) => store.book);
   const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
   const dispatch = useDispatch();
@@ -100,7 +100,9 @@ const CreateRequestPage = () => {
                 </div>
             </div>
             <div className='books-container-footer'>
-                <button onClick={handleSubmitRequest} className='submit-request-btn'>Submit Request</button>
+                <button disabled={ creatingRequest ? true : false} onClick={handleSubmitRequest} className='submit-request-btn'>
+                    { creatingRequest ? 'Loading...' : 'Submit Request' }
+                </button>
             </div>
         </div>
     </Wrapper>
@@ -168,7 +170,7 @@ const Wrapper = styled.div`
     .main-book{
         /* border-radius: 3px; */
         border-bottom: var(--color2) 1px solid;
-        height: 80px;
+        height: fit-content;
         /* margin-right: 20px;
         margin-left: 1px; */
         /* margin-top: -10px; */

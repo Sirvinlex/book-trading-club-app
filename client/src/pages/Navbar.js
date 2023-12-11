@@ -29,6 +29,7 @@ const Navbar = () => {
     // navigate(`books/user-books/${localStorageUser?.userId}`);
     navigate(`users/user-books/${localStorageUser?.userId}`);
     setShowProfile(false);
+    setShowRequest(false);
   };
 
   const handleLogout = () =>{
@@ -49,7 +50,7 @@ const Navbar = () => {
           <div id="request-container">
           <p>
             <Link onClick={() => setShowRequest(false)} style={{textDecoration:'none', color:'var(--fontColor1)'}} to='books/requests'>
-              All Requests
+              Active Requests
             </Link>
           </p>
 
@@ -71,6 +72,9 @@ const Navbar = () => {
             }
           }} style={{cursor: 'pointer'}}>
             Create Request
+          </p>
+          <p style={{cursor: 'pointer'}} onClick={ () => !localStorageUser ? alert('Login/Create account to add books to exchange') : handleMyBooks()}>
+            Add book
           </p>
         </div>
         ) : null}

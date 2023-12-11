@@ -7,7 +7,7 @@ import { getUsers } from '../features/usersSlice';
 import Moment from 'react-moment';
 
 const BookRequests = () => {
-    const { book, requestedBooks, requestData, createTradeMsg } = useSelector((store) => store.book);
+    const { book, requestedBooks, requestData, createTradeMsg, isLoading } = useSelector((store) => store.book);
     const { users } = useSelector((store) => store.users);
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
@@ -48,6 +48,7 @@ const BookRequests = () => {
         return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName, requestDataId, requestTime }
     });
 
+    if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
 
   return (
     <Wrapper>
@@ -480,17 +481,8 @@ const Wrapper = styled.div`
             margin-left: 2px;
         }
     }
+    
     @media (min-width: 768px) {
-        .main-book{
-            display: flex;
-            flex-direction: row;
-        }
-        .book-details-container{
-            width: 80%;
-        }
-        .book-stats{
-          width: 20%;
-        }
         .accept-reject-btn-container{
             top: 4;
         }
@@ -522,6 +514,18 @@ const Wrapper = styled.div`
             margin-left: auto;
             margin-right: auto;
             border-radius: 5px;
+        }
+    }
+    @media (min-width: 1200px) {
+        .main-book{
+            display: flex;
+            flex-direction: row;
+        }
+        .book-details-container{
+            width: 80%;
+        }
+        .book-stats{
+          width: 20%;
         }
     }
 

@@ -9,7 +9,7 @@ import Moment from 'react-moment';
 
 
 const Trades = () => {
-    const { trades } = useSelector((store) => store.book);
+    const { trades, isLoading } = useSelector((store) => store.book);
     const { users } = useSelector((store) => store.users);
 
     const dispatch = useDispatch();
@@ -24,6 +24,8 @@ const Trades = () => {
         dispatch(getTrades());
     }, []);
 
+    if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
+    
   return (
     <Wrapper>
       <div className='books-container'>

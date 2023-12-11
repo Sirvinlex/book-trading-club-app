@@ -28,7 +28,7 @@ const UserBooks = () => {
 
     useEffect(() =>{
       dispatch(getUserDetails(id));
-    }, [id, dispatch]);
+    }, [id]);
   
     useEffect(() =>{
         const userId = id;
@@ -100,7 +100,7 @@ const UserBooks = () => {
                             </button>
                         </div>
                     </form>
-                </>
+                </> 
             ) : null
         }
 
@@ -134,29 +134,31 @@ const UserBooks = () => {
                     <div key={item._id}>
                       {/* {console.log(item)} */}
                         <label className='books-container-body'>
-                        <input onChange={handleCheckedChange} type="checkbox" id={item._id} name="bookData" value={item._id} 
-                        data-test-id={itemData} checked={requestedBooksId.includes(bookId) ? 'checked' : null}
-                        />
-                        <div className='book-details'>
-                          <p className='book-title'>{item.title}</p>
-                          <p className='book-description'>{item.description}</p>
-                          <p className='creator-details'>
-                            from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
-                            {' '} in {item.creatorCity}, {item.creatorState}
-                          </p>
-                        </div>
-                        <div className='book-stats'>
-                          {
-                            item.requests > 0 ? (
-                              <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
-                              // <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
-                            ) : null
-                          }
-                          {/* <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p> */}
-                        </div>
-                        { localStorageUser?.userId === item.creatorId ? (
-                          <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
-                        ) : null}
+                            <input onChange={handleCheckedChange} type="checkbox" id={item._id} name="bookData" value={item._id} 
+                            data-test-id={itemData} checked={requestedBooksId.includes(bookId) ? 'checked' : null}
+                            />
+                            <div className='main-book'>
+                              <div className='book-details'>
+                                <p className='book-title'>{item.title}</p>
+                                <p className='book-description'>{item.description}</p>
+                                <p className='creator-details'>
+                                  from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
+                                  {' '} in {item.creatorCity}, {item.creatorState}
+                                </p>
+                              </div>
+                              <div className='book-stats'>
+                                {
+                                  item.requests > 0 ? (
+                                    <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
+                                    // <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
+                                  ) : null
+                                }
+                                {/* <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p> */}
+                              </div>
+                              { localStorageUser?.userId === item.creatorId ? (
+                                <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                              ) : null}
+                            </div>
                       </label>
                     </div>
                     
@@ -229,6 +231,8 @@ const Wrapper = styled.div`
         /* border-top: var(--color2) 1px solid; */
         border-bottom: var(--color2) 1px solid;
         position: relative;
+        display: flex;
+        flex-direction: row;
     }
     .books-container-title{
         width: 100%;
@@ -377,6 +381,11 @@ const Wrapper = styled.div`
     }
     @media (min-width: 768px) {
         margin-top: -65px;
+        .main-book{
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+        }
         .request-btn-absolute{
           width: 200px;
           height: 45px;

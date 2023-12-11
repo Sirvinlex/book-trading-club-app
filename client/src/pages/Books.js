@@ -118,56 +118,60 @@ const Books = () => {
                     // requestedBooksId.includes(bookId)
                     <div key={item._id}>
                       {/* {console.log(item)} */}
-                        <label className='books-container-body'>
+                      <label className='books-container-body'>
                         <input onChange={handleChange} type="checkbox" id={item._id} name="bookData" value={item._id} 
                         data-test-id={itemData}  checked={requestedBooksId.includes(bookId) ? 'checked' : null}
                         />
-                        <div className='book-details'>
-                          <p className={requestedBooksId.includes(item._id) && bookCreatorId === requesterId ? 'book-title2' :
-                         requestedBooksId.includes(item._id) && bookCreatorId !== requesterId ? 'book-title3' : 'book-title'}>
-                            {item.title}
-                          </p>
-                          <p className={requestedBooksId.includes(item._id) && bookCreatorId === requesterId ? 'book-description2' :
-                         requestedBooksId.includes(item._id) && bookCreatorId !== requesterId ? 'book-description3' : 'book-description'}>
-                            {item.description}
-                          </p>
-                          <p className='creator-details'>
-                            from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>
-                              {bookCreatorNameFromUsersState || creatorName}
-                              </Link>
-                              </span>{' '} in {item.creatorCity}, {item.creatorState}
-                          </p>
-                        </div>
-                        {item.requests > 0 ? (
-                            <div className='book-stats'>
-                              <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
-                              <p style={{marginTop: '-13px'}}>
-                                 ( {
-                                    // const myLink = `/users/users-details/${item.creatorId}`
-                                    requestersArr2.map((reqArr2,i) =>{
-                                      const id = reqArr2?.split(' ')[0];
-                                      const name = reqArr2?.split(' ')[1];
-                                      const count = reqArr2?.split(' ')[2];
-                                      const comma = reqArr2?.split(' ')[3] || '';
-                                      const myLink = `/users/users-details/${id}`
-                                      // console.log(id, name, count, comma)
-                                      // console.log(id)
-                                      return(
-                                          <span key={i} className='requestor-list'>
-                                            <Link style={{textDecoration:'none', fontWeight:'700'}} to={myLink}>
-                                              {name}<span>({count}){comma} </span> 
-                                            </Link>
-                                          </span>
-                                      )
-                                    })
-                                  } )
+                        {/* ///////////////////// */}
+                        <div className='main-book'>
+                            <div className='book-details'>
+                              <p className={requestedBooksId.includes(item._id) && bookCreatorId === requesterId ? 'book-title2' :
+                            requestedBooksId.includes(item._id) && bookCreatorId !== requesterId ? 'book-title3' : 'book-title'}>
+                                {item.title}
+                              </p>
+                              <p className={requestedBooksId.includes(item._id) && bookCreatorId === requesterId ? 'book-description2' :
+                            requestedBooksId.includes(item._id) && bookCreatorId !== requesterId ? 'book-description3' : 'book-description'}>
+                                {item.description}
+                              </p>
+                              <p className='creator-details'>
+                                from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>
+                                  {bookCreatorNameFromUsersState || creatorName}
+                                  </Link>
+                                  </span>{' '} in {item.creatorCity}, {item.creatorState}
                               </p>
                             </div>
-                        ) : null}
-                        { localStorageUser?.userId === item.creatorId ? (
-                          <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
-                        ) : null}
-                      </label>
+                            {item.requests > 0 ? (
+                                <div className='book-stats'>
+                                  <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
+                                  <p style={{marginTop: '-13px'}}>
+                                    ( {
+                                        // const myLink = `/users/users-details/${item.creatorId}`
+                                        requestersArr2.map((reqArr2,i) =>{
+                                          const id = reqArr2?.split(' ')[0];
+                                          const name = reqArr2?.split(' ')[1];
+                                          const count = reqArr2?.split(' ')[2];
+                                          const comma = reqArr2?.split(' ')[3] || '';
+                                          const myLink = `/users/users-details/${id}`
+                                          // console.log(id, name, count, comma)
+                                          // console.log(id)
+                                          return(
+                                              <span key={i} className='requestor-list'>
+                                                <Link style={{textDecoration:'none', fontWeight:'700'}} to={myLink}>
+                                                  {name}<span>({count}){comma} </span> 
+                                                </Link>
+                                              </span>
+                                          )
+                                        })
+                                      } )
+                                  </p>
+                                </div>
+                            ) : null}
+                            { localStorageUser?.userId === item.creatorId ? (
+                              <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                            ) : null}
+                          </div>
+                        </label>
+                      {/* //////////////// */}
                     </div>
                     
                   )
@@ -235,6 +239,8 @@ const Wrapper = styled.div`
         /* border-top: var(--color2) 1px solid; */
         border-bottom: var(--color2) 1px solid;
         position: relative;
+        display: flex;
+        flex-direction: row;
     }
     .empty-book-body{
         padding-left: 5px;
@@ -393,6 +399,11 @@ const Wrapper = styled.div`
     }
     @media (min-width: 768px) {
         /* margin-top: -65px; */
+        .main-book{
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+        }
         .request-btn-absolute{
           width: 200px;
           height: 45px;

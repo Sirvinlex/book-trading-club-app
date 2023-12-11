@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getUsers } from '../features/usersSlice';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
+import Moment from 'react-moment';
 
 {/* <Link to='users/:id'>Login/Register</Link> */}
 
@@ -23,15 +24,18 @@ const UsersPage = () => {
       <div className='user-page'>
         {myUsers.map((item, i) =>{
           const id = item?._id;
-          console.log(item)
           return(
             <div key={i} className='users-container'>
               <p className='user-name' onClick={() => navigate(`users-details/${id}`)}>{item.name}</p>
               <p>City: {item.city}</p>
-              <div style={{display:'flex', flexDirection:'row'}}>
-                <div className='book-div'>Books: {item.books}</div><div className='request-div'>Active Requests: 1</div>
+              <div style={{display:'flex', flexDirection:'row', flexWrap:'wrap'}}>
+                <div className='book-div'>Books: {item.books}</div>
+                <div className='request-div'>Active Requests: {item.activeRequest}</div>
+                <div className='trade-div'>Completed Trades: {item.completedTrades}</div>
               </div>
-              <p className='joined'>Joined: {item.createdAt}</p>
+              {/* <p className='joined'>Joined: {item.createdAt}</p> */}
+              <p className='joined'>Joined: <Moment fromNow ago>{item.createdAt}</Moment></p>
+              {/* <Moment fromNow ago>{item["created_at"]}</Moment> */}
             </div>
           )
         })}
@@ -94,6 +98,7 @@ const Wrapper = styled.div`
     margin-right: 5px;
     padding: 2px 5px 6px 5px;
     border-radius: 3px;
+    margin-bottom: 3px;
   }
   .request-div{
     height: 15px;
@@ -104,6 +109,18 @@ const Wrapper = styled.div`
     margin-right: 5px;
     padding: 2px 5px 6px 5px;
     border-radius: 3px;
+    margin-bottom: 3px;
+  }
+  .trade-div{
+    height: 15px;
+    width: fit-content;
+    font-size: 13px;
+    background-color: #277d4c;
+    color: white;
+    margin-right: 5px;
+    padding: 2px 5px 6px 5px;
+    border-radius: 3px;
+    margin-bottom: 3px;
   }
   @media (min-width: 768px) {
     .user-page{

@@ -31,6 +31,10 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    completedTrades:  {
+        type: Number,
+        default: 0,
+    },
 },
 { timestamps: true }
 );

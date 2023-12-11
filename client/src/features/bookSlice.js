@@ -1,6 +1,6 @@
 import React from 'react';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { updateUserBookCount, updateUserRequestCount } from './usersSlice';
+import { updateUserBookCount, updateUserRequestCount, updateUserTradeCount } from './usersSlice';
 import * as api from '../api';
 
 
@@ -150,6 +150,14 @@ export const deleteRequestData = createAsyncThunk('deleteRequestData/book', asyn
 export const createTrade = createAsyncThunk('createTrade/book', async (tradeData, thunkAPI) =>{
     try {
         const {data} = await api.createTrade(tradeData);
+        
+        // After request is accepted and trade is successful, the two users exchanging book will have their completed trade count increased by 1
+        // we can dispatch the action here, we just need the two users' IDs
+        const userId = data.trade.idOfRequestCreator;
+        const userId2 = data.trade.requestAccepterBooks[0].creatorId;
+        const userIds =  [ userId, userId2 ];
+
+        if(data.msg === 'Trade successfully added') thunkAPI.dispatch(updateUserTradeCount(userIds));
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);

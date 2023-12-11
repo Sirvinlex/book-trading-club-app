@@ -10,7 +10,8 @@ const initialState = {
     userState: '',
     address: '',
     updateProfileMessage: '',
-    profileUpdateResult: {}
+    profileUpdateResult: {},
+    // updatedUser: []
 };
 
 export const getUsers = createAsyncThunk('getUsers/allUsers', async (_, thunkAPI) =>{
@@ -64,6 +65,18 @@ export const updateUserRequestCount = createAsyncThunk('updateUserRequestCount/u
   try {
     // console.log(updateData, 'data')
     const {data} = await api.updateUserRequestCount(updateData); 
+    // console.log(data)
+    return data;
+  } catch (error) {
+    // console.log(error)
+    // return  thunkAPI.rejectWithValue(error.response.data.msg);
+    return  thunkAPI.rejectWithValue(error);
+  }
+});
+export const updateUserTradeCount = createAsyncThunk('updateUserTradeCount/userProfile', async (updateData, thunkAPI) =>{
+  try {
+    // console.log(updateData, 'data')
+    const {data} = await api.updateUserTradeCount(updateData); 
     // console.log(data)
     return data;
   } catch (error) {
@@ -141,6 +154,10 @@ const usersSlice = createSlice({
         builder.addCase(updateUserBookCount.rejected, (state, action) => {
           alert('Oops! an error occured');
         })
+        // builder.addCase(updateUserRequestCount.fulfilled, (state, action) => {
+        //   state.updatedUser = action.payload.updatedUser;
+        // })
+        
       
     },
     

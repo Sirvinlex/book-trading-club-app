@@ -4,6 +4,8 @@ import { getTrades } from '../features/bookSlice';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getUsers } from '../features/usersSlice';
+import Moment from 'react-moment';
+
 
 
 const Trades = () => {
@@ -35,6 +37,7 @@ const Trades = () => {
                   ) : (
                     trades.map((item, i) =>{
                         const requestCreatorLink = `/users/users-details/${item.idOfRequestCreator}`;
+                        const myId = item.idOfRequestCreator
                         let requestCreatorName;
                         let requestAccepterName;
                         let requestAccepterLinks
@@ -59,7 +62,7 @@ const Trades = () => {
                                   }
                                     <p>
                                         <b>
-                                          <Link style={{textDecoration:'none'}} link={requestCreatorLink}>{requestCreatorName}</Link>{' '}
+                                          <Link style={{textDecoration:'none'}} to={requestCreatorLink}>{requestCreatorName}</Link>{' '}
                                             Gave:
                                         </b>
                                     </p>
@@ -92,6 +95,7 @@ const Trades = () => {
                                         
                                     </div>
                                 </div>
+                                <p className='date'><Moment fromNow ago>{item.createdAt}</Moment> ago</p>
                             </div>
                         <hr/>
                         </div>
@@ -159,6 +163,13 @@ const Wrapper = styled.div`
         justify-content: center;
         align-items: center; */
         padding-bottom: 30px;
+    }
+    .date{
+        position: absolute;
+        bottom: -11px;
+        left: 27px;
+        font-weight: 700;
+        font-size: 14px;
     }
     .take-div>p{
         text-align: center;

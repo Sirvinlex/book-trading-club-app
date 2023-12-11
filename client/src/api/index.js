@@ -10,6 +10,7 @@ export const updateUserProfile = (updateData) => API.patch(`/users/updateUserPro
 export const updateBookProps = (updateData) => API.patch(`/book/updateBookProps`, updateData);
 export const updateUserBookCount = (updateData) => API.patch(`/users/updateUserBookCount`, updateData);
 export const updateUserRequestCount = (updateData) => API.patch(`/users/updateUserRequestCount`, updateData);
+export const updateUserTradeCount = (updateData) => API.patch(`/users/updateUserTradeCount`, updateData);
 export const createBook = (bookData) => API.post('/book/createBook', bookData);
 export const request = (requestData) => API.post('request/create-request', requestData);
 export const getRequestData = () => API.get('/request/getRequestData');

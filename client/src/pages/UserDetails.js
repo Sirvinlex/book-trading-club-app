@@ -40,7 +40,6 @@ const UserDetails = () => {
   return (
     <Wrapper>
       <p className='details-title'>
-        {console.log(userDetails)}
         <span id='span1'>{userFirstName}</span> <span id='span2'>Profile</span>
       </p>
       <p>Full Name: {userDetails?.name}</p>

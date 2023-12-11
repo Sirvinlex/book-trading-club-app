@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { getRequestData, getBooks, deleteRequestData, updateRequestData, createTrade } from '../features/bookSlice';
 import { getUsers } from '../features/usersSlice';
+import Moment from 'react-moment';
 
 const BookRequests = () => {
     const { book, requestedBooks, requestData, createTradeMsg } = useSelector((store) => store.book);
@@ -34,7 +35,7 @@ const BookRequests = () => {
 
     const myData = requestData.map((item) =>{
         let mainData = item, requestCreatorId = item.requestCreatorId, accepterBooks = [], requesterBooks = [], 
-        acceptersId = item.acceptersId, requestCreatorName, requestDataId = item._id;
+        acceptersId = item.acceptersId, requestCreatorName, requestDataId = item._id, requestTime = item.createdAt;
         book?.forEach((bk) =>{
             if (mainData.requesterBooksId.includes(bk._id)) requesterBooks.push(bk)
             else if (mainData.accepterBooksId.includes(bk._id)) accepterBooks.push(bk)
@@ -44,7 +45,7 @@ const BookRequests = () => {
             if (user._id === requestCreatorId) requestCreatorName = user.name;
         })
 
-        return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName, requestDataId }
+        return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName, requestDataId, requestTime }
     });
 
 
@@ -205,6 +206,8 @@ const BookRequests = () => {
                                             
                                         </div>
                                     </div>
+                                    {/* <p className='date'><Moment fromNow ago></Moment> ago</p> */}
+                                    <p className='date'><Moment fromNow ago>{item.requestTime}</Moment> ago</p>
                                 </div>
                             <hr/>
                             </div>
@@ -312,6 +315,13 @@ const Wrapper = styled.div`
         justify-content: center;
         align-items: center; */
         padding-bottom: 30px;
+    }
+    .date{
+        position: absolute;
+        bottom: -11px;
+        left: 27px;
+        font-weight: 700;
+        font-size: 14px;
     }
     .take-div>p{
         text-align: center;

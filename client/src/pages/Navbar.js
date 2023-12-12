@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
-import { getUserDetails } from '../features/usersSlice'
 import { Link, useNavigate } from 'react-router-dom';
 import { AiFillCaretDown } from 'react-icons/ai';
 
@@ -13,7 +12,6 @@ const Navbar = () => {
   const [showRequest, setShowRequest] = useState(false);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   
   const handleProfileClick = () =>{
     navigate(`/users/users-details/${localStorageUser.userId}`);
@@ -26,7 +24,6 @@ const Navbar = () => {
   };
 
   const handleMyBooks = () =>{
-    // navigate(`books/user-books/${localStorageUser?.userId}`);
     navigate(`users/user-books/${localStorageUser?.userId}`);
     setShowProfile(false);
     setShowRequest(false);
@@ -54,16 +51,6 @@ const Navbar = () => {
             </Link>
           </p>
 
-            {/* <Link onClick={() => {
-              if(!localStorageUser) alert('Login/Create account to create request')
-              else {
-                navigate('/books/create-request');
-                setShowRequest(false);
-              }
-            
-            }} style={{textDecoration:'none', color:'var(--fontColor1)'}} to='/books/create-request'>
-              Create Request
-            </Link> */}
           <p onClick={() => {
             if(!localStorageUser) alert('Login/Create account to create request')
             else {
@@ -91,7 +78,6 @@ const Navbar = () => {
       )}
       {(showProfile && localStorageUser) ? (
         <div className="profile-container">
-          {/* {console.log(localStorageUser.userId)} */}
         <p onClick={handleProfileClick}>Profile</p>
         <p onClick={handleEditProfile}>Edit Profile</p>
         <p onClick={handleMyBooks}>My Books</p>
@@ -196,11 +182,9 @@ const Wrapper = styled.div`
       margin-top: 0px;
     }
     #request-container{
-      /* display: none; */
       position: absolute;
       left: 320px;
       top: 60px;
-      /* background-color: red; */
       padding-top: 7px;
       background-color: var(--backgroundColor);
       height: fit-content;
@@ -208,13 +192,11 @@ const Wrapper = styled.div`
       box-shadow: 4px 3px 5px #abaaa7, -4px 3px 5px #abaaa7;
     }
     .profile-container{
-      /* display: none; */
       padding-top: 6px;
       position: absolute;
       right: 20px;
       top: 60px;
       background-color: var(--backgroundColor);
-      /* background-color: red; */
       height: fit-content;
       width: 130px;
       box-shadow: 4px 3px 5px #abaaa7, -4px 3px 5px #abaaa7;

@@ -15,7 +15,6 @@ export const getTrades = async (req, res) =>{
         const trades = await Trades.find().sort({ _id: -1});
         res.status(200).json({ result: trades })
     } catch (error) {
-     //    res.status(404).json({message: error.message})
         res.status(404).json(error);
     }
  };

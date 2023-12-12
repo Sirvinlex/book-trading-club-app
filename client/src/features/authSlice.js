@@ -1,13 +1,10 @@
-import React from 'react';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { toast } from 'react-toastify';
 import * as api from '../api';
 
 const initialState = {
     name: '',
     email: '',
     password: '',
-    // authSuccess: false,
     user: {},
     toggleUser: false,
     loading: false,
@@ -18,7 +15,6 @@ const initialState = {
 export const regUser = createAsyncThunk('register/user', async (regData, thunkAPI) =>{
     try {
         const {data} = await api.registerUser(regData);
-        // console.log(data)
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -29,11 +25,8 @@ export const regUser = createAsyncThunk('register/user', async (regData, thunkAP
 export const logUser = createAsyncThunk('login/user', async (loginData, thunkAPI) =>{
     try {
         const {data} = await api.loginUser(loginData);
-        // console.log(data, 'login')
         return data;
-    } catch (error) {
-        // console.log(error)
-        
+    } catch (error) {        
         return  thunkAPI.rejectWithValue(error.response.data.msg);
     }
 });

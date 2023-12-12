@@ -13,10 +13,8 @@ export const createBook = async(req, res) =>{
 export const getBooks = async (req, res) =>{
     try {
         const books = await Book.find().sort({ _id: -1});
-     //    console.log(users)  
         res.status(200).json({ result: books })
     } catch (error) {
-     //    res.status(404).json({message: error.message})
         res.status(404).json(error);
     }
  };
@@ -43,15 +41,17 @@ export const deleteBook = async(req, res) =>{
 export const updateBookProps = async(req, res) =>{
     const { requesterBookProp, accepterBookProp, IsCancelled } = req.body
     try {
-        // console.log(requesterBookProp)
-        // if (!requesterBookProp || !accepterBookProp) return res.status(400).json({msg: 'Oops! something went wrong'});
         for (let i = 0; i < requesterBookProp.length; i++){
             if(IsCancelled === false){
+                const book = await Book.findById(requesterBookProp[i].bookId);
+                const tempProposed = book.proposed;
                 const updatedBook = await Book.findByIdAndUpdate({ _id: requesterBookProp[i].bookId }, 
-                    { isProposed: true }, {new: true, runValidators: true})
+                    { proposed: tempProposed + 1 }, {new: true, runValidators: true})
             }else{
+                const book = await Book.findById(requesterBookProp[i].bookId);
+                const tempProposed = book.proposed;
                 const updatedBook = await Book.findByIdAndUpdate({ _id: requesterBookProp[i].bookId }, 
-                    { isProposed: false }, {new: true, runValidators: true})
+                    { proposed: tempProposed - 1 }, {new: true, runValidators: true})
             }
         }
 
@@ -74,17 +74,7 @@ export const updateBookProps = async(req, res) =>{
         }
 
         res.status(200).json({ msg: 'Book property updated successfully' });
-
-        // requesterBookProp.forEach((item) =>{
-        //     let isProposed
-        //     // const book = await Book.findById(item.bookId)
-        //     // console.log(book)
-        // })
-
-        // const book = await Book.findByIdAndUpdate({ _id: id }, { name, city, state: userState, address }, {new: true, runValidators: true})
-        // if (!book) return res.status(400).json({msg: 'No book with this Id'});
-        // res.status(200).json({ user });
     } catch (error) { 
-        res.status(400).json(error);
-    }
-};
+            res.status(400).json(error);
+        }
+    };

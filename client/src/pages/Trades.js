@@ -18,7 +18,7 @@ const Trades = () => {
       if (trades.length > 0){
           dispatch(getUsers());
       }
-    }, [trades]);
+    }, []);
 
     useEffect(() =>{
         dispatch(getTrades());
@@ -35,11 +35,10 @@ const Trades = () => {
           <div className='books-container-body'></div>
                 {
                   trades.length < 1 ? (
-                    <p>No completed trades yet</p>
+                    <p style={{textAlign:'center'}}>No completed trades yet</p>
                   ) : (
                     trades.map((item, i) =>{
                         const requestCreatorLink = `/users/users-details/${item.idOfRequestCreator}`;
-                        const myId = item.idOfRequestCreator
                         let requestCreatorName;
                         let requestAccepterName;
                         let requestAccepterLinks
@@ -117,17 +116,14 @@ const Wrapper = styled.div`
         margin-top: 45px;
         margin-bottom: 40px;
         width: 100%;
-        /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
         color: var(--fontColor1);
-        /* background: pink; */
     }
     .books-container-title{
         width: 100%;
         background-color: var(--color1);
         border-bottom: var(--color2) 1px solid;
         height: 100px;
-        /* text-align: center; */
         font-weight: 600;
         font-size: 21px;
         display: flex;
@@ -136,18 +132,14 @@ const Wrapper = styled.div`
         justify-content: center;
     }
     .books-container-body{
-        /* padding: 10px; */
         height: fit-content;
         width: 100%;
-        /* border-bottom: var(--color2) 1px solid; */
         display: flex;
         flex-direction: column;
-        /* background-color: blue; */
         align-items: center;
         justify-content: center;
     }
     .give-take-container{
-        /* background-color: red; */
         width: 100%;
         height: fit-content;
         display: flex;
@@ -159,11 +151,6 @@ const Wrapper = styled.div`
     }
     .take-div{
         width: 100%;
-        /* margin-left: 10px; */
-        /* display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center; */
         padding-bottom: 30px;
     }
     .date{
@@ -189,20 +176,16 @@ const Wrapper = styled.div`
     .request-container{
         display: flex;
         flex-direction: column;
-        /* background-color: pink; */
         background-color: var(--color1);
         width: 100%;
         height: fit-content;
         margin-top: 20px;
         margin-bottom: 20px;
-        /* padding-top: 10px; */
         border: var(--color2) 1px solid;
         position: relative;
     }
     .main-book-container{
         border: var(--color2) 1px solid;
-        /* margin-right: 20px; */
-        /* margin-left: 1px; */
         border-radius: 3px;
         height: fit-content;
         width: 90%;
@@ -246,16 +229,6 @@ const Wrapper = styled.div`
         margin-top: -10px;
     }
     @media (min-width: 600px) {
-        /* .give-btn,.take-btn{
-            margin-left: 2px;
-        } */
-        .books-container-body{
-            /* padding: 15px; */
-        }
-        .main-book-container{
-            /* margin-right: 33px; */
-            /* margin-left: 2px; */
-        }
         .main-book-container2{
             margin-right: 33px;
             margin-left: 2px;
@@ -273,9 +246,6 @@ const Wrapper = styled.div`
             flex-direction: row;
             width: 97%;
             border-radius: 4px;
-        }
-        .books-container-body{
-            /* flex-direction: row; */
         }
         .give-div{
             width: 50%;

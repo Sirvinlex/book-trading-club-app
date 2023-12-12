@@ -7,13 +7,11 @@ import { getUsers } from '../features/usersSlice';
 import Moment from 'react-moment';
 
 const BookRequests = () => {
-    const { book, requestedBooks, requestData, createTradeMsg, isLoading } = useSelector((store) => store.book);
+    const { book, requestData, createTradeMsg, isLoading } = useSelector((store) => store.book);
     const { users } = useSelector((store) => store.users);
-    const requestedBooksId = requestedBooks?.map((item) => item.bookId);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
 
-    // const navigate = useNavigate();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -22,7 +20,7 @@ const BookRequests = () => {
             dispatch(getBooks());
             dispatch(getUsers());
         }
-    }, [requestData]);
+    }, []);
 
     useEffect(() =>{
         dispatch(getRequestData());
@@ -60,28 +58,23 @@ const BookRequests = () => {
                 {requestData.length < 1 ? <p>No active requests</p>
                     : ( myData.map((item, i) =>{
 
-                        // getting bookIds belonging to each user that will accept or reject request
                         const userBooks = item.accepterBooks.filter((userBook) => userBook.creatorId === localStorageUser?.userId);
                         const userBookIds = [];
                         const requestId = item.requestDataId;                        
                         userBooks.forEach((userBook) => userBookIds.push(userBook._id))
-                        // console.log(userBookIds)
 
                         const requestUpdateData = { userBookIds, requestId, userId: localStorageUser?.userId };
-                        // console.log(requestUpdateData)
 
                         const requesterBookProp = item.requesterBooks.map((reqBookProp) =>{
                             const isProposed = false;
                             const bookId = reqBookProp._id;
                             return { bookId }
-                            // return { isProposed, bookId }
                         });
                         const accepterBookProp = item.accepterBooks.map((accBookProp) =>{
                             const isIncreased = false;
                             const requesterId = item.requestCreatorId;
                             const bookId = accBookProp._id;
                             return { requesterId, bookId }
-                            // return { requesterId, isIncreased, bookId }
                         })
                         // isCancelled prop is passed to determine whether request is being created of cancelled
                         const updateBookPropData = {requesterBookProp, accepterBookProp, IsCancelled: true}
@@ -89,8 +82,6 @@ const BookRequests = () => {
                         // when a user rejects a request and their books are removed from the request, the particular books request properties
                         // also need to be updated. so we need to get updateBookPropData for those particular book
                         
-                        // requestId: "6572945236e361f898d3a5a4"
-                        // userBookIds: (2) ['656e12acae7f0c4f347751b5', '656ac1ba07c6a5a4423f388b']
                         const updateBookPropDataForReject = { 
                             requesterBookProp: [], 
                             accepterBookProp: requestUpdateData.userBookIds.map((myData) =>{
@@ -99,11 +90,8 @@ const BookRequests = () => {
                             IsCancelled: true,
                         }
 
-                        // console.log(updateBookPropDataForReject, ' jjjjjjjjjjj')
                         // dispatch action to delete request is if accepters book is zero, that is if all accepters reject's request
-                        if (item.accepterBooks.length < 1){
-                            // dispatch(deleteRequestData({cancelData: {dataId: item.requestDataId, role: 'cancel'}, updateBookPropData}))
-                        }
+                        
                         
                         const link = `/users/users-details/${item.requestCreatorId}`;
                         return(
@@ -124,7 +112,6 @@ const BookRequests = () => {
 
                                     {item.acceptersId.includes(localStorageUser?.userId) ? (
                                         <div className='accept-reject-btn-container'>
-                                            {/* requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName, requestDataId */}
                                             <button className='accept-btn'
                                                 onClick={() =>{
                                                     const idOfRequestCreator = item.requestCreatorId;
@@ -190,7 +177,6 @@ const BookRequests = () => {
                                                         <div className='book-details-container'>
                                                             <p className='book-title'>{accBook.title} from {' '}
                                                             <Link style={{textDecoration:'none'}} to={link}>{name}</Link>
-                                                            {/* <span>{name}</span> */}
                                                             </p>
                                                             <p className='book-description'>{accBook.description}</p>
                                                         </div>
@@ -207,7 +193,6 @@ const BookRequests = () => {
                                             
                                         </div>
                                     </div>
-                                    {/* <p className='date'><Moment fromNow ago></Moment> ago</p> */}
                                     <p className='date'><Moment fromNow ago>{item.requestTime}</Moment> ago</p>
                                 </div>
                             <hr/>
@@ -254,17 +239,14 @@ const Wrapper = styled.div`
         margin-top: 45px;
         margin-bottom: 40px;
         width: 100%;
-        /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
         color: var(--fontColor1);
-        /* background: pink; */
     }
     .books-container-title{
         width: 100%;
         background-color: var(--color1);
         border-bottom: var(--color2) 1px solid;
         height: 100px;
-        /* text-align: center; */
         font-weight: 600;
         font-size: 21px;
         display: flex;
@@ -273,48 +255,26 @@ const Wrapper = styled.div`
         justify-content: center;
     }
     .books-container-body{
-        /* padding: 10px; */
         height: fit-content;
         width: 100%;
-        /* border-bottom: var(--color2) 1px solid; */
         display: flex;
         flex-direction: column;
-        /* background-color: blue; */
         align-items: center;
         justify-content: center;
     }
     .give-take-container{
-        /* background-color: red; */
         width: 100%;
         height: fit-content;
         display: flex;
         flex-direction: column;
     }
-    /* .give-div>div{
-        border-radius: 3px;
-        border: var(--color2) 1px solid;
-        height: 80px;
-        margin-right: 20px;
-        margin-left: 1px;
-        margin-top: -10px;
-    } */
+    
     .give-div{
         width: 100%;
-        /* margin-left: 10px; */
-        /* display: flex; */
-        /* flex-direction: column; */
-        /* justify-content: center; */
-        /* align-items: center; */
-        
         padding-bottom: 30px;
     }
     .take-div{
         width: 100%;
-        /* margin-left: 10px; */
-        /* display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center; */
         padding-bottom: 30px;
     }
     .date{
@@ -340,13 +300,11 @@ const Wrapper = styled.div`
     .request-container{
         display: flex;
         flex-direction: column;
-        /* background-color: pink; */
         background-color: var(--color1);
         width: 100%;
         height: fit-content;
         margin-top: 20px;
         margin-bottom: 20px;
-        /* padding-top: 10px; */
         border: var(--color2) 1px solid;
         position: relative;
     }
@@ -385,8 +343,6 @@ const Wrapper = styled.div`
     }
     .main-book-container{
         border: var(--color2) 1px solid;
-        /* margin-right: 20px; */
-        /* margin-left: 1px; */
         border-radius: 3px;
         height: fit-content;
         width: 90%;
@@ -397,13 +353,7 @@ const Wrapper = styled.div`
     hr{
         width: 100%;
     }
-    /* .main-book-container2{
-        border: var(--color2) 1px solid;
-        margin-right: 20px;
-        margin-left: 1px;
-        border-radius: 3px;
-        height: 80px;
-    } */
+    
     .main-book{
         border-radius: 3px;
         border-bottom: var(--color2) 1px solid;
@@ -411,9 +361,6 @@ const Wrapper = styled.div`
         background-color: var(--backgroundColor);
         display: flex;
         flex-direction: column;
-        /* margin-right: 20px;
-        margin-left: 1px; */
-        /* margin-top: -10px; */
     }
     
     .books-container-footer{
@@ -425,7 +372,6 @@ const Wrapper = styled.div`
         align-items: center;
         justify-content: center;
         margin-top: -9px;
-        /* border-top: var(--color2) 1px solid; */
     }
     .submit-request-btn{
         background-color: var(--btnColor);
@@ -442,13 +388,6 @@ const Wrapper = styled.div`
         font-size: 20px;
         margin-top: 1px;
     }
-    /* .book-title2{
-        font-weight: 600;
-        margin-left: 5px;
-        color: #27a160;
-        font-size: 20px;
-        margin-top: 1px;
-    } */
     .book-description{
         font-weight: 500;
         margin-left: 5px;
@@ -456,13 +395,6 @@ const Wrapper = styled.div`
         font-size: 17px;
         margin-top: -10px;
     }
-    /* .book-description2{
-        font-weight: 500;
-        margin-left: 5px;
-        color: #27a160;
-        font-size: 17px;
-        margin-top: -10px;
-    } */
     
     
     @media (min-width: 600px) {
@@ -470,12 +402,8 @@ const Wrapper = styled.div`
             margin-left: 2px;
         }
         .books-container-body{
-            /* padding: 15px; */
         }
-        .main-book-container{
-            /* margin-right: 33px; */
-            /* margin-left: 2px; */
-        }
+        
         .main-book-container2{
             margin-right: 33px;
             margin-left: 2px;
@@ -494,9 +422,7 @@ const Wrapper = styled.div`
             width: 97%;
             border-radius: 4px;
         }
-        .books-container-body{
-            /* flex-direction: row; */
-        }
+        
         .give-div{
             width: 50%;
         }

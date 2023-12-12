@@ -27,7 +27,6 @@ const EditProfileForm = () => {
     useEffect(() =>{
         const name = 'name', userState = 'userState', city = 'city', address = 'address';
         const stateName = userDetails?.name, stateState = userDetails?.state, stateCity = userDetails?.city, stateAddress = userDetails.address;
-        // console.log(stateAddress, stateCity, stateName, stateState)
         dispatch(handleName({name, stateName}));
         dispatch(handleState({userState, stateState}));
         dispatch(handleCity({city, stateCity}));
@@ -38,7 +37,6 @@ const EditProfileForm = () => {
         dispatch(toggleOnHasUpdateProfile());
     }, []);
 
-    // {type, name, value,  handleChange, labelText, page,placeholder }
 
     const handleChange = (e) =>{
         e.preventDefault();
@@ -58,7 +56,6 @@ const EditProfileForm = () => {
         if (updateProfileMessage === 'Your profile has been updated successfully'){
             navigate(`/users/users-details/${id}`);
             dispatch(resetUpdateProfileMessage());
-            // console.log(profileUpdateResult)
             const localStorageUser = JSON.parse(localStorage.getItem("user"));
             
             localStorageUser.name = profileUpdateResult.name;
@@ -69,8 +66,6 @@ const EditProfileForm = () => {
             localStorage.setItem('user', JSON.stringify(localStorageUser));
         }
     }, [updateProfileMessage]);
-    // localStorage.setItem('user', JSON.stringify(state.user));
-    // const localStorageUser = JSON.parse(localStorage.getItem("user"));
   return (
     <Wrapper>
         <p className='form-title'>Edit Your Profile</p>

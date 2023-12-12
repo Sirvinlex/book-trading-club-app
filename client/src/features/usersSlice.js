@@ -11,77 +11,54 @@ const initialState = {
     address: '',
     updateProfileMessage: '',
     profileUpdateResult: {},
-    // updatedUser: []
 };
 
 export const getUsers = createAsyncThunk('getUsers/allUsers', async (_, thunkAPI) =>{
   try {
     const {data} = await api.getUsers(); 
-    // console.log(data)
     return data;
   } catch (error) {
-    // console.log(error)
-    // return  thunkAPI.rejectWithValue(error.response.data.msg);
     return  thunkAPI.rejectWithValue(error);
   }
 });
 export const getUserDetails = createAsyncThunk('getUsers/userDetails', async (id, thunkAPI) =>{
   try {
     const {data} = await api.getUserDetails(id); 
-    // console.log(data)
     return data
   } catch (error) {
-    // console.log(error)
-    // return  thunkAPI.rejectWithValue(error.response.data.msg);
     return  thunkAPI.rejectWithValue(error);
   }
 });
 
 export const updateUserProfile = createAsyncThunk('updateUser/userProfile', async (updateData, thunkAPI) =>{
   try {
-    // console.log(updateData, 'data')
     const {data} = await api.updateUserProfile(updateData); 
-    // console.log(data)
     return data;
   } catch (error) {
-    // console.log(error)
-    // return  thunkAPI.rejectWithValue(error.response.data.msg);
     return  thunkAPI.rejectWithValue(error);
   }
 });
 export const updateUserBookCount = createAsyncThunk('updateUserBookCount/userProfile', async (updateData, thunkAPI) =>{
   try {
-    // console.log(updateData, 'data')
     const {data} = await api.updateUserBookCount(updateData); 
-    console.log(data)
     return data;
   } catch (error) {
-    // console.log(error)
-    // return  thunkAPI.rejectWithValue(error.response.data.msg);
     return  thunkAPI.rejectWithValue(error);
   }
 });
 export const updateUserRequestCount = createAsyncThunk('updateUserRequestCount/userProfile', async (updateData, thunkAPI) =>{
   try {
-    // console.log(updateData, 'data')
     const {data} = await api.updateUserRequestCount(updateData); 
-    // console.log(data)
     return data;
   } catch (error) {
-    // console.log(error)
-    // return  thunkAPI.rejectWithValue(error.response.data.msg);
     return  thunkAPI.rejectWithValue(error);
   }
 });
 export const updateUserTradeCount = createAsyncThunk('updateUserTradeCount/userProfile', async (updateData, thunkAPI) =>{
   try {
-    // console.log(updateData, 'data')
     const {data} = await api.updateUserTradeCount(updateData); 
-    // console.log(data)
     return data;
   } catch (error) {
-    // console.log(error)
-    // return  thunkAPI.rejectWithValue(error.response.data.msg);
     return  thunkAPI.rejectWithValue(error);
   }
 });
@@ -94,14 +71,12 @@ const usersSlice = createSlice({
             state[name] = value;
       },
       handleName:(state, {payload: {name, stateName}}) =>{
-        // console.log(name, stateName, 'test')
             state[name] = stateName;
       },
       handleCity:(state, {payload: {city, stateCity}}) =>{
             state[city] = stateCity;
       },
       handleState:(state, {payload: {userState, stateState}}) =>{
-        // console.log(userState, stateState)
             state[userState] = stateState;
       },
       handleAddress:(state, {payload: {address, stateAddress}}) =>{
@@ -154,9 +129,6 @@ const usersSlice = createSlice({
         builder.addCase(updateUserBookCount.rejected, (state, action) => {
           alert('Oops! an error occured');
         })
-        // builder.addCase(updateUserRequestCount.fulfilled, (state, action) => {
-        //   state.updatedUser = action.payload.updatedUser;
-        // })
         
       
     },

@@ -9,8 +9,6 @@ import { deleteBook, addBook, removeBook } from '../features/bookSlice';
 import { getUserDetails, updateUserBookCount } from '../features/usersSlice';
 
 
-// navigate(`/users/user-books/${id}`, { relative: "path" });
-// type, name, value,  handleChange, labelText, page,placeholder 
 const UserBooks = () => {
     const { title, description, isLoading, userBooks, createdBook, requestedBooks, } = useSelector((store) => store.book);
     const { userDetails } = useSelector((store) => store.users);
@@ -19,12 +17,6 @@ const UserBooks = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
-
-
-    // useEffect(() =>{
-    //   const userId = localStorageUser?.userId;
-    //   dispatch(updateUserBookCount({userId, isIncreased: true}))
-    // }, []);
 
     useEffect(() =>{
       dispatch(getUserDetails(id));
@@ -47,12 +39,6 @@ const UserBooks = () => {
 
     const handleCheckedChange = (e) =>{
       const bookData = JSON.parse(e.currentTarget.getAttribute('data-test-id'));
-      // if (e.target.checked){
-      //   dispatch(addBook(bookData));
-      // }
-      // else{
-      //   dispatch(removeBook(bookData));
-      // }
 
       if (!localStorageUser){
         e.target.checked = null;
@@ -78,8 +64,14 @@ const UserBooks = () => {
         else dispatch(createBook({ title, description, creatorName, creatorId, creatorState, creatorCity }));
     };
 
-    const handleDeleteBook = (bookId) =>{
-        dispatch(deleteBook(bookId));
+    const handleDeleteBook = ({itemId, activeRequest, proposedCount }) =>{
+      if (proposedCount > 0){
+        alert(`This book is currently being proposed in ${proposedCount} active requests, please cancel request in order to be able to delete book`);
+      }else if (activeRequest > 0){
+        alert(`This book is currently involved in ${activeRequest} active requests, please reject/accept request to be able to delete book`);
+      }else{
+        dispatch(deleteBook(itemId));
+      }
     };
 
   if (isLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
@@ -114,7 +106,6 @@ const UserBooks = () => {
             <div className='books-container-title'>
               {localStorageUser?.userId === userDetails?.userId ? 'Your' : `${userDetails?.name}'s`} Books available for trade
             </div>
-            {/* <div className='books-container-body'></div> */}
 
             {
               userBooks.length < 1 ? (
@@ -132,7 +123,6 @@ const UserBooks = () => {
                    "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
                   return(
                     <div key={item._id}>
-                      {/* {console.log(item)} */}
                         <label className='books-container-body'>
                             <input onChange={handleCheckedChange} type="checkbox" id={item._id} name="bookData" value={item._id} 
                             data-test-id={itemData} checked={requestedBooksId.includes(bookId) ? 'checked' : null}
@@ -150,13 +140,11 @@ const UserBooks = () => {
                                 {
                                   item.requests > 0 ? (
                                     <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
-                                    // <p className='request-count'>requests: <span className='request-number'>{item.requests}</span></p>
                                   ) : null
                                 }
-                                {/* <p className='requestor-list'>(Sam, Peter, Chidi, Sam, David, Sam, Peter, Chidi, Sam, David)</p> */}
                               </div>
                               { localStorageUser?.userId === item.creatorId ? (
-                                <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                                <button onClick={() => handleDeleteBook({itemId, activeRequest: item.requests, proposedCount: item.proposed})} className='remove-book-btn'><FaTimes size={30}/></button>
                               ) : null}
                             </div>
                       </label>
@@ -185,7 +173,6 @@ const UserBooks = () => {
 
 const Wrapper = styled.div`
     width: 100%;
-    /* height: 100vh; */
     margin-top: -40px;
     padding-top: 30px;
     .request-btn-absolute_container{
@@ -212,7 +199,6 @@ const Wrapper = styled.div`
     .books-container{
         margin-top: 45px;
         width: 100%;
-        /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
         margin-bottom: 40px;
     }
@@ -222,13 +208,8 @@ const Wrapper = styled.div`
         height: 60px;
     }
     .books-container-body{
-        /* height: 70px;
-        width: 100%;
-        border-top: var(--color2) 1px solid;
-        border-bottom: var(--color2) 1px solid; */
         height: fit-content;
         width: 100%;
-        /* border-top: var(--color2) 1px solid; */
         border-bottom: var(--color2) 1px solid;
         position: relative;
         display: flex;
@@ -239,7 +220,6 @@ const Wrapper = styled.div`
         background-color: var(--color1);
         border-bottom: var(--color2) 1px solid;
         height: 100px;
-        /* text-align: center; */
         font-weight: 600;
         font-size: 21px;
         display: flex;
@@ -319,11 +299,6 @@ const Wrapper = styled.div`
     .book-stats{
       margin: 5px;
     }
-    /* .request-count{
-      font-weight: 600;
-      font-size: 20px;
-      margin-top: -5px;
-    } */
     .request-count{
       font-weight: 600;
       font-size: 20px;
@@ -421,7 +396,6 @@ const Wrapper = styled.div`
         .books-container-body{
           display: flex;
           flex-direction: row;
-          /* height: 100px; */
         }
         .books-container-title{
           font-size: 30px;

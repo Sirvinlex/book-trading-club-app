@@ -5,9 +5,7 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import Moment from 'react-moment';
 
-{/* <Link to='users/:id'>Login/Register</Link> */}
 
-// users/:id
 const UsersPage = () => {
     const { users, isLoading } = useSelector((store) => store.users);
     const myUsers = users ? users : [];
@@ -33,20 +31,11 @@ const UsersPage = () => {
                 <div className='request-div'>Active Requests: {item.activeRequest}</div>
                 <div className='trade-div'>Completed Trades: {item.completedTrades}</div>
               </div>
-              {/* <p className='joined'>Joined: {item.createdAt}</p> */}
               <p className='joined'>Joined: <Moment fromNow ago>{item.createdAt}</Moment> ago</p>
-              {/* <Moment fromNow ago>{item["created_at"]}</Moment> */}
             </div>
           )
         })}
-        {/* <div className='users-container'>
-          <p className='user-name'>Name: USer Name user name</p>
-          <p>City: User city user city</p>
-          <p style={{display:'flex', flexDirection:'row'}}>
-            <div className='book-div'>Books: 2</div><div className='request-div'>Active Request: 1</div>
-          </p>
-          <p className='joined'>Joined: date date</p>
-        </div> */}
+        
       </div>
     </Wrapper>
   )

@@ -1,4 +1,3 @@
-import React from 'react';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { updateUserBookCount, updateUserRequestCount, updateUserTradeCount } from './usersSlice';
 import * as api from '../api';
@@ -17,21 +16,11 @@ const initialState = {
     trades: [],
     createTradeMsg: '',
     creatingRequest: false,
-    // deletedReqData: false,
-    // bookId: '',
-    // creatorName: '',
-    // creatorId: '',
-    // requests: 0,
-    // requestersNameId: [],
-    // creatorCity: '',
-    // creatorState: '',
-};
+    };
 
 export const createBook = createAsyncThunk('createBook/book', async (bookData, thunkAPI) =>{
     try {
         const {data} = await api.createBook(bookData);
-        // thunkAPI.dispatch(updateUserBookCount())
-        // thunkAPI.dispatch(updateUserBookCount({userId, isIncreased: true}))
         console.log(data)
         if(data.msg ===  "Book successfully added") {
             const userId = data.book.creatorId;
@@ -46,7 +35,6 @@ export const createBook = createAsyncThunk('createBook/book', async (bookData, t
 export const getBooks = createAsyncThunk('getBooks/book', async (_, thunkAPI) =>{
     try {
         const {data} = await api.getBooks();
-        // console.log(data)
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -75,7 +63,6 @@ export const getUserBooks = createAsyncThunk('getUserBooks/book', async (userId,
     }
 
 });
-// requests requestersNames requestersIds
 export const updateBookProps = createAsyncThunk('updateBookProps/book', async (updateData, thunkAPI) =>{
     try {
       const {data} = await api.updateBookProps(updateData); 
@@ -87,12 +74,10 @@ export const updateBookProps = createAsyncThunk('updateBookProps/book', async (u
   });
 export const request = createAsyncThunk('request/book', async (requestData, thunkAPI) =>{
     try {
-        // console.log(requestData.updateBookPropData)
         const {data} = await api.request(requestData.createRequestData);
         if (data.msg === 'Request successfully created'){
             thunkAPI.dispatch(updateBookProps(requestData.updateBookPropData));
             thunkAPI.dispatch(updateUserRequestCount(requestData.updateUserRequestCountData));
-            //  updateUserRequestCountData
         }
         return data;
     } catch (error) {
@@ -103,7 +88,6 @@ export const request = createAsyncThunk('request/book', async (requestData, thun
 export const getRequestData = createAsyncThunk('getRequestData/book', async (_, thunkAPI) =>{
     try {
         const {data} = await api.getRequestData();
-        // console.log(data)
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -112,14 +96,12 @@ export const getRequestData = createAsyncThunk('getRequestData/book', async (_, 
 });
 export const updateRequestData = createAsyncThunk('updateRequestData/book', async (updateData, thunkAPI) =>{
     try {
-        // console.log(updateData)
         const { requestUpdateData, updateBookPropData, updateUserRequestCountData } = updateData;
       const {data} = await api.updateRequestData(requestUpdateData); 
       if (data.msg === 'Request data updated successfully') {
         thunkAPI.dispatch(getRequestData());
         thunkAPI.dispatch(updateBookProps(updateBookPropData));
       }
-    //   requestId, isAcceptersBookEmpty
     
       if (data.isAcceptersBookEmpty === true) {
         thunkAPI.dispatch(deleteRequestData({cancelData: {dataId: data.requestId, role: ''}, updateBookPropData: data.updateBookPropData,
@@ -168,7 +150,6 @@ export const createTrade = createAsyncThunk('createTrade/book', async (tradeData
 export const getTrades = createAsyncThunk('getTrades/book', async (_, thunkAPI) =>{
     try {
         const {data} = await api.getTrades();
-        // console.log(data)
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -197,19 +178,15 @@ const bookSlice = createSlice({
     
     extraReducers: (builder) => {
         builder.addCase(createBook.pending, (state, action) => {
-            // state.isLoading = true;
         })
         builder.addCase(createBook.fulfilled, (state, action) => {
             alert(action.payload.msg);
             state.createdBook = action.payload.book;
             state.title = '';
             state.description = '';
-            // state.isLoading = false;
         })
         builder.addCase(createBook.rejected, (state, action) => {
-            // alert(action.payload);
             alert('Oops! an error occured');
-            // state.isLoading = false;
         })
         builder.addCase(getBooks.pending, (state, action) => {
             state.isLoading = true;
@@ -219,7 +196,6 @@ const bookSlice = createSlice({
             state.isLoading = false;
         })
         builder.addCase(getBooks.rejected, (state, action) => {
-            // alert(action.payload);
             alert('Oops! an error occured');
             state.isLoading = false;
         })

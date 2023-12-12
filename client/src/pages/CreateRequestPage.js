@@ -33,18 +33,15 @@ const CreateRequestPage = () => {
          and thunk API will be used to dispatch update to the book if create request is successful, we also update the request creator active
          active request count on the user profile, so we also need to sent the data */
         const requesterBookProp = requesterBooksId.map((reqBookProp) =>{
-            // const requesterId = requestCreatorId;
             const isProposed = true;
             const bookId = reqBookProp;
             return { bookId }
-            // return { isProposed, bookId }
         })
         const accepterBookProp = accepterBooksId.map((accBookProp) =>{
             const requesterId = requestCreatorId;
             const isIncreased = true;   // isIncreased constant is used to indicate that request is being created, hence the particular book request count will increase
             const bookId = accBookProp;
             return { requesterId, bookId }
-            // return { requesterId, isIncreased, bookId }
         })
         // isCancelled prop is passed to determine whether request is being created of cancelled
         dispatch(request({ createRequestData: {requestCreatorId, requesterBooksId, accepterBooksId, acceptersId}, 
@@ -114,7 +111,6 @@ const Wrapper = styled.div`
         margin-top: 45px;
         margin-bottom: 40px;
         width: 100%;
-        /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
         color: var(--fontColor1);
     }
@@ -123,7 +119,6 @@ const Wrapper = styled.div`
         background-color: var(--color1);
         border-bottom: var(--color2) 1px solid;
         height: 100px;
-        /* text-align: center; */
         font-weight: 600;
         font-size: 21px;
         display: flex;
@@ -135,24 +130,10 @@ const Wrapper = styled.div`
         padding: 10px;
         height: fit-content;
         width: 100%;
-        /* border-bottom: var(--color2) 1px solid; */
         display: flex;
         flex-direction: column;
     }
-    /* .give-div>div{
-        border-radius: 3px;
-        border: var(--color2) 1px solid;
-        height: 80px;
-        margin-right: 20px;
-        margin-left: 1px;
-        margin-top: -10px;
-    } */
-    /* .give-div{
-        background-color: red;
-    }
-    .take-div{
-        background-color: pink;
-    } */
+    
     .main-book-container{
         border: var(--color2) 1px solid;
         margin-right: 20px;
@@ -168,13 +149,9 @@ const Wrapper = styled.div`
         height: 80px;
     }
     .main-book{
-        /* border-radius: 3px; */
         border-bottom: var(--color2) 1px solid;
         height: fit-content;
-        /* margin-right: 20px;
-        margin-left: 1px; */
-        /* margin-top: -10px; */
-    }
+        }
     
     .books-container-footer{
         width: 100%;

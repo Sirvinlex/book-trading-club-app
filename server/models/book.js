@@ -1,6 +1,5 @@
 import mongoose from 'mongoose';
 
-// const mongoose = require('mongoose');
 
 const BookSchema = new mongoose.Schema({
     title : String,
@@ -10,6 +9,10 @@ const BookSchema = new mongoose.Schema({
     isProposed: {
         type: Boolean,
         default: false,
+    },
+    proposed: {
+        type: Number,
+        default: 0,
     },
     requests: {
         type: Number,
@@ -36,6 +39,5 @@ const BookSchema = new mongoose.Schema({
 );
 
 const Book = mongoose.model('Book', BookSchema);
-// module.exports = User;
 export default Book;
 

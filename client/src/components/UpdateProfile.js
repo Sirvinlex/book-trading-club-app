@@ -53,7 +53,6 @@ const Wrapper = styled.div`
     flex-wrap: row;
     align-items: center;
     justify-content: center;
-    /* display: none; */
 }
 .modal-container2{
     display: none;

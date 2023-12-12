@@ -15,17 +15,13 @@ const FormInput = ({type, name, value,  handleChange, labelText, page,placeholde
     </Wrapper>
   )
 }
-    //   <input className={page === 'navbar' ? 'input' : 'form-input'} 
 
     const Wrapper = styled.div`
-      /* .form{ */
         margin-left: 10px;
         margin-right: 17px;
         padding-top: 20px;
         display: flex;
         flex-direction: column;
-        /* background-color: #fa9b3c; */
-      /* } */
       label{
         font-weight: 600;
         font-size: 20px;
@@ -39,7 +35,6 @@ const FormInput = ({type, name, value,  handleChange, labelText, page,placeholde
       @media (min-width: 600px) {
         margin-left: 40px;
         margin-right: 45px;
-        /* padding-top: 50px; */
       }
       @media (min-width: 768px) {
         margin-left: 70px;

@@ -1,9 +1,6 @@
 import User from "../models/auth.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-// const User = require("../models/auth");
-// const bcrypt = require("bcryptjs");
-// const jwt = require("jsonwebtoken");
 
 
 
@@ -36,7 +33,6 @@ export const signIn = async(req, res) =>{
         
         if(!isPasswordCorrect) return res.status(400).json({msg: 'Invalid Credentials'});
         
-        // res.status(200).json({name:existingUser.name, token, msg: `Welcome Back ${existingUser.name}`});
         res.status(200).json({name: existingUser.name, userId: existingUser._id, token, joined: existingUser.createdAt, 
         city: existingUser.city, state: existingUser.state,  address: existingUser.address, activeRequest: existingUser.activeRequest,
          books: existingUser.books, msg: `Welcome Back ${existingUser.name}`});

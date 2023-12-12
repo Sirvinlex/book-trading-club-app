@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
 
-// const mongoose = require('mongoose');
-
 const RequestSchema = new mongoose.Schema({
     requestCreatorId: String,
     acceptersId: {
@@ -21,5 +19,4 @@ const RequestSchema = new mongoose.Schema({
 );
 
 const Request = mongoose.model('Request', RequestSchema);
-// module.exports = User;
 export default Request;

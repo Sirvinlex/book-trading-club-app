@@ -9,6 +9,5 @@ const TradesSchema = new mongoose.Schema({
 );
 
 const Trades = mongoose.model('Trades', TradesSchema);
-// module.exports = User;
 export default Trades;
 

@@ -4,10 +4,8 @@ export const getUsers = async (req, res) =>{
    const { page } = req.query;
    try {
        const users = await User.find().sort({ _id: -1});
-    //    console.log(users)  
        res.status(200).json({ result: users })
    } catch (error) {
-    //    res.status(404).json({message: error.message})
        res.status(404).json(error);
    }
 };
@@ -16,8 +14,6 @@ export const getUserDetails = async (req, res) =>{
    const { id } = req.params;
     try {
         const user = await User.findById(id);
-      //   res.status(200).json({ result: user })
-      // console.log(user.name)
         res.status(200).json({name: user.name, userId: user._id, joined: user.createdAt, city: user.city, state: user.state, 
          address: user.address, activeRequest: user.activeRequest, books: user.books, });
     } catch (error) {
@@ -28,12 +24,10 @@ export const getUserDetails = async (req, res) =>{
 export const updateUserProfile = async(req, res) =>{
     const { body: { name, city, userState, address }, params: { id }} = req;
     try {
-      // console.log({id, name, city, state, address})
         if (!name || !city || !userState || !address) return res.status(400).json({msg: 'Please fill in required fields'});
         const user = await User.findByIdAndUpdate({ _id: id }, { name, city, state: userState, address }, {new: true, runValidators: true})
         if (!user) return res.status(400).json({msg: 'No user with this Id'});
         res.status(200).json({ result: {name: user.name, city: user.city, state: user.state, address: user.address,}, msg: 'Your profile has been updated successfully' });
-        // res.status(200).json({ user });
     } catch (error) { 
         res.status(400).json(error);
     }
@@ -41,7 +35,6 @@ export const updateUserProfile = async(req, res) =>{
 export const updateUserBookCount = async(req, res) =>{
     const { userId, isIncreased} = req.body;
     try {
-      // console.log(userId, isIncreased)
       const user = await User.findById(userId);
       let books;
       if (isIncreased === true){
@@ -58,7 +51,6 @@ export const updateUserBookCount = async(req, res) =>{
 export const updateUserRequestCount = async(req, res) =>{
     const { userId, isIncreased } = req.body;
     try {
-      // console.log(userId, isIncreased)
       const user = await User.findById(userId);
       let activeRequest;
       if (isIncreased === true){
@@ -73,19 +65,13 @@ export const updateUserRequestCount = async(req, res) =>{
     }
 };
 export const updateUserTradeCount = async(req, res) =>{
-    // const { userIds } = req.body;
     try {
-      // console.log(req.body)
       for (let i = 0; i < req.body.length; i++){
         const user = await User.findById(req.body[i]);
         let tradeCount;
         tradeCount = user.completedTrades + 1;
         const updatedUser = await User.findByIdAndUpdate({ _id: req.body[i] }, { completedTrades: tradeCount }, {new: true, runValidators: true});
       }
-      // const user = await User.findById(userId);
-      // let tradeCount;
-      // tradeCount = user.completedTrades + 1;
-      // const updatedUser = await User.findByIdAndUpdate({ _id: userId }, { completedTrades: tradeCount }, {new: true, runValidators: true});
       res.status(200).json({ msg: 'Trade counts successfully updated' });
     } catch (error) { 
         res.status(400).json(error);

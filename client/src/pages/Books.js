@@ -33,8 +33,14 @@ const Books = () => {
     navigate(`/users/user-books/${localStorageUser?.userId}`);
   };
 
-  const handleDeleteBook = (bookId) =>{
-    dispatch(deleteBook(bookId));
+  const handleDeleteBook = ({ itemId, activeRequest, proposedCount }) =>{
+    if (proposedCount > 0){
+      alert(`This book is currently being proposed in ${proposedCount} active requests, please cancel request in order to be able to delete book`);
+    }else if (activeRequest > 0){
+      alert(`This book is currently involved in ${activeRequest} active requests, please reject/accept request to be able to delete book`);
+    }else{
+      dispatch(deleteBook(itemId));
+    }
   };
 
   const handleSubmit = (e) =>{
@@ -75,21 +81,18 @@ const Books = () => {
                   // profile
                   let bookCreatorNameFromUsersState;
                   users?.map((user) => user._id === item.creatorId ? bookCreatorNameFromUsersState = user.name.split(' ')[0] : null);
-                  // /////
 
                   const requestersArr = [];
                   item.requestersIds.map((reqId) =>{
                     users?.map((user) =>{
                       if (user._id === reqId){
                         requestersArr.push(`${reqId} ${user.name.split(' ')[0]}`);
-                        // requestersArr.push([reqId, user.name.split(' ')[0]]);
-                        // console.log(requestersArr)
                       }
                     })
 
 
                   })
-                  // console.log(myArr)
+
                   let requestersArr2 = [];
 
                   requestersArr.forEach((reqArr) => !requestersArr2.includes(reqArr) ? requestersArr2.push(reqArr) : null)
@@ -105,7 +108,6 @@ const Books = () => {
                       requestersArr2[i] = itemWithComma;
                     }
                   })
-                  //  console.log(requestersArr2, '2')
 
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
@@ -115,14 +117,11 @@ const Books = () => {
                   const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "bookCreatorId": "${bookCreatorId}",
                    "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
                   return(
-                    // requestedBooksId.includes(bookId)
                     <div key={item._id}>
-                      {/* {console.log(item)} */}
                       <label className='books-container-body'>
                         <input onChange={handleChange} type="checkbox" id={item._id} name="bookData" value={item._id} 
                         data-test-id={itemData}  checked={requestedBooksId.includes(bookId) ? 'checked' : null}
                         />
-                        {/* ///////////////////// */}
                         <div className='main-book'>
                             <div className='book-details'>
                               <p className={requestedBooksId.includes(item._id) && bookCreatorId === requesterId ? 'book-title2' :
@@ -145,15 +144,12 @@ const Books = () => {
                                   <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
                                   <p style={{marginTop: '-13px'}}>
                                     ( {
-                                        // const myLink = `/users/users-details/${item.creatorId}`
                                         requestersArr2.map((reqArr2,i) =>{
                                           const id = reqArr2?.split(' ')[0];
                                           const name = reqArr2?.split(' ')[1];
                                           const count = reqArr2?.split(' ')[2];
                                           const comma = reqArr2?.split(' ')[3] || '';
                                           const myLink = `/users/users-details/${id}`
-                                          // console.log(id, name, count, comma)
-                                          // console.log(id)
                                           return(
                                               <span key={i} className='requestor-list'>
                                                 <Link style={{textDecoration:'none', fontWeight:'700'}} to={myLink}>
@@ -167,11 +163,10 @@ const Books = () => {
                                 </div>
                             ) : null}
                             { localStorageUser?.userId === item.creatorId ? (
-                              <button onClick={() => handleDeleteBook(itemId)} className='remove-book-btn'><FaTimes size={30}/></button>
+                              <button onClick={() => handleDeleteBook({itemId, activeRequest: item.requests, proposedCount: item.proposed})} className='remove-book-btn'><FaTimes size={30}/></button>
                             ) : null}
                           </div>
                         </label>
-                      {/* //////////////// */}
                     </div>
                     
                   )
@@ -223,7 +218,6 @@ const Wrapper = styled.div`
         margin-top: 45px;
         margin-bottom: 40px;
         width: 100%;
-        /* border-top: var(--color2) 1px solid; */
         border: var(--color2) 1px solid;
         color: var(--fontColor1);
     }
@@ -233,10 +227,8 @@ const Wrapper = styled.div`
         height: 60px;
     }
     .books-container-body{
-        /* padding-left: 5px; */
         height: fit-content;
         width: 100%;
-        /* border-top: var(--color2) 1px solid; */
         border-bottom: var(--color2) 1px solid;
         position: relative;
         display: flex;
@@ -247,6 +239,7 @@ const Wrapper = styled.div`
         font-size: 25px;
         height: 100px;
         width: 100%;
+        text-align: center;
         border-top: var(--color2) 1px solid;
         border-bottom: var(--color2) 1px solid;
     }
@@ -255,7 +248,6 @@ const Wrapper = styled.div`
     }
     .book-stats{
       margin: 5px;
-      /* position: relative; */
     }
     .book-title{
       font-size: 20px;
@@ -282,19 +274,16 @@ const Wrapper = styled.div`
       margin-top: -10px;
     }
     .book-description{
-      /* font-weight: 500; */
       font-size: 15px;
       margin-top: -20px;
     }
     .book-description2{
-      /* font-weight: 500; */
       font-size: 15px;
       margin-top: -20px;
       color: #f59c36;
       font-style: italic;
     }
     .book-description3{
-      /* font-weight: 500; */
       font-size: 15px;
       margin-top: -20px;
       color: #27a160;
@@ -323,7 +312,6 @@ const Wrapper = styled.div`
     }
     .requestor-list{
       font-weight: 500;
-      /* font-size: 12px; */
       margin-top: -10px;
     }
     .remove-book-btn{
@@ -349,7 +337,6 @@ const Wrapper = styled.div`
         background-color: var(--color1);
         border-bottom: var(--color2) 1px solid;
         height: 100px;
-        /* text-align: center; */
         font-weight: 600;
         font-size: 21px;
         display: flex;
@@ -398,7 +385,6 @@ const Wrapper = styled.div`
       }
     }
     @media (min-width: 768px) {
-        /* margin-top: -65px; */
         .main-book{
           display: flex;
           flex-direction: row;
@@ -426,7 +412,6 @@ const Wrapper = styled.div`
         .books-container-body{
           display: flex;
           flex-direction: row;
-          /* height: 100px; */
         }
         .book-details{
           width: 60%;
@@ -437,20 +422,9 @@ const Wrapper = styled.div`
         .requestor-list{
           font-size: 13px;
         }
-        /* .btn-container{
-            margin-left: 70px;
-            margin-right: 68px;
-        }
-        .form-title{
-            margin-top: 65px;
-        } */
+        
     }
-    @media (min-width: 992px) {
-        /* .btn-container{
-            margin-left: 200px;
-            margin-right: 198px;
-        } */
-    }
+    
 `
 
 

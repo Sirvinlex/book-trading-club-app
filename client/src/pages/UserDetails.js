@@ -30,8 +30,6 @@ const UserDetails = () => {
   
   const userId = userDetails?.userId ? userDetails?.userId : '';
 
-  // const userBooks = (userDetails !== {} && userDetails !== undefined) ? userDetails.books : 0;
-  // const userBooks = userDetails?.books ? userDetails?.books : 0;
 
   const handleUserBooks = () =>{
     navigate(`/users/user-books/${id}`, { relative: "path" });

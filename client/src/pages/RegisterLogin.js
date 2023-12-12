@@ -7,7 +7,6 @@ import { handleInputs, logUser, regUser, resetUserState } from '../features/auth
 
 
 const RegisterLogin = () => {
-  // const localStorageUser = JSON.parse(localStorage.getItem("user"));
   const { name, email, password, authSuccess, deactivateBtn, user } = useSelector((store) => store.auth);
 
   const dispatch = useDispatch();
@@ -17,7 +16,6 @@ const RegisterLogin = () => {
 
   const handleSubmit = (e) =>{
     e.preventDefault();
-    // console.log('test')
     if (isLogin){
       if (!email || !password) alert("Please provide all values");
       else dispatch(logUser({ email, password }))
@@ -33,7 +31,6 @@ const RegisterLogin = () => {
         navigate('/');
         dispatch(resetUserState());
       }, 500);
-      // console.log(user.name)
     }
   }, [user, navigate]); 
 
@@ -45,7 +42,6 @@ const RegisterLogin = () => {
 
   return (
     <Wrapper>
-      {/* {console.log(user, 'user')} */}
       <p className="form-title">{isLogin ? 'Login' : 'Register'}</p>
       <form onSubmit={handleSubmit}>
         {isLogin ? (
@@ -70,7 +66,6 @@ const RegisterLogin = () => {
               {isLogin ? 'Register' : 'Login'}
             </button>
           </p>
-          {/* {deactivateBtn ? 'Loading...' : <>{isLogin ? 'Register' : 'Login'}</>} */}
         </div>
       </form>
     </Wrapper>

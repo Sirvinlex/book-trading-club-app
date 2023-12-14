@@ -134,7 +134,7 @@ const Books = () => {
                                 {item.description}
                               </p>
                               <p className='creator-details'>
-                                from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>
+                                from <span><Link className='name-link' to={myLink}>
                                   {bookCreatorNameFromUsersState || creatorName}
                                   </Link>
                                   </span>{' '} in {item.creatorCity}, {item.creatorState}
@@ -153,7 +153,7 @@ const Books = () => {
                                           const myLink = `/users/users-details/${id}`
                                           return(
                                               <span key={i} className='requestor-list'>
-                                                <Link style={{textDecoration:'none', fontWeight:'700'}} to={myLink}>
+                                                <Link className='name-link' to={myLink}>
                                                   {name}<span>({count}){comma} </span> 
                                                 </Link>
                                               </span>
@@ -193,9 +193,17 @@ const Books = () => {
 }
 
 const Wrapper = styled.div`
-  .request-link{
-    text-decoration: none;
-  }
+  .name-link{
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .request-link:hover,.name-link:hover{
+      text-decoration: underline;
+    }
+    .request-link{
+      text-decoration: none;
+      font-weight: 700;
+    }
   .request-btn-absolute_container{
     position: sticky;
     z-index: 1;

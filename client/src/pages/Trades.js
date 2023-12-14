@@ -18,7 +18,7 @@ const Trades = () => {
       if (trades.length > 0){
           dispatch(getUsers());
       }
-    }, []);
+    }, [trades]);
 
     useEffect(() =>{
         dispatch(getTrades());
@@ -46,7 +46,7 @@ const Trades = () => {
                             if (user._id === item.idOfRequestCreator) requestCreatorName = user.name
                         });
 
-                        item.requestAccepterBooks.map((accBook) =>{
+                        item.requestAccepterBooks.forEach((accBook) =>{
                           users?.forEach((user) => {
                               if (user._id === accBook.creatorId){
                                 requestAccepterName = user.name;
@@ -63,7 +63,7 @@ const Trades = () => {
                                   }
                                     <p>
                                         <b>
-                                          <Link style={{textDecoration:'none'}} to={requestCreatorLink}>{requestCreatorName}</Link>{' '}
+                                          <Link className='name-link' to={requestCreatorLink}>{requestCreatorName}</Link>{' '}
                                             Gave:
                                         </b>
                                     </p>
@@ -81,7 +81,7 @@ const Trades = () => {
                                     </div>
                                 </div>
                                 <div className='take-div'>
-                                    <p><b>And received from <Link style={{textDecoration:'none'}} to={requestAccepterLinks}>{requestAccepterName}</Link>:</b></p>
+                                    <p><b>And received from <Link className='name-link' to={requestAccepterLinks}>{requestAccepterName}</Link>:</b></p>
                                     <div className='main-book-container'>
                                         {item.requestAccepterBooks.map((accBook) =>{
                                             return(
@@ -112,6 +112,14 @@ const Trades = () => {
 }
 
 const Wrapper = styled.div`
+    .name-link{
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .name-link:hover{
+      text-decoration: underline;
+    }
     .books-container{
         margin-top: 45px;
         margin-bottom: 40px;

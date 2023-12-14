@@ -65,12 +65,10 @@ const BookRequests = () => {
                         const requestUpdateData = { userBookIds, requestId, userId: localStorageUser?.userId };
 
                         const requesterBookProp = item.requesterBooks.map((reqBookProp) =>{
-                            const isProposed = false;
                             const bookId = reqBookProp._id;
                             return { bookId }
                         });
                         const accepterBookProp = item.accepterBooks.map((accBookProp) =>{
-                            const isIncreased = false;
                             const requesterId = item.requestCreatorId;
                             const bookId = accBookProp._id;
                             return { requesterId, bookId }
@@ -138,7 +136,7 @@ const BookRequests = () => {
                                     <div className='give-div'>
                                         <p>
                                             <b>
-                                            <Link style={{textDecoration:'none'}} to={link}>{item.requestCreatorName}</Link>{' '}
+                                            <Link className='name-link' to={link}>{item.requestCreatorName}</Link>{' '}
                                                 want to give:
                                             </b>
                                         </p>
@@ -146,6 +144,7 @@ const BookRequests = () => {
 
                                         :(<div className='main-book-container'>
                                             {item.requesterBooks.map((reqBook) =>{
+                                                const bookLink = `/books/requests/${reqBook._id}`
                                                 return(
                                                     <div key={reqBook._id} className='main-book'>
                                                         <div className='book-details-container'>
@@ -155,7 +154,9 @@ const BookRequests = () => {
                                                         {
                                                             reqBook.requests > 0 ? (
                                                                 <div className='book-stats'>
-                                                                    <div className='request-count'>Requests <p className='request-number'>{reqBook.requests}</p></div>
+                                                                    <div className='request-count'>
+                                                                        <Link to={bookLink} className='request-link'>Requests</Link> <p className='request-number'>{reqBook.requests}</p>
+                                                                    </div>
                                                                 </div>
                                                             ) : null
                                                         }
@@ -170,6 +171,7 @@ const BookRequests = () => {
                                         : (<div className='main-book-container'>
                                             {item.accepterBooks.map((accBook) =>{
                                                 const link = `/users/users-details/${accBook.creatorId}`;
+                                                const bookLink = `/books/requests/${accBook._id}`
                                                 let name;
                                                 users?.forEach((user) => {
                                                     if (user._id === accBook.creatorId) name = user.name
@@ -178,14 +180,16 @@ const BookRequests = () => {
                                                     <div key={accBook._id} className='main-book'>
                                                         <div className='book-details-container'>
                                                             <p className='book-title'>{accBook.title} from {' '}
-                                                            <Link style={{textDecoration:'none'}} to={link}>{name}</Link>
+                                                            <Link className='name-link' to={link}>{name}</Link>
                                                             </p>
                                                             <p className='book-description'>{accBook.description}</p>
                                                         </div>
                                                         {
                                                             accBook.requests > 0 ? (
                                                                 <div className='book-stats'>
-                                                                    <div className='request-count'>Requests <p className='request-number'>{accBook.requests}</p></div>
+                                                                    <div className='request-count'>
+                                                                        <Link className='request-link' to={bookLink}>Requests</Link> <p className='request-number'>{accBook.requests}</p>
+                                                                    </div>
                                                                 </div>
                                                             ) : null
                                                         }
@@ -213,6 +217,18 @@ const BookRequests = () => {
 }
 
 const Wrapper = styled.div`
+    .name-link{
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .request-link:hover,.name-link:hover{
+      text-decoration: underline;
+    }
+    .request-link{
+      text-decoration: none;
+      font-weight: 700;
+    }
     .book-stats{
       margin: 5px;
     }

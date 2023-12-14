@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUsers } from '../features/usersSlice';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Moment from 'react-moment';
 
 
@@ -34,7 +34,7 @@ const UsersPage = () => {
               <p className='joined'>Joined: <Moment fromNow ago>{item.createdAt}</Moment> ago</p>
             </div>
           )
-        })}
+        })} 
         
       </div>
     </Wrapper>
@@ -86,7 +86,6 @@ const Wrapper = styled.div`
     color: white;
     margin-right: 5px;
     padding: 2px 5px 6px 5px;
-    border-radius: 3px;
     margin-bottom: 3px;
   }
   .request-div{
@@ -97,7 +96,6 @@ const Wrapper = styled.div`
     color: white;
     margin-right: 5px;
     padding: 2px 5px 6px 5px;
-    border-radius: 3px;
     margin-bottom: 3px;
   }
   .trade-div{
@@ -108,7 +106,6 @@ const Wrapper = styled.div`
     color: white;
     margin-right: 5px;
     padding: 2px 5px 6px 5px;
-    border-radius: 3px;
     margin-bottom: 3px;
   }
   @media (min-width: 768px) {

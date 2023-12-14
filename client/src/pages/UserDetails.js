@@ -44,7 +44,12 @@ const UserDetails = () => {
       <p>City: {userDetails?.city}</p>
       <p>State: {userDetails?.state}</p>
       <p>Address: {userDetails?.address}</p>
-      <p>Books: {userDetails?.books}</p>
+      {/* <p>Books: {userDetails?.books}</p> */}
+      <div style={{display:'flex', flexDirection:'row', flexWrap:'wrap'}}>
+        <div className='book-div'>Books: {userDetails?.books}</div>
+        <div className='request-div'>Active Requests: {userDetails?.activeRequest}</div>
+        <div className='trade-div'>Completed Trades: {userDetails?.completedTrades}</div>
+      </div>
       <div className='btn-container'>
         <button onClick={handleUserBooks} className='book-btn' type='button'>See {userFirstName} Books</button>
         {localStorageUser?.userId === userId ? (
@@ -65,24 +70,67 @@ const Wrapper = styled.div`
   #span2{
     font-size: 23px;
   }
+  .book-btn:hover{
+    background-color: var(--btnColor);
+    color: white;
+  }
   .book-btn{
-    border: none;
-    background: var(--btnColor);
+    border: var(--btnColor) solid 2px;
+    background: inherit;
     width: fit-content;
     height: 25px;
-    color: white;
+    color: var(--btnColor);
     border-radius: 3px;
     margin-right: 3px;
     cursor: pointer;
+    margin-top: 5px;
+  }
+  .edit-btn:hover{
+    background-color: var(--btnColor2);
+    color: white;
   }
   .edit-btn{
-    background: var(--btnColor2);
-    border: none;
+    background: inherit;
+    border: var(--btnColor2) solid 2px;
     width: fit-content;
     height: 25px;
-    color: white;
+    color: var(--btnColor2);
     border-radius: 3px;
     cursor: pointer;
+    margin-top: 5px;
+  }
+  .book-div{
+    height: 15px;
+    width: fit-content;
+    font-size: 13px;
+    background-color: var(--btnColor);
+    color: white;
+    margin-right: 5px;
+    padding: 2px 5px 6px 5px;
+    /* border-radius: 3px; */
+    margin-bottom: 3px;
+  }
+  .request-div{
+    height: 15px;
+    width: fit-content;
+    font-size: 13px;
+    background-color: var(--btnColor2);
+    color: white;
+    margin-right: 5px;
+    padding: 2px 5px 6px 5px;
+    /* border-radius: 3px; */
+    margin-bottom: 3px;
+  }
+  .trade-div{
+    height: 15px;
+    width: fit-content;
+    font-size: 13px;
+    background-color: #277d4c;
+    color: white;
+    margin-right: 5px;
+    padding: 2px 5px 6px 5px;
+    /* border-radius: 3px; */
+    margin-bottom: 3px;
   }
 `
 

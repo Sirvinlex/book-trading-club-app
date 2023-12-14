@@ -6,7 +6,7 @@ import FormInput from '../components/FormInput';
 import { createBook, handleInput, getUserBooks } from '../features/bookSlice';
 import { FaTimes } from "react-icons/fa";
 import { deleteBook, addBook, removeBook } from '../features/bookSlice';
-import { getUserDetails, updateUserBookCount } from '../features/usersSlice';
+import { getUserDetails, } from '../features/usersSlice';
 
 
 const UserBooks = () => {
@@ -121,6 +121,7 @@ const UserBooks = () => {
                   bookTitle = item.title, bookReq = item.requests, requesterId = localStorageUser?.userId;
                   const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "bookCreatorId": "${bookCreatorId}",
                    "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
+                   const bookLink = `/books/requests/${bookId}`;
                   return(
                     <div key={item._id}>
                         <label className='books-container-body'>
@@ -132,14 +133,14 @@ const UserBooks = () => {
                                 <p className='book-title'>{item.title}</p>
                                 <p className='book-description'>{item.description}</p>
                                 <p className='creator-details'>
-                                  from <span><Link style={{textDecoration:'none', fontWeight:'800'}} to={myLink}>{creatorName}</Link></span>
+                                  from <span><Link className='name-link' to={myLink}>{creatorName}</Link></span>
                                   {' '} in {item.creatorCity}, {item.creatorState}
                                 </p>
                               </div>
                               <div className='book-stats'>
                                 {
                                   item.requests > 0 ? (
-                                    <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
+                                    <div className='request-count'><Link className='request-link' to={bookLink}>Requests</Link> <p className='request-number'>{item.requests}</p></div>
                                   ) : null
                                 }
                               </div>
@@ -175,6 +176,17 @@ const Wrapper = styled.div`
     width: 100%;
     margin-top: -40px;
     padding-top: 30px;
+    /* style={{textDecoration:'none', fontWeight:'800'}} */
+    .name-link{
+      text-decoration: none;
+      font-weight: 800;
+    }
+    .request-link:hover,.name-link:hover{
+      text-decoration: underline;
+    }
+    .request-link{
+      text-decoration: none;
+    }
     .request-btn-absolute_container{
       position: sticky;
       z-index: 1;

@@ -1,36 +1,40 @@
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link, } from 'react-router-dom';
+import { getSingleBookRequestData } from '../features/bookSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
-import { getRequestData, getBooks, deleteRequestData, updateRequestData, createTrade } from '../features/bookSlice';
 import { getUsers } from '../features/usersSlice';
+import { getBooks, deleteRequestData, updateRequestData, createTrade } from '../features/bookSlice';
 import Moment from 'react-moment';
+import styled from 'styled-components';
 
-const BookRequests = () => {
-    const { book, requestData, createTradeMsg, isLoading, reqDataLoading } = useSelector((store) => store.book);
+
+
+
+const AllRequestsForBook = () => {
+    const { book, createTradeMsg, isLoading, reqDataLoading, singleBookRequestData } = useSelector((store) => store.book);
     const { users } = useSelector((store) => store.users);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
 
-    const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { id } = useParams();
+    const dispatch = useDispatch();
 
     useEffect(() =>{
-        dispatch(getRequestData());
-    }, []);
+        dispatch(getSingleBookRequestData(id));
+    }, [id]);
 
     useEffect(() =>{
-        if (requestData.length > 0){
+        if (singleBookRequestData.length > 0){
             dispatch(getBooks());
             dispatch(getUsers());
         }
-    }, [requestData]);
+    }, [singleBookRequestData]);
 
     useEffect(() =>{
         if (createTradeMsg === 'Trade successfully added') navigate('/trades');
     }, [createTradeMsg]);
 
-
-    const myData = requestData.map((item) =>{
+    const myData = singleBookRequestData.map((item) =>{
         let mainData = item, requestCreatorId = item.requestCreatorId, accepterBooks = [], requesterBooks = [], 
         acceptersId = item.acceptersId, requestCreatorName, requestDataId = item._id, requestTime = item.createdAt;
         book?.forEach((bk) =>{
@@ -45,16 +49,19 @@ const BookRequests = () => {
         return { requestCreatorId, accepterBooks, requesterBooks, acceptersId, requestCreatorName, requestDataId, requestTime }
     });
 
+    let bookTitle;
+    book?.forEach((bk) => bk._id === id ? bookTitle = bk.title : 'This Book' )
     if (reqDataLoading) return <div style={{textAlign:'center', marginTop:'20px', fontSize:'40px'}}>Loading...</div>
+
 
   return (
     <Wrapper>
         <div className='books-container'>
             <div className='books-container-title'>
-                All Requests 
+               Requests for {bookTitle}
             </div>
             <div className='books-container-body'>
-                {requestData.length < 1 ? <p>No active requests</p>
+                {singleBookRequestData.length < 1 ? <p>No active requests for this book</p>
                     : ( myData.map((item, i) =>{
 
                         const userBooks = item.accepterBooks.filter((userBook) => userBook.creatorId === localStorageUser?.userId);
@@ -458,5 +465,4 @@ const Wrapper = styled.div`
     }
 
 `
-
-export default BookRequests;
+export default AllRequestsForBook;

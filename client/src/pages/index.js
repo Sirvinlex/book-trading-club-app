@@ -11,8 +11,9 @@ import BookRedirect from "./BookRedirect";
 import CreateRequestPage from "./CreateRequestPage";
 import BookRequests from "./BookRequests";
 import Trades from "./Trades";
+import AllRequestsForBook from "./AllRequestsForBook"
 
 
 export { ErrorPage, Home, Navbar, RegisterLogin, Books, UsersPage, UserDetails, EditProfileForm, UserBooks, BookRedirect, 
-CreateRequestPage, BookRequests, Trades }
+CreateRequestPage, BookRequests, Trades, AllRequestsForBook }
 

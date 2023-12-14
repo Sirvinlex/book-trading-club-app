@@ -10,8 +10,10 @@ const initialState = {
     title : '',
     description: '',
     isLoading: false,
+    reqDataLoading: false,
     requestedBooks: [],
     requestData: [],
+    singleBookRequestData: [],
     isCreateRequestSuccessful: false,
     trades: [],
     createTradeMsg: '',
@@ -88,6 +90,15 @@ export const request = createAsyncThunk('request/book', async (requestData, thun
 export const getRequestData = createAsyncThunk('getRequestData/book', async (_, thunkAPI) =>{
     try {
         const {data} = await api.getRequestData();
+        return data;
+    } catch (error) {
+        return  thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+
+});
+export const getSingleBookRequestData = createAsyncThunk('getSingleBookRequestData/book', async (bookId, thunkAPI) =>{
+    try {
+        const {data} = await api.getSingleBookRequestData(bookId);
         return data;
     } catch (error) {
         return  thunkAPI.rejectWithValue(error.response.data.msg);
@@ -232,15 +243,25 @@ const bookSlice = createSlice({
             state.creatingRequest = false;
         })
         builder.addCase(getRequestData.pending, (state, action) => {
-            state.isLoading = true;
+            state.reqDataLoading = true;
         })
         builder.addCase(getRequestData.fulfilled, (state, action) => {
             state.requestData = action.payload.result;
             state.isCreateRequestSuccessful = false;
-            state.isLoading = false;
+            state.reqDataLoading = false;
         })
         builder.addCase(getRequestData.rejected, (state, action) => {
-            state.isLoading = false;
+            state.reqDataLoading = false;
+        })
+        builder.addCase(getSingleBookRequestData.pending, (state, action) => {
+            state.reqDataLoading = true;
+        })
+        builder.addCase(getSingleBookRequestData.fulfilled, (state, action) => {
+            state.singleBookRequestData = action.payload.result;
+            state.reqDataLoading = false;
+        })
+        builder.addCase(getSingleBookRequestData.rejected, (state, action) => {
+            state.reqDataLoading = false;
         })
         builder.addCase(deleteRequestData.fulfilled, (state, action) => {
             state.requestData = state.requestData.filter((item) => item._id !== action.payload.data.deletedId);

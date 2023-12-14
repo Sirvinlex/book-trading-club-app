@@ -35,7 +35,7 @@ const Books = () => {
 
   const handleDeleteBook = ({ itemId, activeRequest, proposedCount }) =>{
     if (proposedCount > 0){
-      alert(`This book is currently being proposed in ${proposedCount} active requests, please cancel request in order to be able to delete book`);
+      alert(`This book is currently being proposed ${proposedCount} times in active requests, please cancel request in order to be able to delete book`);
     }else if (activeRequest > 0){
       alert(`This book is currently involved in ${activeRequest} active requests, please reject/accept request to be able to delete book`);
     }else{
@@ -83,8 +83,8 @@ const Books = () => {
                   users?.map((user) => user._id === item.creatorId ? bookCreatorNameFromUsersState = user.name.split(' ')[0] : null);
 
                   const requestersArr = [];
-                  item.requestersIds.map((reqId) =>{
-                    users?.map((user) =>{
+                  item.requestersIds.forEach((reqId) =>{
+                    users?.forEach((user) =>{
                       if (user._id === reqId){
                         requestersArr.push(`${reqId} ${user.name.split(' ')[0]}`);
                       }
@@ -116,6 +116,7 @@ const Books = () => {
                   bookTitle = item.title, bookReq = item.requests, requesterId = localStorageUser?.userId;
                   const itemData = `{"bookId": "${bookId}", "bookCreatorName": "${bookCreatorName}", "bookCreatorId": "${bookCreatorId}",
                    "bookDesc": "${bookDesc}", "bookTitle": "${bookTitle}", "bookReq": ${bookReq}, "requesterId": "${requesterId}"  }`
+                   const bookLink = `/books/requests/${bookId}`;
                   return(
                     <div key={item._id}>
                       <label className='books-container-body'>
@@ -141,7 +142,7 @@ const Books = () => {
                             </div>
                             {item.requests > 0 ? (
                                 <div className='book-stats'>
-                                  <div className='request-count'>Requests <p className='request-number'>{item.requests}</p></div>
+                                  <div className='request-count'><Link className='request-link' to={bookLink}>Request</Link> <p className='request-number'>{item.requests}</p></div>
                                   <p style={{marginTop: '-13px'}}>
                                     ( {
                                         requestersArr2.map((reqArr2,i) =>{
@@ -192,7 +193,9 @@ const Books = () => {
 }
 
 const Wrapper = styled.div`
-  
+  .request-link{
+    text-decoration: none;
+  }
   .request-btn-absolute_container{
     position: sticky;
     z-index: 1;

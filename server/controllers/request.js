@@ -13,7 +13,19 @@ export const request = async(req, res) =>{
 export const getRequestData = async (req, res) =>{
     try {
         const requestData = await Request.find().sort({ _id: -1});
+        if (!requestData) return res.status(400).json({msg: 'Oops! Something went wrong'});
         res.status(200).json({ result: requestData });
+    } catch (error) {
+        res.status(404).json(error);
+    }
+ };
+export const getSingleBookRequestData = async (req, res) =>{
+    const { id } = req.params;
+    try {
+        const requestData = await Request.find().sort({ _id: -1});
+        if (!requestData) return res.status(400).json({msg: 'Oops! Something went wrong'});
+        const singleBookRequestData = requestData.filter((item) => item.accepterBooksId.includes(id));
+        res.status(200).json({ result: singleBookRequestData });
     } catch (error) {
         res.status(404).json(error);
     }

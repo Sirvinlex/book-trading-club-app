@@ -14,6 +14,7 @@ export const updateUserTradeCount = (updateData) => API.patch(`/users/updateUser
 export const createBook = (bookData) => API.post('/book/createBook', bookData);
 export const request = (requestData) => API.post('request/create-request', requestData);
 export const getRequestData = () => API.get('/request/getRequestData');
+export const getSingleBookRequestData = (bookId) => API.get(`/request/getSingleBookRequestData/${bookId}`);
 export const updateRequestData = (updateData) => API.patch(`/request/updateRequestData`, updateData);
 export const deleteRequestData = (dataId) => API.delete(`/request/deleteRequestData/${dataId}`);
 export const getBooks = () => API.get('/book/getBooks');

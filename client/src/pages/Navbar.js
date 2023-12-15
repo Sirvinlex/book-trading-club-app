@@ -289,7 +289,7 @@ const Wrapper = styled.div`
     /* padding-left: 10px; */
     /* padding-left: 20px; */
     /* margin-left: -30px; */
-    margin-top: -23px;
+    margin-top: -17px;
     margin-bottom: 10px;
     color: var(--fontColor1);
     /* background-color: red; */

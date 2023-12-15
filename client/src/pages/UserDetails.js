@@ -63,6 +63,7 @@ const UserDetails = () => {
 const Wrapper = styled.div`
   margin-left: 7px;
   margin-right: 7px;
+  margin-bottom: 20px;
   #span1{
     font-weight: 600;
     font-size: 30px;

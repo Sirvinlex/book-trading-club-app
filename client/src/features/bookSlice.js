@@ -23,7 +23,6 @@ const initialState = {
 export const createBook = createAsyncThunk('createBook/book', async (bookData, thunkAPI) =>{
     try {
         const {data} = await api.createBook(bookData);
-        console.log(data)
         if(data.msg ===  "Book successfully added") {
             const userId = data.book.creatorId;
             thunkAPI.dispatch(updateUserBookCount({userId, isIncreased: true}))
@@ -265,6 +264,7 @@ const bookSlice = createSlice({
         })
         builder.addCase(deleteRequestData.fulfilled, (state, action) => {
             state.requestData = state.requestData.filter((item) => item._id !== action.payload.data.deletedId);
+            state.singleBookRequestData = state.singleBookRequestData.filter((item) => item._id !== action.payload.data.deletedId);
             if (action.payload.role === 'cancel') alert('Request successfully removed')
             else if (action.payload.role === 'accept') alert('Request successfully accepted')
         })

@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { AiFillCaretDown } from 'react-icons/ai';
+import { jwtDecode } from 'jwt-decode';
 
 const Navbar = () => {
   
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [showRequest2, setShowRequest2] = useState(false);
   const [clicked, setClicked] = useState(false);
 
+  const location = useLocation();
   const navigate = useNavigate();
   const ref = useRef();
   const ref2 = useRef();
@@ -71,6 +73,16 @@ const Navbar = () => {
       setClicked(false);
     }
   }, [clicked]);
+
+  useEffect(() =>{
+    const token = localStorageUser?.token;
+    if (token){
+        const decodedToken = jwtDecode(token);
+        if (decodedToken.exp * 1000 < new Date().getTime()) handleLogout();
+    }
+
+  }, [location, localStorageUser?.token, ])
+
   return (
     <Wrapper>
       <p className="logo-name">Book Club</p>
@@ -178,7 +190,7 @@ const Navbar = () => {
             <ul onClick={() => setShowProfile2((prevState) => !prevState)} className="owner-name">
               <li style={{position:'relative', fontWeight:'700'}}>{ownerFirstName}
               {(showProfile2 && localStorageUser) ? (
-              <div ref={ref2} className="profile-container2">
+              <div className="profile-container2">
                 <p onClick={handleProfileClick}>Profile</p>
                 <p onClick={handleEditProfile}>Edit Profile</p>
                 <p onClick={handleMyBooks}>My Books</p>
@@ -430,7 +442,7 @@ const Wrapper = styled.div`
       /* padding-tsop: 6px; */
       position: absolute;
       /* right: 0px; */
-      left: -60%;
+      left: -120%;
       top: 37px;
       background-color: var(--backgroundColor);
       height: fit-content;

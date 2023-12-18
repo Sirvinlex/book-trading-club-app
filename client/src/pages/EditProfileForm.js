@@ -11,6 +11,7 @@ import { toggleOnHasUpdateProfile } from '../features/authSlice';
 
 
 const EditProfileForm = () => {
+    const localStorageUser = JSON.parse(localStorage.getItem("user"));
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -48,7 +49,8 @@ const EditProfileForm = () => {
     const handleSubmit = (e) =>{
         e.preventDefault();
         const userId = id; 
-        if (!userId || !name || !city || !userState || !address) alert('Please provide all values');
+        if (!localStorageUser) alert('Please Login to edit your profile')
+        else if (!userId || !name || !city || !userState || !address) alert('Please provide all values');
         else dispatch(updateUserProfile({userId, name, city, userState, address}));
     };
 

@@ -19,12 +19,15 @@ const UserBooks = () => {
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
 
     useEffect(() =>{
-      dispatch(getUserDetails(id));
+       dispatch(getUserDetails(id));
     }, [id]);
   
     useEffect(() =>{
         const userId = id;
-        dispatch(getUserBooks(userId));
+        if (!localStorageUser){
+          alert('Something went wrong, please login and try again.')
+        } 
+        else dispatch(getUserBooks(userId));
     }, [id, createdBook]);
 
     const handleUserAddBook = () =>{

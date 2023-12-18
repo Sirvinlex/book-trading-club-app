@@ -19,7 +19,8 @@ const CreateRequestPage = () => {
   const accepterBooksIds = accepterBooks?.map((item) => item.bookId);
 
   const handleSubmitRequest = () =>{
-    if (requesterBooks.length < 1 && accepterBooks.length < 1) alert('Please select books to trade')
+    if (!localStorageUser) alert('Please login/Register account to create request')
+    else if (requesterBooks.length < 1 && accepterBooks.length < 1) alert('Please select books to trade')
     else if (requesterBooks.length < 1) alert('Please select book you want to give for this trade')
     else if (accepterBooks.length < 1) alert('Please select book you want take for this trade')
     else {

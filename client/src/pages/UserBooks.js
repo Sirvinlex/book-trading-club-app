@@ -6,18 +6,18 @@ import FormInput from '../components/FormInput';
 import { createBook, handleInput, getUserBooks } from '../features/bookSlice';
 import { FaTimes } from "react-icons/fa";
 import { deleteBook, addBook, removeBook } from '../features/bookSlice';
-import { getUserDetails, } from '../features/usersSlice';
+import { getUserDetails, getUsers } from '../features/usersSlice';
 
 
 const UserBooks = () => {
     const { title, description, isLoading, userBooks, createdBook, requestedBooks, } = useSelector((store) => store.book);
-    const { userDetails } = useSelector((store) => store.users);
+    const { userDetails, users } = useSelector((store) => store.users);
     const localStorageUser = JSON.parse(localStorage.getItem("user"));
     const { id } = useParams();
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const requestedBooksId = requestedBooks?.map((item) => item.bookId);
-
+    
     useEffect(() =>{
        dispatch(getUserDetails(id));
     }, [id]);
@@ -29,6 +29,10 @@ const UserBooks = () => {
         } 
         else dispatch(getUserBooks(userId));
     }, [id, createdBook]);
+
+    useEffect(() =>{
+      dispatch(getUsers());
+    }, [dispatch, createdBook,]);
 
     const handleUserAddBook = () =>{
         navigate(`/users/user-books/${localStorageUser?.userId}`);
@@ -117,6 +121,8 @@ const UserBooks = () => {
                 </div>
               ) : (
                 userBooks.map((item, i) =>{
+                  let bookCreatorNameFromUsersState;
+                  users?.map((user) => user._id === item.creatorId ? bookCreatorNameFromUsersState = user.name.split(' ')[0] : null);
                   const creatorName = item.creatorName.split(' ')[0];
                   const myLink = `/users/users-details/${item.creatorId}`
                   const itemId = item._id;
@@ -136,7 +142,7 @@ const UserBooks = () => {
                                 <p className='book-title'>{item.title}</p>
                                 <p className='book-description'>{item.description}</p>
                                 <p className='creator-details'>
-                                  from <span><Link className='name-link' to={myLink}>{creatorName}</Link></span>
+                                  from <span><Link className='name-link' to={myLink}>{bookCreatorNameFromUsersState || creatorName}</Link></span>
                                   {' '} in {item.creatorCity}, {item.creatorState}
                                 </p>
                               </div>
